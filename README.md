@@ -2,7 +2,7 @@
 
 ## Overview
 
-Project Oracle is an AI-powered onboarding assistant that helps new team members understand organizational processes and required skills. Built with async Python and OpenAI's GPT-4, it provides an interactive chat interface for personalized onboarding guidance.
+Project Oracle is an AI-powered educational onboarding assistant that helps new user's or team members understand organizational processes and required skills. Built with async Python and OpenAI's GPT-4o, it provides an interactive chat interface for personalized onboarding guidance.
 
 ## 🌟 Current Features
 
