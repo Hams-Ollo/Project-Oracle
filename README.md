@@ -17,7 +17,7 @@ Project Oracle is an AI-powered onboarding assistant that helps new team members
 
 ### Prerequisites
 
-- Python 3.8+
+- Python 3.12+
 - OpenAI API key
 - Basic understanding of YAML for content configuration
 
@@ -26,7 +26,7 @@ Project Oracle is an AI-powered onboarding assistant that helps new team members
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/project_oracle.git
+   git clone https://github.com/Hams-Ollo/Project-Oracle.git  
    cd project_oracle
    ```
 
