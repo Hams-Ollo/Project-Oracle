@@ -131,11 +131,20 @@ def create_agent(role: AgentRole):
         # Get relevant documentation based on the last message
         last_message = state["messages"][-1]
         if isinstance(last_message, HumanMessage):
+            # Get relevant docs based on agent role
             relevant_docs = doc_loader.get_relevant_docs(
                 last_message.content,
-                context_type=role.value
+                context_type=role.name  # This will match with DocCategory
             )
-            state["doc_context"] = relevant_docs
+            
+            # Format documentation context
+            doc_context = []
+            for doc in relevant_docs:
+                doc_context.append(f"\n### {doc['doc_name']} ({doc['category']})")
+                for section_name, content in doc['sections'].items():
+                    doc_context.append(f"\n#### {section_name}\n{content}")
+            
+            state["doc_context"] = doc_context
         
         # Create a combined system message with documentation context
         system_content = instructions[role]
