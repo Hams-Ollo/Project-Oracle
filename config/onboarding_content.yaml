@@ -1,0 +1,19 @@
+skills:
+  technical:
+    - python_programming
+    - data_analysis
+    - machine_learning
+  soft:
+    - communication
+    - teamwork
+    - time_management
+  
+processes:
+  development:
+    - code_review
+    - git_workflow
+    - deployment
+  team:
+    - daily_standups
+    - sprint_planning
+    - retrospectives 
