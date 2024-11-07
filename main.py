@@ -26,6 +26,8 @@ import os
 from dotenv import load_dotenv
 from swarm import Swarm, Agent
 import openai
+from utils.knowledge_base import KnowledgeBase
+from typing import Dict, List, Optional
 
 # Load environment variables and configure settings
 load_dotenv()
@@ -47,10 +49,32 @@ def format_debug_info(message, level="INFO"):
     }
     return f"{prefix.get(level, '[LOG]')} {message}"
 
+# Create a wrapper class to handle documentation functionality
+class AgentWithDocs:
+    def __init__(self, agent: Agent, knowledge_base: KnowledgeBase):
+        self.agent = agent
+        self.kb = knowledge_base
+        
+    def get_context_from_docs(self, query: str) -> str:
+        """Retrieve relevant information from knowledge base"""
+        results = self.kb.search(query)
+        return self.kb.format_response(results)
+
+    @property
+    def name(self):
+        return self.agent.name
+
+    @property
+    def functions(self):
+        return self.agent.functions
+
+    @functions.setter
+    def functions(self, value):
+        self.agent.functions = value
+
 def main():
     """
     Main function that initializes and runs the multi-agent conversation system.
-    Handles agent creation, message routing, and user interactions.
     """
     # Print API key for debugging (first 5 chars)
     print(f"[DEBUG] Using API key starting with: {os.getenv('OPENAI_API_KEY')[:5]}...")
@@ -59,38 +83,53 @@ def main():
     swarm = Swarm()
     print("[INIT] Swarm client initialized")
     
-    # Create specialized agents with specific roles and responsibilities
-    print("[SETUP] Initializing specialized agents...")
+    # Initialize KnowledgeBase instead of DocumentationLoader
+    kb = KnowledgeBase()
+    print("[INIT] Knowledge base initialized")
     
-    onboarding_agent = Agent(
-        name="Onboarding Specialist",
-        instructions="You are an onboarding specialist who helps new team members understand their role and required skills.",
-        model="gpt-4o-mini"  # Updated model
+    # Create specialized agents with knowledge base
+    onboarding_agent = AgentWithDocs(
+        agent=Agent(
+            name="Onboarding Specialist",
+            instructions="""You are an onboarding specialist who helps new team members understand their role and required skills.
+            When answering questions, use the provided documentation context to give accurate, specific answers about this project.""",
+            model="gpt-4o-mini"
+        ),
+        knowledge_base=kb
     )
     
-    technical_agent = Agent(
-        name="Technical Advisor",
-        instructions="You are a technical advisor who provides detailed technical guidance and best practices.",
-        model="gpt-4o-mini"  # Updated model
+    technical_agent = AgentWithDocs(
+        agent=Agent(
+            name="Technical Advisor",
+            instructions="""You are a technical advisor who provides detailed technical guidance and best practices.
+            Use the provided documentation context to give specific, accurate technical information about this project.""",
+            model="gpt-4o-mini"
+        ),
+        knowledge_base=kb
     )
     
-    process_agent = Agent(
-        name="Process Guide",
-        instructions="You are a process guide who explains workflows and organizational procedures.",
-        model="gpt-4o-mini"  # Updated model
+    process_agent = AgentWithDocs(
+        agent=Agent(
+            name="Process Guide",
+            instructions="""You are a process guide who explains workflows and organizational procedures.
+            Reference the provided documentation context when explaining processes specific to this project.""",
+            model="gpt-4o-mini"
+        ),
+        knowledge_base=kb
     )
+    
     print("[SETUP] All agents initialized successfully")
     
     # Define handoff functions for agent transitions
     def transfer_to_technical():
         """Handles transition to technical advisor agent"""
         print("[TRANSFER] Initiating handoff to Technical Advisor")
-        return technical_agent
+        return technical_agent.agent  # Return the underlying Agent object
 
     def transfer_to_process():
         """Handles transition to process guide agent"""
         print("[TRANSFER] Initiating handoff to Process Guide")
-        return process_agent
+        return process_agent.agent  # Return the underlying Agent object
     
     # Configure agent routing capabilities
     onboarding_agent.functions = [transfer_to_technical, transfer_to_process]
@@ -117,13 +156,27 @@ def main():
         messages.append({"role": "user", "content": user_input})
         
         try:
-            # Process conversation through swarm
+            # Get relevant documentation context
+            doc_context = current_agent.get_context_from_docs(user_input)
+            
+            # Add documentation context to the conversation
+            context_message = {
+                "role": "system",
+                "content": f"Use this documentation context to inform your response: {doc_context}"
+            } if doc_context else None
+            
+            # Create messages list with context
+            messages_with_context = messages.copy()
+            if context_message:
+                messages_with_context.insert(-1, context_message)
+            
+            # Process conversation through swarm with context
             if os.getenv("DEBUG_MODE"):
                 print(format_debug_info("Generating response...", "DEBUG"))
                 
             response = swarm.run(
-                agent=current_agent,
-                messages=messages,
+                agent=current_agent.agent,  # Use the underlying Agent object
+                messages=messages_with_context,
                 context_variables={"user_name": "New Team Member"},
                 debug=os.getenv("DEBUG_MODE", "false").lower() == "true"
             )

@@ -1,0 +1,63 @@
+{
+    "project_info": {
+        "name": "Project Oracle",
+        "description": "A multi-agent AI system demonstrating RAG capabilities and agent collaboration",
+        "version": "1.0.0"
+    },
+    "documentation": {
+        "setup": {
+            "title": "Setup Guide",
+            "content": "1. Create a virtual environment -> python -m venv venv\n2. Activate the virtual environment -> .\\venv\\Scripts\\Activate\n3. Install the requirements -> pip install -r requirements.txt\n4. Run the app -> python main.py",
+            "tags": ["setup", "installation", "getting started"]
+        },
+        "architecture": {
+            "title": "System Architecture",
+            "content": "Project Oracle uses a multi-agent system where specialized agents collaborate to handle different types of queries. The system includes:\n- Onboarding Specialist\n- Technical Advisor\n- Process Guide\nAgents can access documentation and hand off conversations to other agents when appropriate.",
+            "tags": ["technical", "architecture", "system design"]
+        },
+        "git_workflow": {
+            "title": "Git Workflow",
+            "content": "1. Initialize repository -> git init\n2. Add files to staging -> git add .\n3. Commit changes -> git commit -m 'message'\n4. Create new branch -> git checkout -b branch-name\n5. Switch branches -> git checkout branch-name\n6. Push to remote -> git push -u origin branch-name\n7. Pull latest changes -> git pull origin branch-name",
+            "tags": ["git", "version control", "workflow"]
+        },
+        "project_requirements": {
+            "title": "Project Documentation Requirements",
+            "content": "The project requires comprehensive documentation across multiple levels:\n\n1. High Level Documentation\n- Project overview\n- System architecture\n- User guides\n\n2. Developer Level Documentation\n- Technical specifications\n- API documentation\n- Setup guides\n- Code standards\n\n3. Project Management Level\n- Project roadmap\n- Sprint planning\n- Resource allocation\n\nAll documentation should be maintained in markdown format within the docs folder.",
+            "tags": ["documentation", "requirements", "project management"]
+        }
+    },
+    "faqs": {
+        "general": [
+            {
+                "question": "What is Project Oracle?",
+                "answer": "Project Oracle is a demonstration of RAG (Retrieval-Augmented Generation) capabilities using a multi-agent system. It showcases how AI agents can collaborate and use documentation to provide informed responses."
+            },
+            {
+                "question": "How do I start contributing?",
+                "answer": "Begin by following the setup guide, reviewing the architecture documentation, and following the git workflow guidelines. The Onboarding Specialist can guide you through this process."
+            }
+        ],
+        "technical": [
+            {
+                "question": "How does the agent system work?",
+                "answer": "The system uses specialized agents (Onboarding, Technical, Process) that can access documentation and hand off conversations to each other based on the query context. Each agent has specific expertise and can retrieve relevant information from the knowledge base."
+            }
+        ],
+        "easter_eggs": [
+            {
+                "question": "What is the name of hams_ollo's Queen?",
+                "answer": "hams_ollo's Queen's name is: Mohini Murti Devi"
+            }
+        ]
+    },
+    "project_scope": {
+        "title": "Project Scope",
+        "description": "A chatbot system using LLMs to help users with their questions about the project. The system features:\n- Multi-agent architecture\n- RAG capabilities for context-aware responses\n- Documentation retrieval and integration\n- Interactive chat interface",
+        "primary_features": [
+            "LLM-powered responses",
+            "Documentation integration",
+            "Multi-agent collaboration",
+            "Context-aware assistance"
+        ]
+    }
+} 
