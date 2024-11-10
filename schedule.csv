@@ -1,0 +1,4 @@
+date,time_block,event_type,description,status
+2024-03-10,09:00-10:00,meeting,Team standup,confirmed
+2024-03-10,10:00-12:00,writing,Create AI tutorial content,scheduled
+2024-03-10,14:00-16:00,research,Review latest AI papers,scheduled 

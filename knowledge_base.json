@@ -1,63 +1,238 @@
 {
-    "project_info": {
-        "name": "Project Oracle",
-        "description": "A multi-agent AI system demonstrating RAG capabilities and agent collaboration",
-        "version": "1.0.0"
-    },
-    "documentation": {
-        "setup": {
-            "title": "Setup Guide",
-            "content": "1. Create a virtual environment -> python -m venv venv\n2. Activate the virtual environment -> .\\venv\\Scripts\\Activate\n3. Install the requirements -> pip install -r requirements.txt\n4. Run the app -> python main.py",
-            "tags": ["setup", "installation", "getting started"]
+    "topics": {
+        "jedi_order": {
+            "definition": "The Jedi Order is an ancient monastic peacekeeping organization unified by its belief and observance of the Force, specifically the light side.",
+            "history": "Founded over 25,000 years before the Battle of Yavin, the Jedi Order served as guardians of peace and justice in the Galactic Republic. They played pivotal roles in major conflicts such as the Great Hyperspace War, the Clone Wars, and faced near-extinction during events like the Great Purge and Order 66.",
+            "key_concepts": [
+                "The Force",
+                "Light Side",
+                "Jedi Code",
+                "Padawan",
+                "Jedi Council",
+                "Force Abilities",
+                "Lightsaber Combat"
+            ],
+            "important_figures": [
+                "Yoda",
+                "Obi-Wan Kenobi",
+                "Anakin Skywalker",
+                "Luke Skywalker",
+                "Mace Windu",
+                "Qui-Gon Jinn",
+                "Rey"
+            ],
+            "cultural_significance": "The Jedi symbolize wisdom, selflessness, and a commitment to peace. They are renowned for their mastery of the Force and lightsaber skills, serving as role models and mentors throughout the galaxy."
         },
-        "architecture": {
-            "title": "System Architecture",
-            "content": "Project Oracle uses a multi-agent system where specialized agents collaborate to handle different types of queries. The system includes:\n- Onboarding Specialist\n- Technical Advisor\n- Process Guide\nAgents can access documentation and hand off conversations to other agents when appropriate.",
-            "tags": ["technical", "architecture", "system design"]
+        "sith": {
+            "definition": "The Sith are an order of Force-sensitive beings who harness the dark side of the Force, often characterized by their desire for power and dominance.",
+            "history": "Originating from a schism within the Jedi Order, the Sith have a tumultuous history marked by internal conflict and wars against the Jedi. Notable periods include the Old Sith Wars, the rise of the Sith Empire, and the implementation of the Rule of Two after the Sith nearly destroyed themselves.",
+            "key_concepts": [
+                "Dark Side",
+                "Sith Code",
+                "Rule of Two",
+                "Apprentice",
+                "Sith Empire",
+                "Force Lightning",
+                "Holocrons"
+            ],
+            "important_figures": [
+                "Darth Sidious (Emperor Palpatine)",
+                "Darth Vader (Anakin Skywalker)",
+                "Darth Maul",
+                "Darth Plagueis",
+                "Darth Bane",
+                "Darth Revan",
+                "Asajj Ventress"
+            ],
+            "cultural_significance": "The Sith represent ambition, power, and the corrupting influence of the dark side. They often serve as antagonists, embodying the struggle between good and evil within the galaxy."
         },
-        "git_workflow": {
-            "title": "Git Workflow",
-            "content": "1. Initialize repository -> git init\n2. Add files to staging -> git add .\n3. Commit changes -> git commit -m 'message'\n4. Create new branch -> git checkout -b branch-name\n5. Switch branches -> git checkout branch-name\n6. Push to remote -> git push -u origin branch-name\n7. Pull latest changes -> git pull origin branch-name",
-            "tags": ["git", "version control", "workflow"]
+        "mandalorians": {
+            "definition": "Mandalorians are a nomadic group of clan-based people from the planet Mandalore and its surrounding systems, known for their warrior culture and distinctive armor made from Beskar.",
+            "history": "Mandalorian history is rich with conquest and warfare. They were once a dominant military force, clashing with the Jedi during the Mandalorian Wars. Internal strife and conflicts like the Great Purge severely diminished their numbers. Their culture has seen resurgence through figures like Bo-Katan Kryze and Din Djarin.",
+            "key_concepts": [
+                "Beskar Armor",
+                "Mandalorian Creed",
+                "Clan System",
+                "The Way",
+                "Foundlings",
+                "Darksaber",
+                "Mandalore (Planet)"
+            ],
+            "important_figures": [
+                "Mandalore the Ultimate",
+                "Bo-Katan Kryze",
+                "Din Djarin (The Mandalorian)",
+                "Sabine Wren",
+                "Pre Vizsla",
+                "Jango Fett",
+                "Boba Fett"
+            ],
+            "cultural_significance": "Mandalorians are celebrated for their combat prowess, strict honor code, and iconic armor. They have significantly influenced galactic events and continue to be revered and feared as formidable warriors."
         },
-        "project_requirements": {
-            "title": "Project Documentation Requirements",
-            "content": "The project requires comprehensive documentation across multiple levels:\n\n1. High Level Documentation\n- Project overview\n- System architecture\n- User guides\n\n2. Developer Level Documentation\n- Technical specifications\n- API documentation\n- Setup guides\n- Code standards\n\n3. Project Management Level\n- Project roadmap\n- Sprint planning\n- Resource allocation\n\nAll documentation should be maintained in markdown format within the docs folder.",
-            "tags": ["documentation", "requirements", "project management"]
+        "the_force": {
+            "definition": "An omnipresent energy field created by all living things, the Force binds the galaxy together and can be harnessed by Force-sensitive individuals.",
+            "key_concepts": [
+                "Light Side",
+                "Dark Side",
+                "Balance of the Force",
+                "Force Sensitivity",
+                "Force Powers",
+                "Midi-chlorians"
+            ],
+            "important_figures": [
+                "Anakin Skywalker",
+                "Yoda",
+                "Darth Sidious",
+                "Luke Skywalker",
+                "Rey",
+                "Kylo Ren",
+                "Ahsoka Tano"
+            ],
+            "cultural_significance": "The Force is central to the beliefs of the Jedi and Sith, representing the ongoing struggle between light and dark, good and evil. It influences the destinies of individuals and the fate of the galaxy."
+        },
+        "galactic_empire": {
+            "definition": "A regime that rose to power following the Clone Wars, led by Emperor Palpatine, replacing the Galactic Republic with an authoritarian government.",
+            "history": "The Galactic Empire was established after Palpatine declared himself Emperor, consolidating power and suppressing dissent. It was characterized by its oppressive rule, the construction of superweapons like the Death Star, and its conflict with the Rebel Alliance.",
+            "key_concepts": [
+                "Imperial Rule",
+                "Stormtroopers",
+                "Death Star",
+                "Rebel Alliance",
+                "TIE Fighters",
+                "Moff System"
+            ],
+            "important_figures": [
+                "Emperor Palpatine",
+                "Darth Vader",
+                "Grand Moff Tarkin",
+                "Grand Admiral Thrawn",
+                "Princess Leia Organa",
+                "Mon Mothma",
+                "Admiral Piett"
+            ],
+            "cultural_significance": "The Empire symbolizes tyranny and oppression, serving as the primary antagonist force in the original Star Wars trilogy. Its rise and fall are central to the saga's narrative."
         }
     },
-    "faqs": {
-        "general": [
-            {
-                "question": "What is Project Oracle?",
-                "answer": "Project Oracle is a demonstration of RAG (Retrieval-Augmented Generation) capabilities using a multi-agent system. It showcases how AI agents can collaborate and use documentation to provide informed responses."
-            },
-            {
-                "question": "How do I start contributing?",
-                "answer": "Begin by following the setup guide, reviewing the architecture documentation, and following the git workflow guidelines. The Onboarding Specialist can guide you through this process."
-            }
-        ],
-        "technical": [
-            {
-                "question": "How does the agent system work?",
-                "answer": "The system uses specialized agents (Onboarding, Technical, Process) that can access documentation and hand off conversations to each other based on the query context. Each agent has specific expertise and can retrieve relevant information from the knowledge base."
-            }
-        ],
-        "easter_eggs": [
-            {
-                "question": "What is the name of hams_ollo's Queen?",
-                "answer": "hams_ollo's Queen's name is: Mohini Murti Devi"
-            }
-        ]
-    },
-    "project_scope": {
-        "title": "Project Scope",
-        "description": "A chatbot system using LLMs to help users with their questions about the project. The system features:\n- Multi-agent architecture\n- RAG capabilities for context-aware responses\n- Documentation retrieval and integration\n- Interactive chat interface",
-        "primary_features": [
-            "LLM-powered responses",
-            "Documentation integration",
-            "Multi-agent collaboration",
-            "Context-aware assistance"
-        ]
+    "articles": {
+        "the_jedi_code": {
+            "title": "The Jedi Code: Principles of the Light Side",
+            "summary": "An in-depth exploration of the Jedi Code, its origins, interpretations, and impact on the Jedi Order's philosophy and actions.",
+            "key_points": [
+                "Origins and historical context of the Jedi Code",
+                "The fundamental tenets of the Code",
+                "Variations and interpretations over time",
+                "Influence on Jedi training and behavior",
+                "Contrasts with the Sith Code"
+            ],
+            "content": "The Jedi Code serves as the foundational philosophy guiding the Jedi Order. It emphasizes values such as peace, knowledge, serenity, and harmony with the Force. The Code's traditional phrasing—'There is no emotion, there is peace...'—teaches Jedi to transcend personal emotions to serve the greater good. Throughout history, interpretations of the Code have evolved, affecting how Jedi interact with attachments, fear, and aggression."
+        },
+        "the_rule_of_two": {
+            "title": "The Rule of Two: The Sith Philosophy of Power",
+            "summary": "An analysis of the Sith doctrine known as the Rule of Two, instituted to prevent internal conflict and ensure the survival of the Sith Order.",
+            "key_points": [
+                "Establishment by Darth Bane after the Sith Wars",
+                "Purpose to minimize infighting among the Sith",
+                "Dynamics between the Master and Apprentice",
+                "Notable Sith who followed the Rule",
+                "Long-term consequences for the galaxy"
+            ],
+            "content": "The Rule of Two was a significant shift in Sith philosophy, decreed by Darth Bane approximately a millennium before the rise of the Galactic Empire. It mandated that only two Sith could exist at any given time: a Master to embody power and an Apprentice to crave it. This structure was designed to concentrate the dark side's strength and prevent the self-destructive tendencies of the Sith. The Rule played a crucial role in the Sith's eventual takeover of the galaxy through subterfuge and manipulation."
+        },
+        "mandalorian_beskar_armor": {
+            "title": "Beskar Armor: The Mandalorian Legacy",
+            "summary": "An exploration of the significance of Beskar armor in Mandalorian culture, its unique properties, and its role in the identity of Mandalorian warriors.",
+            "key_points": [
+                "Physical properties of Beskar metal",
+                "Traditional forging techniques",
+                "Symbolism and cultural importance",
+                "Conflicts over Beskar resources",
+                "Modern use and representation"
+            ],
+            "content": "Beskar, also known as Mandalorian iron, is a rare metal revered for its extraordinary resilience. Capable of withstanding blaster fire and lightsaber strikes, Beskar armor is both a protective gear and a cultural emblem for Mandalorians. The process of forging Beskar is steeped in tradition, often signifying a warrior's achievements and status within their clan. Throughout history, Beskar has been a source of conflict, coveted by enemies and sought after by Mandalorians to preserve their heritage."
+        },
+        "the_clone_wars": {
+            "title": "The Clone Wars: A Galaxy Divided",
+            "summary": "An overview of the Clone Wars, the pivotal conflict between the Galactic Republic and the Separatist Alliance, and its profound impact on the Jedi Order and the galaxy.",
+            "key_points": [
+                "Political and economic causes of the war",
+                "Role of the Jedi as military leaders",
+                "Major battles and turning points",
+                "Manipulation by Darth Sidious",
+                "Consequences leading to the rise of the Empire"
+            ],
+            "content": "The Clone Wars were ignited by the secession of numerous star systems under the Confederacy of Independent Systems, led by Count Dooku. The Republic, lacking a standing army, commissioned a clone army from Kamino, with the Jedi Order assuming command roles. Unbeknownst to the galaxy, the war was orchestrated by Darth Sidious as part of his grand plan to dismantle the Republic and eliminate the Jedi. The war's end saw the execution of Order 66, devastating the Jedi Order and paving the way for the Galactic Empire."
+        },
+        "order_66": {
+            "title": "Order 66: The Fall of the Jedi",
+            "summary": "A detailed account of Order 66, the clandestine command that led to the near-extinction of the Jedi Order by their own clone troopers.",
+            "key_points": [
+                "Implementation within the clone trooper ranks",
+                "Execution across various battlefronts",
+                "Notable Jedi survivors and their fates",
+                "Transition from Republic to Empire",
+                "Long-term impact on the Force balance"
+            ],
+            "content": "Order 66 was a secret protocol implanted in clone troopers through inhibitor chips, compelling them to view Jedi as traitors upon activation. Issued by Emperor Palpatine, the order led to a coordinated and ruthless attack on Jedi across the galaxy. While many Jedi were killed, a few survived by going into hiding, such as Obi-Wan Kenobi and Yoda. The purge effectively ended the Jedi Order's influence and allowed Palpatine to consolidate his power unopposed."
+        },
+        "the_mandalorian_wars": {
+            "title": "The Mandalorian Wars: Conquests and Consequences",
+            "summary": "An examination of the Mandalorian Wars, their origins, major events, and the profound impact on both the Mandalorians and the Jedi Order.",
+            "key_points": [
+                "Motivations behind Mandalorian expansion",
+                "Key battles and strategies",
+                "Involvement of Revan and Malak",
+                "Aftermath for the Mandalorians",
+                "Effects on the Jedi and the eventual Jedi Civil War"
+            ],
+            "content": "The Mandalorian Wars began with the Mandalorian Neo-Crusaders seeking to expand their territory and influence. Despite initial reluctance from the Jedi Council to intervene, Jedi Knights Revan and Malak led a faction of Jedi to assist the Republic forces. Their involvement turned the tide but at a great cost, leading Revan and Malak down a dark path that eventually resulted in them becoming Sith Lords. The war devastated Mandalorian society and set the stage for future conflicts."
+        },
+        "mandalorian_culture_and_society": {
+            "title": "Mandalorian Culture and Society: Honor Among Warriors",
+            "summary": "An exploration of Mandalorian customs, societal structures, and the values that define this warrior people.",
+            "key_points": [
+                "Clan and house affiliations",
+                "The Mandalorian Creed and 'This is the Way'",
+                "Role of armor and weapons",
+                "Rituals and rites of passage",
+                "Adaptations over time and diaspora"
+            ],
+            "content": "Mandalorian culture is deeply rooted in the concepts of honor, loyalty, and martial prowess. Their society is organized into clans and houses, each led by a figure known as the Mand'alor. The Mandalorian Creed governs their way of life, with phrases like 'This is the Way' reflecting a shared commitment to their traditions. Armor made of Beskar is not only protective but also a symbol of identity and heritage. Over time, Mandalorians have adapted to changes, including exile and the scattering of their people across the galaxy."
+        },
+        "the_sith_code": {
+            "title": "The Sith Code: The Path to Power",
+            "summary": "An analysis of the Sith Code, its principles, and how it shapes the philosophy and actions of the Sith Order.",
+            "key_points": [
+                "Meaning behind each tenet",
+                "Emphasis on passion and strength",
+                "Application in Sith training and ideology",
+                "Contrasts with the Jedi Code",
+                "Influence on Sith strategies and objectives"
+            ],
+            "content": "The Sith Code serves as the philosophical foundation for the Sith, promoting the embrace of emotions and the pursuit of power. Its lines—'Peace is a lie, there is only passion...'—encourage followers to harness their desires to achieve strength and victory. This approach contrasts sharply with the Jedi's emphasis on restraint and harmony, leading to the fundamental conflict between the two orders. The Sith Code justifies the use of any means necessary to attain dominance and reshape the galaxy according to their will."
+        },
+        "kyber_crystals": {
+            "title": "Kyber Crystals: The Heart of the Lightsaber",
+            "summary": "An in-depth look at kyber crystals, their connection to the Force, and their significance in lightsaber construction.",
+            "key_points": [
+                "Natural properties and locations",
+                "The Gathering ritual for Jedi Padawans",
+                "Attunement process and color significance",
+                "Role in superweapons like the Death Star",
+                "Variations, such as synthetic and bled crystals"
+            ],
+            "content": "Kyber crystals are rare Force-attuned minerals essential for lightsaber functionality. They are found on planets like Ilum and Jedha, where Jedi younglings undergo the Gathering to find a crystal that resonates with them. The color of the lightsaber blade often reflects the nature of the connection between the crystal and the wielder. Kyber crystals have also been exploited for destructive purposes, notably as the power source for the Death Star's superlaser. Sith often use synthetic or 'bled' crystals, resulting in red blades."
+        },
+        "lightsabers": {
+            "title": "Lightsabers: The Elegant Weapon of the Jedi and Sith",
+            "summary": "A comprehensive overview of lightsabers, their construction, variations, and significance to Force users.",
+            "key_points": [
+                "Components and construction process",
+                "Different lightsaber types and forms",
+                "Significance of blade colors",
+                "Dueling techniques and forms",
+                "Cultural impact and symbolism"
+            ],
+            "content": "Lightsabers are more than just weapons; they are extensions of a Force user's connection to the Force. Constructed through a meticulous process involving a kyber crystal, each lightsaber is unique. Blade colors range from blue and green for Jedi to red for Sith, with other colors like purple and white having special meanings. Lightsabers come in various designs, including double-bladed and crossguard variants. Mastery of lightsaber combat involves learning different forms, each suited to various fighting styles and situations."
+        }
     }
-} 
+}
