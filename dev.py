@@ -1,55 +1,84 @@
-from typing import Annotated, Sequence, Literal
-from typing_extensions import TypedDict
-from langchain_core.messages import BaseMessage, HumanMessage, SystemMessage
-from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langgraph.graph import END, StateGraph, START
-from langgraph.prebuilt import create_react_agent
-from langchain_openai import ChatOpenAI
-from pydantic import BaseModel
-from langchain_community.document_loaders.firecrawl import FireCrawlLoader
-from langchain_core.tools import Tool
-import logging
-import os
-from dotenv import load_dotenv
-import operator
-from datetime import datetime
-from pathlib import Path
-import re
-import json
+################################################################################
+# Imports and Configuration
+################################################################################
 
-# Setup basic logging and environment
-load_dotenv()
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+# Standard library imports for basic functionality
+from typing import Annotated, Sequence, Literal  # Type hints and annotations
+from typing_extensions import TypedDict  # Custom type dictionary support
+from datetime import datetime  # Date/time handling
+from pathlib import Path  # Cross-platform file path operations
+import logging  # Logging functionality
+import os  # Operating system interface
+import re  # Regular expressions
+import json  # JSON data handling
+import operator  # Basic operators as functions
 
-# Initialize API keys
+# LangChain imports for AI functionality
+from langchain_core.messages import BaseMessage, HumanMessage, SystemMessage  # Message types for chat
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder  # Prompt templates
+from langgraph.graph import END, StateGraph, START  # Graph components for workflow
+from langgraph.prebuilt import create_react_agent  # Agent creation utility
+from langchain_openai import ChatOpenAI  # OpenAI chat model interface
+from langchain_community.document_loaders.firecrawl import FireCrawlLoader  # Web scraping
+from langchain_core.tools import Tool  # Tool definition class
+from pydantic import BaseModel  # Data validation and settings management
+from dotenv import load_dotenv  # Environment variable loading
+
+################################################################################
+# Initial Setup and Configuration
+################################################################################
+
+# Load environment variables and configure logging
+load_dotenv()  # Load environment variables from .env file for secure configuration
+logging.basicConfig(level=logging.INFO)  # Set up basic logging configuration
+logger = logging.getLogger(__name__)  # Get logger for this module
+
+# Validate and load API keys from environment
 FIRECRAWL_API_KEY = os.getenv('FIRECRAWL_API_KEY')
 if not FIRECRAWL_API_KEY:
     raise ValueError("FIRECRAWL_API_KEY not found in environment variables")
 
-# Initialize LLM
-llm = ChatOpenAI(temperature=0.7)  # Slightly higher temperature for more natural conversation
+# Initialize LLM (Language Learning Model) with temperature parameter
+# Higher temperature (0.7) means more creative/diverse responses
+llm = ChatOpenAI(temperature=0.7)
 
-# Add emoji constants for logging
+# Define emoji constants for visual feedback in logs
+# Each emoji represents a different type of operation or status
 EMOJIS = {
-    'start': '🚀',
-    'chat': '💭',
-    'web': '🌐',
-    'route': '🔄',
-    'error': '❌',
-    'success': '✅',
-    'info': 'ℹ️ ',
-    'think': '🤔',
-    'done': '🏁',
-    'warn': '⚠️ '
+    'start': '🚀',  # Process initiation
+    'chat': '💭',   # Chat messages
+    'web': '🌐',    # Web operations
+    'route': '🔄',  # Routing decisions
+    'error': '❌',  # Error states
+    'success': '✅', # Successful operations
+    'info': 'ℹ️ ',   # Information messages
+    'think': '🤔',  # Processing states
+    'done': '🏁',   # Completion
+    'warn': '⚠️ '    # Warning messages
 }
 
+################################################################################
+# Utility Functions
+################################################################################
+
 def log_step(emoji: str, message: str):
-    """Helper function for consistent logging"""
+    """
+    Provides consistent logging with emoji indicators for better visibility
+    
+    Args:
+        emoji (str): Key for emoji from EMOJIS dict
+        message (str): Message to be logged
+    """
     print(f"\n{EMOJIS.get(emoji, 'ℹ️ ')} {message}")
 
 def setup_scrape_directory():
-    """Get or create scrape_dump directory"""
+    """
+    Creates or verifies the scrape_dump directory for storing scraped content.
+    Creates directory if it doesn't exist.
+    
+    Returns:
+        Path: Path object pointing to scrape_dump directory
+    """
     scrape_dir = Path("scrape_dump")
     if scrape_dir.exists():
         log_step('info', "Using existing scrape_dump directory")
@@ -59,22 +88,49 @@ def setup_scrape_directory():
     return scrape_dir
 
 def sanitize_filename(url: str) -> str:
-    """Convert URL to a safe filename"""
+    """
+    Converts a URL into a safe filename with timestamp to prevent conflicts
+    
+    Args:
+        url (str): URL to be converted
+        
+    Returns:
+        str: Sanitized filename with timestamp appended
+    """
     # Remove protocol and special characters
     filename = re.sub(r'https?://', '', url)
     filename = re.sub(r'[^\w\-_.]', '_', filename)
-    # Add timestamp to make it unique
+    # Add timestamp for uniqueness
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     return f"{filename}_{timestamp}.md"
 
 class WebScraper:
-    """Web scraping tool using FireCrawl"""
+    """
+    Web scraping tool using FireCrawl API
+    
+    Handles web content scraping and saving to markdown files
+    """
     def __init__(self, api_key: str):
+        """
+        Initialize scraper with API key and setup directory
+        
+        Args:
+            api_key (str): FireCrawl API key for authentication
+        """
         self.api_key = api_key
         self.scrape_dir = setup_scrape_directory()
 
     def save_markdown(self, content: str, url: str) -> str:
-        """Save markdown content to file and return the filepath"""
+        """
+        Save markdown content to file and return the filepath
+        
+        Args:
+            content (str): Content to save
+            url (str): Source URL for reference
+            
+        Returns:
+            str: Path to saved file or empty string if save fails
+        """
         filename = sanitize_filename(url)
         filepath = self.scrape_dir / filename
         
@@ -89,7 +145,15 @@ class WebScraper:
             return ""
 
     def scrape_url(self, url: str) -> str:
-        """Scrape a single webpage"""
+        """
+        Scrape a single webpage and save its content
+        
+        Args:
+            url (str): URL to scrape
+            
+        Returns:
+            str: Status message with results or error
+        """
         try:
             log_step('web', f"Attempting to scrape URL: {url}")
             loader = FireCrawlLoader(
@@ -126,8 +190,18 @@ class WebScraper:
             return f"Failed to scrape URL: {str(e)}"
 
 class KnowledgeBase:
-    """Knowledge base management and querying"""
+    """
+    Knowledge base management and querying system
+    
+    Handles loading, searching, and retrieving information from a JSON-based knowledge base
+    """
     def __init__(self, json_path: str = "knowledge_base.json"):
+        """
+        Initialize knowledge base from JSON file
+        
+        Args:
+            json_path (str): Path to knowledge base JSON file
+        """
         try:
             with open(json_path, 'r', encoding='utf-8') as f:
                 self.data = json.load(f)
@@ -142,7 +216,11 @@ class KnowledgeBase:
             self.article_aliases = {}
 
     def _create_topic_mappings(self):
-        """Create mappings for flexible topic matching"""
+        """
+        Create mappings for flexible topic matching
+        
+        Builds dictionaries of aliases for topics and articles to improve search flexibility
+        """
         self.topic_aliases = {}
         self.article_aliases = {}
         
@@ -174,7 +252,15 @@ class KnowledgeBase:
                 self.article_aliases[key_terms] = article_key
 
     def _find_best_topic_match(self, query: str) -> str:
-        """Find the best matching topic for a query"""
+        """
+        Find the best matching topic for a query
+        
+        Args:
+            query (str): Search query
+            
+        Returns:
+            str: Best matching topic or None if no match found
+        """
         query = query.lower()
         
         # Direct match
@@ -190,7 +276,15 @@ class KnowledgeBase:
         return matches[0] if matches else None
 
     def search_topic(self, topic: str) -> str:
-        """Search for information about a specific topic with flexible matching"""
+        """
+        Search for information about a specific topic with flexible matching
+        
+        Args:
+            topic (str): Topic to search for
+            
+        Returns:
+            str: Formatted topic information or error message
+        """
         log_step('info', f"Searching for topic: {topic}")
         
         matched_topic = self._find_best_topic_match(topic)
@@ -224,7 +318,15 @@ Related Articles: {self._find_related_articles(matched_topic)}"""
         return f"No information found for topic: {topic}. Available topics: {', '.join(self.data['topics'].keys())}"
 
     def _find_related_articles(self, topic: str) -> str:
-        """Find articles related to a topic"""
+        """
+        Find articles related to a topic
+        
+        Args:
+            topic (str): Topic to find related articles for
+            
+        Returns:
+            str: Comma-separated list of related article titles
+        """
         related = []
         topic_lower = topic.lower()
         
@@ -236,7 +338,15 @@ Related Articles: {self._find_related_articles(matched_topic)}"""
         return ', '.join(related) if related else 'None found'
 
     def get_article(self, title: str) -> str:
-        """Get a specific article with flexible matching"""
+        """
+        Get a specific article with flexible matching
+        
+        Args:
+            title (str): Article title to search for
+            
+        Returns:
+            str: Formatted article content or error message
+        """
         title = title.lower()
         
         # Direct match
@@ -268,7 +378,15 @@ Related Topics: {self._find_related_topics(article_key)}"""
         return f"No article found with title: {title}. Try one of these: {', '.join(article['title'] for article in self.data['articles'].values())}"
 
     def _find_related_topics(self, article_key: str) -> str:
-        """Find topics related to an article"""
+        """
+        Find topics related to an article
+        
+        Args:
+            article_key (str): Article key to find related topics for
+            
+        Returns:
+            str: Comma-separated list of related topic names
+        """
         related = []
         article_content = self.data["articles"][article_key].get("content", "").lower()
         
@@ -280,7 +398,12 @@ Related Topics: {self._find_related_topics(article_key)}"""
         return ', '.join(related) if related else 'None found'
 
     def list_topics(self) -> str:
-        """List all available topics with their definitions"""
+        """
+        List all available topics with their definitions
+        
+        Returns:
+            str: Formatted list of topics and brief definitions
+        """
         if not self.data["topics"]:
             return "No topics available in the knowledge base."
         
@@ -294,7 +417,12 @@ Related Topics: {self._find_related_topics(article_key)}"""
         return "Available Topics:\n" + "\n".join(topic_list)
 
     def list_articles(self) -> str:
-        """List all available articles with their summaries"""
+        """
+        List all available articles with their summaries
+        
+        Returns:
+            str: Formatted list of articles and summaries
+        """
         if not self.data["articles"]:
             return "No articles available in the knowledge base."
         
@@ -306,7 +434,7 @@ Related Topics: {self._find_related_topics(article_key)}"""
         
         return "Available Articles:\n" + "\n".join(article_list)
 
-# Initialize scraper and create tools
+# Initialize scraper and create tools for web scraping
 scraper = WebScraper(FIRECRAWL_API_KEY)
 scraping_tools = [
     Tool(
@@ -316,7 +444,7 @@ scraping_tools = [
     )
 ]
 
-# Initialize knowledge base and create tools
+# Initialize knowledge base and create tools for knowledge queries
 kb = KnowledgeBase()
 knowledge_tools = [
     Tool(
@@ -337,11 +465,16 @@ knowledge_tools = [
 ]
 
 class RouteResponse(BaseModel):
-    """Model for routing decisions"""
+    """Model for routing decisions between different processing nodes"""
     next: Literal["FINISH", "WebScrape", "Knowledge", "Conversation"]
 
 def create_webscrape_agent():
-    """Create the web scraping agent"""
+    """
+    Create the web scraping agent with specific instructions
+    
+    Returns:
+        Agent: Configured web scraping agent
+    """
     log_step('info', "Creating web scraping agent")
     return create_react_agent(
         llm.bind(
@@ -364,7 +497,12 @@ def create_webscrape_agent():
     )
 
 def create_knowledge_agent():
-    """Create the knowledge base agent"""
+    """
+    Create the knowledge base agent with specific instructions
+    
+    Returns:
+        Agent: Configured knowledge base agent
+    """
     log_step('info', "Creating knowledge base agent")
     return create_react_agent(
         llm.bind(
@@ -389,7 +527,12 @@ def create_knowledge_agent():
     )
 
 def create_router():
-    """Create an intelligent router using LLM for intent analysis"""
+    """
+    Create an intelligent router using LLM for intent analysis
+    
+    Returns:
+        function: Router function that classifies user intent
+    """
     def route_classifier(state):
         messages = state["messages"]
         log_step('route', "Analyzing user intent...")
@@ -427,7 +570,15 @@ def create_router():
     return route_classifier
 
 def webscrape_node(state):
-    """Handle web scraping requests"""
+    """
+    Handle web scraping requests
+    
+    Args:
+        state: Current conversation state
+        
+    Returns:
+        dict: Updated state with scraping results
+    """
     log_step('web', "Processing web scraping request")
     try:
         agent = create_webscrape_agent()
@@ -456,7 +607,15 @@ def webscrape_node(state):
         return {"messages": [HumanMessage(content=error_message)]}
 
 def knowledge_node(state):
-    """Handle knowledge base queries"""
+    """
+    Handle knowledge base queries
+    
+    Args:
+        state: Current conversation state
+        
+    Returns:
+        dict: Updated state with knowledge base results
+    """
     log_step('info', "Processing knowledge base query")
     try:
         agent = create_knowledge_agent()
@@ -476,7 +635,15 @@ def knowledge_node(state):
         return {"messages": [HumanMessage(content=f"I encountered an error while searching the knowledge base: {str(e)}")]}
 
 def conversation_node(state):
-    """Handle regular conversation"""
+    """
+    Handle regular conversation
+    
+    Args:
+        state: Current conversation state
+        
+    Returns:
+        dict: Updated state with conversation response
+    """
     log_step('chat', "Processing conversation")
     try:
         messages = state["messages"]
@@ -488,15 +655,20 @@ def conversation_node(state):
         return {"messages": [HumanMessage(content="I'm having trouble processing that. Could you rephrase?")]}
 
 def create_chat_workflow():
-    """Create the chat workflow with intelligent routing"""
+    """
+    Create the chat workflow with intelligent routing
+    
+    Returns:
+        Workflow: Compiled workflow graph
+    """
     log_step('start', "Initializing chat workflow")
     
-    # Define state
+    # Define state type for type checking
     class AgentState(TypedDict):
         messages: Annotated[Sequence[BaseMessage], operator.add]
         next: str
 
-    # Create graph
+    # Create workflow graph
     workflow = StateGraph(AgentState)
     
     # Add nodes with logging
@@ -512,13 +684,13 @@ def create_chat_workflow():
     workflow.add_node("router", create_router())
     log_step('info', "Added Router node")
 
-    # Add edges
+    # Add edges to connect nodes
     workflow.add_edge(START, "router")
     workflow.add_edge("WebScrape", END)
     workflow.add_edge("Knowledge", END)
     workflow.add_edge("Conversation", END)
 
-    # Add conditional edges
+    # Add conditional edges based on router decisions
     workflow.add_conditional_edges(
         "router",
         lambda x: x["next"],
@@ -533,7 +705,11 @@ def create_chat_workflow():
     return workflow.compile()
 
 def chat():
-    """Run the chat interface"""
+    """
+    Run the chat interface
+    
+    Main function that handles user interaction and manages the conversation flow
+    """
     workflow = create_chat_workflow()
     conversation_history = []
     
