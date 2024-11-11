@@ -32,14 +32,14 @@ Project Oracle is an intelligent chat system featuring multiple specialized agen
 
 ### Installation
 
-1. Clone the repository:
+Step 1: Clone the repository:
 
 ```bash
 git clone https://github.com/yourusername/project-oracle.git
 cd project-oracle
 ```
 
-2. Create and activate virtual environment:
+Step 2: Create and activate virtual environment:
 
 ```bash
 python -m venv venv
@@ -49,13 +49,13 @@ python -m venv venv
 source venv/bin/activate
 ```
 
-3. Install dependencies:
+Step 3: Install dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-4. Configure environment variables:
+Step 4: Configure environment variables:
 
 ```bash
 cp .env.example .env
@@ -67,13 +67,14 @@ cp .env.example .env
 ### Usage
 
 Run the application:
+
 ```bash
 python dev.py
 ```
 
 Example interactions:
 
-- Web Scraping: "Can you scrape https://example.com?"
+- Web Scraping: "Can you scrape <https://example.com>?"
 - Knowledge Query: "What do you know about the Jedi Order?"
 - General Chat: "Hello, how are you today?"
 

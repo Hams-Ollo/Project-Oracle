@@ -3,6 +3,7 @@
 ## Environment Setup
 
 ### Required Environment Variables
+
 ```bash
 # API Keys
 FIRECRAWL_API_KEY=your-firecrawl-key    # Required for web scraping
@@ -13,7 +14,8 @@ DEBUG_MODE=true                         # Enable detailed logging
 ```
 
 ### Directory Structure
-```
+
+```bash
 project-oracle/
 ├── dev.py                 # Main application
 ├── knowledge_base.json    # Knowledge base data
@@ -25,6 +27,7 @@ project-oracle/
 ## System Configuration
 
 ### LLM Settings
+
 ```python
 # Language Model Configuration
 llm = ChatOpenAI(
@@ -34,6 +37,7 @@ llm = ChatOpenAI(
 ```
 
 ### Workflow Configuration
+
 ```python
 config = {
     "recursion_limit": 150,  # Maximum steps in workflow
@@ -42,6 +46,7 @@ config = {
 ```
 
 ### Logging Configuration
+
 ```python
 # Emoji-based logging indicators
 EMOJIS = {
@@ -61,6 +66,7 @@ EMOJIS = {
 ## Agent Configuration
 
 ### Web Scraping Agent
+
 ```python
 # FireCrawl Configuration
 scraping_tools = [
@@ -73,6 +79,7 @@ scraping_tools = [
 ```
 
 ### Knowledge Base Agent
+
 ```python
 # Knowledge Base Tools
 knowledge_tools = [
@@ -97,12 +104,14 @@ knowledge_tools = [
 ## File Storage
 
 ### Scrape Directory
+
 ```python
 # Configuration for scraped content storage
 scrape_dir = Path("scrape_dump")
 ```
 
 ### File Naming
+
 ```python
 # Timestamp format for unique filenames
 timestamp_format = "%Y%m%d_%H%M%S"
@@ -112,11 +121,13 @@ filename = f"{sanitized_url}_{timestamp}.md"
 ## Performance Settings
 
 ### Rate Limiting
+
 - Web scraping: 10 requests per minute
 - LLM calls: Based on API tier
 - File operations: No specific limits
 
 ### Memory Management
+
 ```python
 # Conversation history management
 max_history_length = 50  # Maximum messages to retain
@@ -126,6 +137,7 @@ max_token_limit = 4000   # Maximum tokens per context
 ## Error Handling
 
 ### Retry Configuration
+
 ```python
 # Retry settings for API calls
 max_retries = 3
@@ -133,6 +145,7 @@ retry_delay = 2  # seconds
 ```
 
 ### Timeout Settings
+
 ```python
 # Timeout configuration
 scraping_timeout = 30    # seconds
@@ -143,6 +156,7 @@ workflow_timeout = 300   # seconds
 ## Development Settings
 
 ### Debug Mode
+
 ```python
 # Enable detailed logging
 DEBUG_MODE=true
@@ -155,6 +169,7 @@ logging.basicConfig(
 ```
 
 ### Testing Configuration
+
 ```python
 # Test environment settings
 TEST_MODE=true
@@ -164,11 +179,13 @@ MOCK_APIS=true
 ## Security Settings
 
 ### API Security
+
 - API keys stored in environment variables
 - No key exposure in logs
 - Secure key rotation support
 
 ### File System Security
+
 - Restricted file operations
 - Sanitized filenames
 - Protected storage directories
@@ -176,6 +193,7 @@ MOCK_APIS=true
 ## Maintenance
 
 ### Cleanup Settings
+
 ```python
 # Automatic cleanup configuration
 max_file_age = 7        # days
@@ -184,6 +202,7 @@ cleanup_interval = 24    # hours
 ```
 
 ### Backup Configuration
+
 ```python
 # Backup settings
 backup_interval = 24    # hours
@@ -194,12 +213,14 @@ backup_directory = "backups/"
 ## Customization
 
 ### Adding New Tools
+
 1. Define tool function
 2. Create Tool instance
 3. Add to appropriate agent
 4. Update configuration
 
 ### Modifying Agents
+
 1. Update system message
 2. Modify tool set
 3. Adjust configuration
@@ -208,13 +229,15 @@ backup_directory = "backups/"
 ## Troubleshooting
 
 ### Common Issues
+
 1. API key not found
 2. Directory permissions
 3. Rate limiting
 4. Memory constraints
 
 ### Debug Steps
+
 1. Enable DEBUG_MODE
 2. Check log files
 3. Verify configurations
-4. Test connections 
+4. Test connections

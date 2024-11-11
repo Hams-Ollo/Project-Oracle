@@ -7,19 +7,23 @@ Project Oracle welcomes contributions! This document provides guidelines for con
 ## Development Environment Setup
 
 ### Prerequisites
+
 - Python 3.12+
 - Git
 - OpenAI API key
 - FireCrawl API key
 
 ### Initial Setup
-1. Fork and Clone
+
+Step A: Fork and Clone
+
 ```bash
 git clone https://github.com/yourusername/project-oracle.git
 cd project-oracle
 ```
 
-2. Virtual Environment
+Step B: Virtual Environment
+
 ```bash
 python -m venv venv
 # Windows
@@ -28,12 +32,14 @@ python -m venv venv
 source venv/bin/activate
 ```
 
-3. Dependencies
+Step C: Dependencies
+
 ```bash
 pip install -r requirements.txt
 ```
 
-4. Environment Configuration
+Step D: Environment Configuration
+
 ```bash
 cp .env.example .env
 # Edit .env with required API keys:
@@ -44,12 +50,14 @@ FIRECRAWL_API_KEY=your-key-here
 ## Code Style Guidelines
 
 ### Python Standards
+
 - Follow PEP 8
 - Use type hints
 - Maximum line length: 88 characters
 - Include docstrings for all classes and functions
 
 ### Example Function Format
+
 ```python
 def process_message(
     message: str,
@@ -77,7 +85,9 @@ def process_message(
 ## Component Development
 
 ### Adding New Agents
-1. Create agent class/function:
+
+Step A: Create agent class/function:
+
 ```python
 def create_new_agent():
     """Create specialized agent"""
@@ -87,7 +97,8 @@ def create_new_agent():
     )
 ```
 
-2. Define tools:
+Step B: Define tools:
+
 ```python
 agent_tools = [
     Tool(
@@ -98,13 +109,16 @@ agent_tools = [
 ]
 ```
 
-3. Add to workflow:
+Step C: Add to workflow:
+
 ```python
 workflow.add_node("NewAgent", new_agent_node)
 ```
 
 ### Modifying Knowledge Base
-1. Follow JSON schema:
+
+Step A: Follow JSON schema:
+
 ```json
 {
     "topics": {
@@ -117,13 +131,16 @@ workflow.add_node("NewAgent", new_agent_node)
 }
 ```
 
-2. Update topic mappings
-3. Test search functionality
-4. Document changes
+Step B: Update topic mappings
+
+Step C: Test search functionality
+
+Step D: Document changes
 
 ## Testing
 
 ### Running Tests
+
 ```bash
 # Run all tests
 pytest
@@ -137,6 +154,7 @@ pytest --cov=src tests/
 ```
 
 ### Writing Tests
+
 ```python
 def test_agent_response():
     """Test agent response generation"""
@@ -152,12 +170,14 @@ def test_agent_response():
 ## Documentation
 
 ### Code Documentation
+
 - Clear docstrings
 - Type hints
 - Inline comments for complex logic
 - Usage examples
 
 ### Markdown Files
+
 - Clear structure
 - Code examples
 - Updated TOC
@@ -166,7 +186,8 @@ def test_agent_response():
 ## Git Workflow
 
 ### Branch Naming
-```
+
+```bash
 feature/add-new-agent
 bugfix/fix-routing-error
 docs/update-readme
@@ -174,7 +195,8 @@ test/add-agent-tests
 ```
 
 ### Commit Messages
-```
+
+```bash
 feat(agents): add new research agent
 fix(kb): resolve knowledge base search
 docs(api): update API documentation
@@ -184,6 +206,7 @@ test(core): add unit tests for base agent
 ## Pull Request Process
 
 ### PR Template
+
 ```markdown
 ## Description
 Brief description of changes
@@ -205,6 +228,7 @@ Brief description of changes
 ```
 
 ### Review Process
+
 1. Code review by maintainers
 2. CI/CD checks pass
 3. Documentation updated
@@ -214,6 +238,7 @@ Brief description of changes
 ## Development Tools
 
 ### Code Quality
+
 ```bash
 # Formatting
 black .
@@ -227,6 +252,7 @@ mypy .
 ```
 
 ### Pre-commit Hooks
+
 ```yaml
 # .pre-commit-config.yaml
 repos:
@@ -243,6 +269,7 @@ repos:
 ## Release Process
 
 ### Version Updates
+
 1. Update version in setup.py
 2. Update CHANGELOG.md
 3. Create release branch
@@ -250,6 +277,7 @@ repos:
 5. Update documentation
 
 ### Release Commands
+
 ```bash
 # Create release branch
 git checkout -b release/v0.2.0
@@ -264,12 +292,14 @@ git push origin v0.2.0
 ## Support
 
 ### Getting Help
+
 - Review documentation
 - Check existing issues
 - Join discussions
 - Contact maintainers
 
 ### Reporting Issues
+
 - Use issue templates
 - Provide reproduction steps
 - Include relevant logs

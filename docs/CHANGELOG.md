@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
 - Enhanced logging system with emoji indicators
 - Flexible topic matching in knowledge base
 - Related content discovery
@@ -15,12 +16,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Comprehensive documentation
 
 ### Changed
+
 - Refactored agent system for better modularity
 - Improved routing logic
 - Enhanced conversation context handling
 - Updated documentation structure
 
 ### Fixed
+
 - Agent recursion limit issues
 - Knowledge base search accuracy
 - Web scraping reliability
@@ -28,7 +31,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.2.0] - 2024-03-18
 
-### Added
+### Added (0.2.0)
+
 - Multi-agent system with specialized agents:
   - Web Scraping Agent
   - Knowledge Base Agent
@@ -40,6 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Emoji-based logging system
 
 ### Core Features
+
 - LangChain and LangGraph integration
 - Flexible knowledge base querying
 - Web content extraction
@@ -47,6 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Detailed logging system
 
 ### Documentation
+
 - Comprehensive API documentation
 - Detailed architecture overview
 - Agent system documentation
@@ -57,12 +63,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Security guidelines
 
 ### Development
+
 - Type hints throughout codebase
 - Error handling improvements
 - Performance optimizations
 - Testing infrastructure
 
 ### Security
+
 - Environment variable management
 - API key protection
 - Input validation
@@ -71,7 +79,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1.0] - 2024-03-10
 
-### Added
+### Added (0.1.0)
+
 - Initial project structure
 - Basic agent framework
 - Simple conversation handling
@@ -79,6 +88,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Documentation framework
 
 ### Development Setup
+
 - Repository initialization
 - Development environment setup
 - Basic dependency management
@@ -86,7 +96,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.0.1] - 2024-03-01
 
-### Added
+### Added (0.0.1)
+
 - Project initialization
 - Basic repository structure
 - Initial documentation outline

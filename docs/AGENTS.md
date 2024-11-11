@@ -7,6 +7,7 @@ Project Oracle implements a multi-agent system using LangChain and LangGraph, fe
 ## Agent Types
 
 ### 1. Web Scraping Agent
+
 ```python
 def create_webscrape_agent():
     """Specialized in web content extraction"""
@@ -24,6 +25,7 @@ def create_webscrape_agent():
 ```
 
 #### Capabilities
+
 - URL extraction from user queries
 - Web content scraping via FireCrawl
 - Markdown file generation
@@ -31,6 +33,7 @@ def create_webscrape_agent():
 - File system management
 
 #### Tools
+
 ```python
 scraping_tools = [
     Tool(
@@ -42,6 +45,7 @@ scraping_tools = [
 ```
 
 ### 2. Knowledge Base Agent
+
 ```python
 def create_knowledge_agent():
     """Specialized in knowledge base queries"""
@@ -57,14 +61,16 @@ def create_knowledge_agent():
     )
 ```
 
-#### Capabilities
+#### Capabilities (0.2.0)
+
 - Topic search and retrieval
 - Article management
 - Fuzzy matching
 - Related content linking
 - Content summarization
 
-#### Tools
+#### Tools (0.2.0)
+
 ```python
 knowledge_tools = [
     Tool(
@@ -86,6 +92,7 @@ knowledge_tools = [
 ```
 
 ### 3. Conversation Agent
+
 ```python
 def conversation_node(state):
     """Handles general conversation"""
@@ -94,7 +101,8 @@ def conversation_node(state):
     return {"messages": [response]}
 ```
 
-#### Capabilities
+#### Capabilities (0.2.1)
+
 - Natural language understanding
 - Context maintenance
 - General chat handling
@@ -103,6 +111,7 @@ def conversation_node(state):
 ## Agent Workflow
 
 ### 1. Router System
+
 ```python
 def create_router():
     """Intelligent query routing"""
@@ -110,12 +119,14 @@ def create_router():
 ```
 
 #### Routing Logic
+
 - Analyzes user input
 - Determines appropriate agent
 - Maintains conversation flow
 - Handles agent transitions
 
 ### 2. State Management
+
 ```python
 class AgentState(TypedDict):
     messages: Annotated[Sequence[BaseMessage], operator.add]
@@ -123,6 +134,7 @@ class AgentState(TypedDict):
 ```
 
 ### 3. Workflow Graph
+
 ```python
 workflow = StateGraph(AgentState)
 workflow.add_node("WebScrape", webscrape_node)
@@ -133,6 +145,7 @@ workflow.add_node("Conversation", conversation_node)
 ## Agent Communication
 
 ### Message Format
+
 ```python
 {
     "messages": [
@@ -144,6 +157,7 @@ workflow.add_node("Conversation", conversation_node)
 ```
 
 ### Response Format
+
 ```python
 {
     "messages": [
@@ -155,7 +169,9 @@ workflow.add_node("Conversation", conversation_node)
 ## Agent Configuration
 
 ### System Messages
+
 Each agent has specific instructions:
+
 ```python
 # Web Scraping Agent
 """
@@ -177,6 +193,7 @@ You are a knowledge base specialist. Your task is to:
 ```
 
 ### Tool Configuration
+
 ```python
 Tool(
     name="tool_name",
@@ -188,6 +205,7 @@ Tool(
 ## Error Handling
 
 ### Agent-Level Errors
+
 ```python
 try:
     result = agent.invoke(state)
@@ -200,6 +218,7 @@ except Exception as e:
 ```
 
 ### Workflow-Level Errors
+
 ```python
 try:
     for step in workflow.stream(state):
@@ -211,12 +230,14 @@ except Exception as e:
 ## Performance Considerations
 
 ### Agent Optimization
+
 1. Response Caching
 2. Tool Result Memoization
 3. Context Management
 4. Resource Cleanup
 
 ### Best Practices
+
 1. Clear System Messages
 2. Specific Tool Descriptions
 3. Proper Error Handling
@@ -225,6 +246,7 @@ except Exception as e:
 ## Development Guidelines
 
 ### Adding New Agents
+
 1. Create agent class/function
 2. Define specialized tools
 3. Configure system message
@@ -232,6 +254,7 @@ except Exception as e:
 5. Update router logic
 
 ### Modifying Existing Agents
+
 1. Update system message
 2. Modify tool set
 3. Adjust error handling
@@ -239,8 +262,9 @@ except Exception as e:
 5. Update documentation
 
 ### Testing Agents
+
 1. Unit test tools
 2. Test agent responses
 3. Verify routing logic
 4. Check error handling
-5. Validate workflow integration 
+5. Validate workflow integration

@@ -5,6 +5,7 @@
 ### Core Classes
 
 #### 1. WebScraper
+
 ```python
 class WebScraper:
     """Web scraping tool using FireCrawl"""
@@ -20,6 +21,7 @@ class WebScraper:
 ```
 
 #### 2. KnowledgeBase
+
 ```python
 class KnowledgeBase:
     """Knowledge base management system"""
@@ -40,6 +42,7 @@ class KnowledgeBase:
 ### Agent System
 
 #### 1. Agent Creation
+
 ```python
 def create_webscrape_agent() -> Agent:
     """Create web scraping specialist agent"""
@@ -57,6 +60,7 @@ def create_knowledge_agent() -> Agent:
 ```
 
 #### 2. Node Handlers
+
 ```python
 def webscrape_node(state: dict) -> dict:
     """Handle web scraping operations"""
@@ -74,6 +78,7 @@ def conversation_node(state: dict) -> dict:
 ### Workflow Management
 
 #### 1. State Definition
+
 ```python
 class AgentState(TypedDict):
     messages: Annotated[Sequence[BaseMessage], operator.add]
@@ -81,6 +86,7 @@ class AgentState(TypedDict):
 ```
 
 #### 2. Routing
+
 ```python
 class RouteResponse(BaseModel):
     """Model for routing decisions"""
@@ -90,6 +96,7 @@ class RouteResponse(BaseModel):
 ## Tools
 
 ### Web Scraping Tools
+
 ```python
 scraping_tools = [
     Tool(
@@ -101,6 +108,7 @@ scraping_tools = [
 ```
 
 ### Knowledge Base Tools
+
 ```python
 knowledge_tools = [
     Tool(
@@ -124,6 +132,7 @@ knowledge_tools = [
 ## Response Formats
 
 ### Web Scraping Response
+
 ```python
 {
     "success": True,
@@ -134,6 +143,7 @@ knowledge_tools = [
 ```
 
 ### Knowledge Base Response
+
 ```python
 {
     "topic": "Topic name",
@@ -148,6 +158,7 @@ knowledge_tools = [
 ## Error Handling
 
 ### Standard Error Response
+
 ```python
 {
     "error": True,
@@ -158,6 +169,7 @@ knowledge_tools = [
 ```
 
 ### Error Types
+
 1. WebScrapingError
    - URL_INVALID
    - SCRAPING_FAILED
@@ -176,6 +188,7 @@ knowledge_tools = [
 ## Usage Examples
 
 ### Web Scraping
+
 ```python
 # Initialize scraper
 scraper = WebScraper(FIRECRAWL_API_KEY)
@@ -185,6 +198,7 @@ result = scraper.scrape_url("https://example.com")
 ```
 
 ### Knowledge Base
+
 ```python
 # Initialize knowledge base
 kb = KnowledgeBase()
@@ -197,6 +211,7 @@ topics = kb.list_topics()
 ```
 
 ### Workflow
+
 ```python
 # Create workflow
 workflow = create_chat_workflow()
@@ -210,12 +225,14 @@ result = workflow.process({
 ## Configuration
 
 ### Environment Variables
+
 ```python
 FIRECRAWL_API_KEY=your-api-key
 OPENAI_API_KEY=your-api-key
 ```
 
 ### System Configuration
+
 ```python
 config = {
     "recursion_limit": 150,
@@ -226,6 +243,7 @@ config = {
 ## Logging
 
 ### Log Format
+
 ```python
 log_step(emoji: str, message: str):
     """Log with emoji indicator"""
@@ -233,6 +251,7 @@ log_step(emoji: str, message: str):
 ```
 
 ### Log Levels
+
 - 'start': Process initiation
 - 'chat': Chat messages
 - 'web': Web operations

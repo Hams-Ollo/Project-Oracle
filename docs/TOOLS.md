@@ -7,6 +7,7 @@ Project Oracle uses LangChain's Tool framework to provide specialized functional
 ## Current Tools
 
 ### Web Scraping Tools
+
 ```python
 scraping_tools = [
     Tool(
@@ -18,12 +19,14 @@ scraping_tools = [
 ```
 
 #### Capabilities
+
 - URL content extraction
 - Markdown conversion
 - File storage
 - Content summarization
 
 ### Knowledge Base Tools
+
 ```python
 knowledge_tools = [
     Tool(
@@ -44,7 +47,8 @@ knowledge_tools = [
 ]
 ```
 
-#### Capabilities
+#### Capabilities (0.2.0)
+
 - Topic search and retrieval
 - Article management
 - Content listing
@@ -53,6 +57,7 @@ knowledge_tools = [
 ## Tool Implementation
 
 ### Basic Tool Structure
+
 ```python
 Tool(
     name: str,          # Unique identifier
@@ -63,6 +68,7 @@ Tool(
 ```
 
 ### Function Requirements
+
 ```python
 def tool_function(input_str: str) -> str:
     """
@@ -82,6 +88,7 @@ def tool_function(input_str: str) -> str:
 ## Creating New Tools
 
 ### Step 1: Define Function
+
 ```python
 def new_tool_function(input_str: str) -> str:
     """
@@ -98,6 +105,7 @@ def new_tool_function(input_str: str) -> str:
 ```
 
 ### Step 2: Create Tool
+
 ```python
 new_tool = Tool(
     name="new_tool_name",
@@ -107,6 +115,7 @@ new_tool = Tool(
 ```
 
 ### Step 3: Add to Tool Set
+
 ```python
 tool_set = [
     existing_tool,
@@ -117,6 +126,7 @@ tool_set = [
 ## Best Practices
 
 ### Tool Design
+
 1. **Single Responsibility**
    - Each tool should do one thing well
    - Clear input/output contract
@@ -135,7 +145,9 @@ tool_set = [
    - Safe failure modes
 
 ### Implementation Guidelines
+
 1. **Input Processing**
+
    ```python
    def validate_input(input_str: str) -> bool:
        """Validate tool input"""
@@ -146,6 +158,7 @@ tool_set = [
    ```
 
 2. **Output Formatting**
+
    ```python
    def format_output(result: Any) -> str:
        """Format tool output"""
@@ -157,6 +170,7 @@ tool_set = [
    ```
 
 3. **Error Messages**
+
    ```python
    def handle_error(e: Exception) -> str:
        """Format error message"""
@@ -171,6 +185,7 @@ tool_set = [
 ## Testing Tools
 
 ### Unit Testing
+
 ```python
 def test_tool():
     """Test tool functionality"""
@@ -181,6 +196,7 @@ def test_tool():
 ```
 
 ### Integration Testing
+
 ```python
 async def test_tool_in_agent():
     """Test tool within agent"""
@@ -192,12 +208,14 @@ async def test_tool_in_agent():
 ## Maintenance
 
 ### Regular Updates
+
 1. Review tool descriptions
 2. Update functionality
 3. Improve error handling
 4. Enhance documentation
 
 ### Performance Monitoring
+
 1. Track usage patterns
 2. Monitor error rates
 3. Measure response times
@@ -206,12 +224,14 @@ async def test_tool_in_agent():
 ## Security Considerations
 
 ### Input Validation
+
 - Sanitize user input
 - Check URL safety
 - Validate file operations
 - Prevent injection attacks
 
 ### Resource Management
+
 - Rate limiting
 - Timeout handling
 - Resource cleanup
@@ -220,13 +240,15 @@ async def test_tool_in_agent():
 ## Future Enhancements
 
 ### Planned Tools
+
 1. Content Analysis Tool
 2. Data Processing Tool
 3. Format Conversion Tool
 4. Enhanced Search Tool
 
 ### Improvements
+
 1. Better error handling
 2. Enhanced performance
 3. More detailed logging
-4. Extended capabilities 
+4. Extended capabilities

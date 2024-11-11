@@ -61,7 +61,7 @@ Project Oracle follows a trunk-based development strategy with feature branches.
 
 ### Feature Development
 
-1. Create Feature Branch
+Phase A: Create Feature Branch
 
 ```bash
 git checkout develop
@@ -69,7 +69,7 @@ git pull origin develop
 git checkout -b feature/your-feature-name
 ```
 
-2. Development Work
+Phase B: Development Work
 
 ```bash
 # Make changes
@@ -77,7 +77,7 @@ git add .
 git commit -m "feat(scope): description"
 ```
 
-3. Stay Updated
+Phase C: Stay Updated
 
 ```bash
 git checkout develop
@@ -86,7 +86,7 @@ git checkout feature/your-feature-name
 git rebase develop
 ```
 
-4. Push Changes
+Phase D: Push Changes
 
 ```bash
 git push origin feature/your-feature-name
@@ -108,7 +108,7 @@ git push origin feature/your-feature-name
 
 ### Release Process
 
-1. Create Release Branch
+Phase A: Create Release Branch
 
 ```bash
 git checkout develop
@@ -116,7 +116,7 @@ git pull origin develop
 git checkout -b release/v1.0.0
 ```
 
-2. Version Updates
+Phase B: Version Updates
 
 ```bash
 # Update version numbers
@@ -124,7 +124,7 @@ git checkout -b release/v1.0.0
 git commit -m "chore(release): prepare v1.0.0"
 ```
 
-3. Finalize Release
+Phase C: Finalize Release
 
 ```bash
 git checkout main
@@ -170,14 +170,14 @@ chore:    Maintenance
 
 ### Branch Management
 
-1. Regular Cleanup
+Task A: Regular Cleanup
 
 ```bash
 # Delete merged local branches
 git branch --merged | grep -v "\*" | xargs -n 1 git branch -d
 ```
 
-2. Remote Cleanup
+Task B: Remote Cleanup
 
 ```bash
 # Delete merged remote branches
@@ -186,7 +186,7 @@ git push origin --delete feature/completed-feature
 
 ### Conflict Resolution
 
-1. Local Conflicts
+Task A: Local Conflicts
 
 ```bash
 git checkout develop
@@ -197,7 +197,7 @@ git rebase develop
 git rebase --continue
 ```
 
-2. Remote Conflicts
+Task B: Remote Conflicts
 
 ```bash
 git fetch origin

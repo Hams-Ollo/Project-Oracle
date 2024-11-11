@@ -21,7 +21,7 @@ pydantic>=2.0.0
 
 ### Environment Setup
 
-1. API Keys
+Feature A: API Keys
 
 ```bash
 # Required in .env file
@@ -29,7 +29,7 @@ OPENAI_API_KEY=your-api-key-here
 DEBUG_MODE=false
 ```
 
-2. Python Environment
+Feature B: Python Environment
 
 ```bash
 # Create virtual environment
@@ -134,14 +134,14 @@ def health_check():
 
 ### Backup Procedures
 
-1. Knowledge Base
+Feature A: Knowledge Base
 
 ```bash
 # Backup knowledge base
 cp knowledge_base.json backups/knowledge_base_$(date +%Y%m%d).json
 ```
 
-2. Configuration
+Feature B: Configuration
 
 ```bash
 # Backup configuration files
@@ -188,7 +188,7 @@ sudo systemctl restart project-oracle
 
 ### Common Issues
 
-1. API Connection Failures
+Feature A: API Connection Failures
 
 ```bash
 # Check API connectivity
@@ -196,14 +196,14 @@ curl -i https://api.openai.com/v1/models \
   -H "Authorization: Bearer $OPENAI_API_KEY"
 ```
 
-2. Memory Issues
+Feature B: Memory Issues
 
 ```bash
 # Monitor memory usage
 watch -n 1 free -m
 ```
 
-3. Process Management
+Feature C: Process Management
 
 ```bash
 # Check process status

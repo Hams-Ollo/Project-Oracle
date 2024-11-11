@@ -7,6 +7,7 @@ Project Oracle uses a JSON-based knowledge base system with flexible topic match
 ## Structure
 
 ### JSON Schema
+
 ```json
 {
     "topics": {
@@ -29,6 +30,7 @@ Project Oracle uses a JSON-based knowledge base system with flexible topic match
 ```
 
 ### Topic Structure
+
 ```python
 topic = {
     "definition": str,          # Main topic definition
@@ -39,6 +41,7 @@ topic = {
 ```
 
 ### Article Structure
+
 ```python
 article = {
     "title": str,              # Article title
@@ -51,6 +54,7 @@ article = {
 ## Implementation
 
 ### KnowledgeBase Class
+
 ```python
 class KnowledgeBase:
     def __init__(self, json_path: str = "knowledge_base.json"):
@@ -69,6 +73,7 @@ class KnowledgeBase:
 ### Flexible Matching System
 
 #### Topic Aliases
+
 ```python
 self.topic_aliases = {
     "original_key": "topic_key",
@@ -78,6 +83,7 @@ self.topic_aliases = {
 ```
 
 #### Article Aliases
+
 ```python
 self.article_aliases = {
     "article_title": "article_key",
@@ -89,6 +95,7 @@ self.article_aliases = {
 ## Usage
 
 ### Searching Topics
+
 ```python
 # Direct search
 result = kb.search_topic("Jedi Order")
@@ -98,6 +105,7 @@ result = kb.search_topic("Jedi")  # Will match "Jedi Order"
 ```
 
 ### Retrieving Articles
+
 ```python
 # Direct retrieval
 article = kb.get_article("The Jedi Code")
@@ -107,6 +115,7 @@ article = kb.get_article("Jedi Code")  # Will find "The Jedi Code"
 ```
 
 ### Listing Content
+
 ```python
 # List all topics
 topics = kb.list_topics()
@@ -118,6 +127,7 @@ articles = kb.list_articles()
 ## Tools Integration
 
 ### Knowledge Tools
+
 ```python
 knowledge_tools = [
     Tool(
@@ -141,6 +151,7 @@ knowledge_tools = [
 ## Response Formats
 
 ### Topic Response
+
 ```python
 """
 Topic: [topic_name]
@@ -160,6 +171,7 @@ Related Articles: [article1, article2, ...]
 ```
 
 ### Article Response
+
 ```python
 """
 Article: [title]
@@ -181,6 +193,7 @@ Related Topics: [topic1, topic2, ...]
 ## Best Practices
 
 ### Content Organization
+
 1. Use clear, unique topic keys
 2. Provide comprehensive definitions
 3. Include relevant key concepts
@@ -188,6 +201,7 @@ Related Topics: [topic1, topic2, ...]
 5. Maintain consistent formatting
 
 ### Content Updates
+
 1. Backup before modifications
 2. Validate JSON structure
 3. Update aliases after changes
@@ -195,6 +209,7 @@ Related Topics: [topic1, topic2, ...]
 5. Verify article links
 
 ### Query Optimization
+
 1. Use specific search terms
 2. Consider alternative names
 3. Check related content
@@ -204,6 +219,7 @@ Related Topics: [topic1, topic2, ...]
 ## Error Handling
 
 ### Common Issues
+
 ```python
 try:
     result = kb.search_topic(topic)
@@ -212,6 +228,7 @@ except Exception as e:
 ```
 
 ### Error Types
+
 1. FileNotFoundError: JSON file missing
 2. JSONDecodeError: Invalid JSON format
 3. KeyError: Missing required fields
@@ -220,6 +237,7 @@ except Exception as e:
 ## Performance Considerations
 
 ### Optimization Techniques
+
 1. Alias caching
 2. Content indexing
 3. Relationship mapping
@@ -227,6 +245,7 @@ except Exception as e:
 5. Error caching
 
 ### Memory Management
+
 1. Lazy loading
 2. Content pagination
 3. Result caching
@@ -236,6 +255,7 @@ except Exception as e:
 ## Development Guidelines
 
 ### Adding New Topics
+
 1. Follow JSON schema
 2. Include all required fields
 3. Add relevant aliases
@@ -243,6 +263,7 @@ except Exception as e:
 5. Update documentation
 
 ### Modifying Content
+
 1. Preserve structure
 2. Update relationships
 3. Maintain formatting
@@ -250,8 +271,9 @@ except Exception as e:
 5. Update aliases
 
 ### Testing
+
 1. Verify topic retrieval
 2. Check article access
 3. Test relationships
 4. Validate formatting
-5. Check error handling 
+5. Check error handling

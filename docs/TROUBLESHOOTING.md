@@ -184,7 +184,7 @@ def cleanup_system():
 
 ### Error Prevention
 
-1. Input Validation
+Feature A: Input Validation
 
 ```python
 def validate_input(message: str) -> bool:
@@ -196,7 +196,7 @@ def validate_input(message: str) -> bool:
     return True
 ```
 
-2. Resource Management
+Feature B: Resource Management
 
 ```python
 class ResourceManager:
@@ -212,7 +212,7 @@ class ResourceManager:
 
 ### Monitoring
 
-1. Health Checks
+Feature A: Health Checks
 
 ```python
 async def check_system_health():
@@ -225,7 +225,7 @@ async def check_system_health():
     return all(checks.values())
 ```
 
-2. Performance Metrics
+Feature B: Performance Metrics
 
 ```python
 class PerformanceMonitor:

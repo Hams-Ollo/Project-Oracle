@@ -9,6 +9,7 @@ Project Oracle requires comprehensive testing across multiple components: agent 
 ### 1. Unit Tests
 
 #### Agent Tests
+
 ```python
 def test_webscrape_agent():
     """Test web scraping agent functionality"""
@@ -34,6 +35,7 @@ def test_knowledge_agent():
 ```
 
 #### Knowledge Base Tests
+
 ```python
 def test_knowledge_base():
     """Test knowledge base operations"""
@@ -51,6 +53,7 @@ def test_knowledge_base():
 ```
 
 #### Web Scraping Tests
+
 ```python
 def test_web_scraper():
     """Test web scraping functionality"""
@@ -67,6 +70,7 @@ def test_web_scraper():
 ### 2. Integration Tests
 
 #### Workflow Tests
+
 ```python
 def test_workflow_routing():
     """Test workflow routing logic"""
@@ -90,6 +94,7 @@ def test_workflow_routing():
 ```
 
 #### Agent Interaction Tests
+
 ```python
 def test_agent_interactions():
     """Test agent interactions and handoffs"""
@@ -111,6 +116,7 @@ def test_agent_interactions():
 ### 3. System Tests
 
 #### End-to-End Tests
+
 ```python
 def test_complete_conversation():
     """Test complete conversation flow"""
@@ -133,6 +139,7 @@ def test_complete_conversation():
 ## Test Configuration
 
 ### Environment Setup
+
 ```python
 # test_config.py
 import pytest
@@ -147,6 +154,7 @@ def setup_test_env():
 ```
 
 ### Mock Data
+
 ```python
 # test_data.py
 TEST_KNOWLEDGE_BASE = {
@@ -168,6 +176,7 @@ TEST_KNOWLEDGE_BASE = {
 ## Running Tests
 
 ### Basic Test Execution
+
 ```bash
 # Run all tests
 pytest
@@ -182,6 +191,7 @@ pytest --cov=src tests/
 ```
 
 ### Test Parameters
+
 ```python
 @pytest.mark.parametrize("input_text,expected_route", [
     ("Hello", "Conversation"),
@@ -198,6 +208,7 @@ def test_router(input_text, expected_route):
 ## Error Testing
 
 ### Agent Error Handling
+
 ```python
 def test_agent_errors():
     """Test agent error handling"""
@@ -213,6 +224,7 @@ def test_agent_errors():
 ```
 
 ### System Error Recovery
+
 ```python
 def test_system_recovery():
     """Test system error recovery"""
@@ -229,6 +241,7 @@ def test_system_recovery():
 ## Performance Testing
 
 ### Response Time Tests
+
 ```python
 def test_response_times():
     """Test response time requirements"""
@@ -244,6 +257,7 @@ def test_response_times():
 ```
 
 ### Load Testing
+
 ```python
 def test_concurrent_requests():
     """Test handling of concurrent requests"""
@@ -263,6 +277,7 @@ def test_concurrent_requests():
 ## CI/CD Integration
 
 ### GitHub Actions
+
 ```yaml
 # .github/workflows/tests.yml
 name: Tests
@@ -284,6 +299,7 @@ jobs:
 ```
 
 ### Pre-commit Hooks
+
 ```yaml
 # .pre-commit-config.yaml
 repos:

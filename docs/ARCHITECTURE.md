@@ -7,6 +7,7 @@ Project Oracle implements a multi-agent chat system using LangChain and LangGrap
 ## Core Components
 
 ### Agent System Architecture
+
 ```mermaid
 graph TD
     A[User Input] --> B[Router]
@@ -22,6 +23,7 @@ graph TD
 ### Key Components
 
 #### 1. Agent Framework
+
 - **Router**: Intelligent query classification and routing
 - **Specialized Agents**:
   - WebScrape Agent: Handles web content extraction
@@ -29,12 +31,14 @@ graph TD
   - Conversation Agent: Handles general chat
 
 #### 2. Knowledge Management
+
 - JSON-based knowledge base
 - Flexible topic matching
 - Related content linking
 - Article management
 
 #### 3. Web Scraping System
+
 - FireCrawl integration
 - Markdown conversion
 - File storage management
@@ -43,24 +47,29 @@ graph TD
 ## Data Flow
 
 ### 1. Input Processing
+
 ```python
 User Query -> Router Analysis -> Agent Selection -> Processing -> Response
 ```
 
 ### 2. Agent Processing
+
 Each agent follows a specific workflow:
 
 #### WebScrape Agent
+
 ```python
 URL Detection -> Content Extraction -> Markdown Conversion -> File Storage -> Summary Generation
 ```
 
 #### Knowledge Agent
+
 ```python
 Query Analysis -> Topic Matching -> Content Retrieval -> Response Formatting
 ```
 
 #### Conversation Agent
+
 ```python
 Context Analysis -> Response Generation -> Output Formatting
 ```
@@ -68,6 +77,7 @@ Context Analysis -> Response Generation -> Output Formatting
 ## Technical Implementation
 
 ### 1. State Management
+
 ```python
 class AgentState(TypedDict):
     messages: Annotated[Sequence[BaseMessage], operator.add]
@@ -75,6 +85,7 @@ class AgentState(TypedDict):
 ```
 
 ### 2. Workflow Graph
+
 ```python
 workflow = StateGraph(AgentState)
 workflow.add_node("WebScrape", webscrape_node)
@@ -84,6 +95,7 @@ workflow.add_node("router", create_router())
 ```
 
 ### 3. Routing Logic
+
 ```python
 workflow.add_conditional_edges(
     "router",
@@ -97,7 +109,8 @@ workflow.add_conditional_edges(
 ```
 
 ## Directory Structure
-```
+
+```curl
 project-oracle/
 ├── dev.py                 # Main application
 ├── knowledge_base.json    # Knowledge storage
@@ -109,18 +122,21 @@ project-oracle/
 ## Component Details
 
 ### WebScraper Class
+
 - Handles web content extraction
 - Manages file storage
 - Implements error handling
 - Provides content summaries
 
 ### KnowledgeBase Class
+
 - Manages JSON data storage
 - Implements fuzzy matching
 - Handles topic relationships
 - Manages article retrieval
 
 ### Router System
+
 - Uses LLM for intent classification
 - Maintains conversation context
 - Handles agent selection
@@ -129,6 +145,7 @@ project-oracle/
 ## Performance Considerations
 
 ### Optimization Strategies
+
 1. **Response Caching**
    - Frequently accessed knowledge
    - Common web scraping results
@@ -147,12 +164,14 @@ project-oracle/
 ## Security Implementation
 
 ### Data Protection
+
 - Environment variable management
 - API key security
 - File system security
 - Input validation
 
 ### Error Handling
+
 - Graceful failure recovery
 - User feedback
 - Logging system
@@ -161,6 +180,7 @@ project-oracle/
 ## Future Enhancements
 
 ### Planned Features
+
 1. Database integration
 2. Enhanced agent collaboration
 3. Advanced content processing
@@ -168,6 +188,7 @@ project-oracle/
 5. Extended knowledge base capabilities
 
 ### Scalability Plans
+
 1. Load balancing
 2. Distributed processing
 3. Enhanced caching
@@ -176,6 +197,7 @@ project-oracle/
 ## Development Guidelines
 
 ### Adding New Agents
+
 1. Create agent class
 2. Define tools
 3. Update router
@@ -183,6 +205,7 @@ project-oracle/
 5. Update documentation
 
 ### Modifying Workflow
+
 1. Update state definitions
 2. Modify graph structure
 3. Update routing logic

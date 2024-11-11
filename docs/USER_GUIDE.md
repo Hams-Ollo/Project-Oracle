@@ -3,6 +3,7 @@
 ## Overview
 
 Project Oracle is a multi-agent chat system that provides:
+
 - General conversation capabilities
 - Web content scraping and storage
 - Knowledge base querying about Star Wars topics
@@ -12,6 +13,7 @@ Project Oracle is a multi-agent chat system that provides:
 ### Basic Interaction
 
 The system provides a simple chat interface:
+
 ```bash
 AI Assistant
 --------------------------------------------------
@@ -23,18 +25,21 @@ Type 'exit' to end the chat or 'help' for assistance.
 ```
 
 ### Basic Commands
+
 - `help`: Display available commands and examples
 - `exit` or `quit`: End the chat session
 
 ## Features
 
 ### 1. General Conversation
+
 ```bash
 You: Hello, how are you today?
 Assistant: Hello! I'm doing well, thank you for asking. How can I help you today?
 ```
 
 ### 2. Web Scraping
+
 ```bash
 You: Can you scrape https://example.com?
 Assistant: I'll scrape that website for you...
@@ -42,6 +47,7 @@ Assistant: I'll scrape that website for you...
 ```
 
 ### 3. Knowledge Base Queries
+
 ```bash
 You: What do you know about the Jedi Order?
 Assistant: Let me search our knowledge base...
@@ -51,6 +57,7 @@ Assistant: Let me search our knowledge base...
 ## Using Web Scraping
 
 ### Basic Scraping
+
 ```bash
 # Direct URL scraping
 "Please scrape https://example.com"
@@ -60,6 +67,7 @@ Assistant: Let me search our knowledge base...
 ```
 
 ### Viewing Results
+
 - Scraped content is saved in the `scrape_dump` folder
 - Files are named with URL and timestamp
 - Content is stored in markdown format
@@ -67,6 +75,7 @@ Assistant: Let me search our knowledge base...
 ## Accessing Knowledge Base
 
 ### Available Topics
+
 ```bash
 # List all topics
 "What topics do you know about?"
@@ -78,6 +87,7 @@ Assistant: Let me search our knowledge base...
 ```
 
 ### Article Retrieval
+
 ```bash
 # Get specific article
 "Show me the article about the Jedi Code"
@@ -87,18 +97,21 @@ Assistant: Let me search our knowledge base...
 ## Best Practices
 
 ### Web Scraping
+
 1. Provide complete URLs
 2. Wait for confirmation of save
 3. Check scrape_dump folder for results
 4. Use for publicly accessible pages
 
 ### Knowledge Queries
+
 1. Start with topic listing
 2. Use specific topic names
 3. Ask about related topics
 4. Request article details
 
 ### General Usage
+
 1. Be specific in requests
 2. Check command feedback
 3. Review saved content
@@ -108,7 +121,8 @@ Assistant: Let me search our knowledge base...
 
 ### Common Issues
 
-1. Web Scraping Errors
+Issue 1: Web Scraping Errors
+
 ```bash
 # Invalid URL
 Error: Failed to scrape URL
@@ -119,7 +133,8 @@ Error: Failed to save content
 Solution: Check scrape_dump folder permissions
 ```
 
-2. Knowledge Base Issues
+Issue 2: Knowledge Base Issues
+
 ```bash
 # Topic Not Found
 Error: No information found for topic
@@ -133,6 +148,7 @@ Solution: Check article title spelling
 ### Error Messages
 
 The system uses emoji indicators for different states:
+
 - ❌ Error state
 - ✅ Success
 - ⚠️ Warning
@@ -141,6 +157,7 @@ The system uses emoji indicators for different states:
 ## Examples
 
 ### Web Scraping Workflow
+
 ```bash
 You: Scrape https://example.com
 Assistant: 🌐 Attempting to scrape URL...
@@ -148,6 +165,7 @@ Assistant: 🌐 Attempting to scrape URL...
 ```
 
 ### Knowledge Base Query
+
 ```bash
 You: Tell me about the Jedi Order
 Assistant: 🤔 Searching knowledge base...
@@ -156,6 +174,7 @@ Assistant: 🤔 Searching knowledge base...
 ```
 
 ### General Conversation
+
 ```bash
 You: What can you help me with?
 Assistant: I can help you with:
@@ -167,6 +186,7 @@ Assistant: I can help you with:
 ## Advanced Usage
 
 ### Combining Features
+
 ```bash
 # Scrape and analyze
 "Scrape this URL and tell me if it mentions Jedi"
@@ -176,6 +196,7 @@ Assistant: I can help you with:
 ```
 
 ### Session Management
+
 - Conversations maintain context
 - History is preserved during session
 - Use clear topic transitions
@@ -183,12 +204,14 @@ Assistant: I can help you with:
 ## Support
 
 ### Getting Help
+
 1. Use the `help` command
 2. Check error messages
 3. Review saved files
 4. Check documentation
 
 ### Feedback
+
 - Clear error messages
 - Operation status updates
 - Save confirmations
