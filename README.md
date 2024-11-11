@@ -1,17 +1,25 @@
-# Project Oracle (Alpha Release v0.1.0)
+# Project Oracle - Multi-Agent Chat System
 
 ## Overview
 
-Project Oracle is an AI-powered educational onboarding assistant that helps new user's or team members understand organizational processes and required skills. Built with async Python and OpenAI's GPT-4o, it provides an interactive chat interface for personalized onboarding guidance.
+Project Oracle is an intelligent chat system featuring multiple specialized agents that can handle web scraping, knowledge base queries, and general conversation. Built with LangChain and OpenAI's GPT models, it provides a flexible and extensible framework for multi-agent interactions.
 
-## 🌟 Current Features
+## 🌟 Features
 
-- **Onboarding Agent**: Specialized agent for handling onboarding-related queries
-- **Skill Assessment**: Intelligent analysis of skill requirements and learning paths
-- **Process Guidance**: Clear explanation of team workflows and development processes
-- **Interactive Interface**: User-friendly chat interface built with Gradio
-- **Configurable Content**: YAML-based configuration for easy content updates
-- **Async Architecture**: Efficient handling of chat interactions
+### Core Capabilities
+
+- **Multi-Agent System**: Specialized agents for different tasks
+  - Web Scraping Agent: Extracts and saves web content
+  - Knowledge Base Agent: Manages and queries stored information
+  - Conversation Agent: Handles general chat interactions
+
+### Technical Features
+
+- **Intelligent Routing**: Automatically directs queries to appropriate agents
+- **Flexible Knowledge Base**: JSON-based storage with fuzzy matching
+- **Web Scraping**: Markdown conversion and storage of web content
+- **Conversation Management**: Context-aware chat handling
+- **Emoji-Enhanced Logging**: Visual feedback for system operations
 
 ## 🚀 Quick Start
 
@@ -19,55 +27,97 @@ Project Oracle is an AI-powered educational onboarding assistant that helps new 
 
 - Python 3.12+
 - OpenAI API key
-- Basic understanding of YAML for content configuration
+- FireCrawl API key
+- Git (for version control)
 
 ### Installation
 
 1. Clone the repository:
 
-   ```bash
-   git clone https://github.com/Hams-Ollo/Project-Oracle.git  
-   cd project_oracle
-   ```
+```bash
+git clone https://github.com/yourusername/project-oracle.git
+cd project-oracle
+```
 
-2. Install dependencies:
+2. Create and activate virtual environment:
 
-   ```bash
-   pip install -r requirements.txt
-   ```
+```bash
+python -m venv venv
+# Windows
+.\venv\Scripts\activate
+# Unix/MacOS
+source venv/bin/activate
+```
 
-3. Set up environment variables:
+3. Install dependencies:
 
-   ```bash
-   cp .env.example .env
-   # Edit .env with your OpenAI API key
-   ```
+```bash
+pip install -r requirements.txt
+```
+
+4. Configure environment variables:
+
+```bash
+cp .env.example .env
+# Edit .env with your API keys:
+# - OPENAI_API_KEY
+# - FIRECRAWL_API_KEY
+```
 
 ### Usage
 
-1. Start the application:
+Run the application:
+```bash
+python dev.py
+```
 
-   ```bash
-   python main.py
-   ```
+Example interactions:
 
-2. Access the chat interface at `http://localhost:7860`
+- Web Scraping: "Can you scrape https://example.com?"
+- Knowledge Query: "What do you know about the Jedi Order?"
+- General Chat: "Hello, how are you today?"
 
-3. Begin interacting with the onboarding assistant by asking questions about:
-   - Required technical skills
-   - Team processes
-   - Development workflows
-   - Company policies
+## 📚 Documentation
 
-## 📝 Configuration
+Detailed documentation is available in the `docs` folder:
 
-### Customizing Onboarding Content
+- [API Documentation](docs/API.md)
+- [Architecture Overview](docs/ARCHITECTURE.md)
+- [Deployment Guide](docs/DEPLOYMENT.md)
+- [User Guide](docs/USER_GUIDE.md)
 
-Edit `config/onboarding_content.yaml` to modify:
+## 🛠️ Development
 
-- Technical skills requirements
-- Soft skills expectations
-- Development processes
-- Team workflows
+### Project Structure
 
-Example:
+```curl
+project-oracle/
+├── dev.py              # Main application file
+├── knowledge_base.json # Knowledge base storage
+├── scrape_dump/       # Scraped content storage
+├── docs/              # Documentation
+└── requirements.txt   # Dependencies
+```
+
+### Key Components
+
+- **Agent System**: Specialized agents for different tasks
+- **Router**: Intelligent query routing
+- **Knowledge Base**: JSON-based information storage
+- **Web Scraper**: FireCrawl-powered web content extraction
+
+## 🤝 Contributing
+
+See [CONTRIBUTING.md](docs/CONTRIBUTING.md) for detailed contribution guidelines.
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🔒 Security
+
+For security concerns, please see our [Security Guidelines](docs/SECURITY.md).
+
+## 🐛 Troubleshooting
+
+For common issues and solutions, see [TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md).

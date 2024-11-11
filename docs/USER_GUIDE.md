@@ -2,228 +2,194 @@
 
 ## Overview
 
-Project Oracle is an AI-powered assistant that helps users understand and work with the project through natural conversation. This guide will help you get the most out of your interactions with the system.
+Project Oracle is a multi-agent chat system that provides:
+- General conversation capabilities
+- Web content scraping and storage
+- Knowledge base querying about Star Wars topics
 
 ## Getting Started
 
-### First-Time Setup
+### Basic Interaction
 
-1. **System Access**
-
+The system provides a simple chat interface:
 ```bash
-# Start the application
-python main.py
+AI Assistant
+--------------------------------------------------
+I'm your AI assistant with web scraping capabilities.
+Type 'exit' to end the chat or 'help' for assistance.
+--------------------------------------------------
 
-# The system will display:
-[INFO] Environment variables loaded successfully
-[CONFIG] OpenAI API configured globally
-[INIT] Knowledge base initialized
-[SETUP] All agents initialized successfully
+💭 You: 
 ```
-
-2. **Initial Interaction**
-
-- Type your questions or requests naturally
-- The system will respond with relevant information
-- Commands are case-insensitive
-- Type 'quit' to exit the system
 
 ### Basic Commands
-
-```bash
-# Get project information
-"Tell me about Project Oracle"
-"What is this project?"
-
-# Get setup help
-"How do I set up the project?"
-"What are the installation steps?"
-
-# Get technical information
-"Explain the architecture"
-"How does the agent system work?"
-```
-
-## Working with Agents
-
-### Available Agents
-
-1. **Onboarding Specialist**
-   - New user guidance
-   - Project introduction
-   - Setup assistance
-   - Basic workflows
-
-2. **Technical Advisor**
-   - Technical documentation
-   - Architecture details
-   - Implementation guidance
-   - Best practices
-
-3. **Process Guide**
-   - Workflow procedures
-   - Development processes
-   - Guidelines and standards
-   - Project management
-
-### Agent Interaction
-
-```bash
-# The system automatically routes your query to the appropriate agent
-You: How do I set up my development environment?
-[Onboarding Specialist will respond]
-
-You: Explain the system architecture
-[Technical Advisor will respond]
-
-You: What's the git workflow?
-[Process Guide will respond]
-```
+- `help`: Display available commands and examples
+- `exit` or `quit`: End the chat session
 
 ## Features
 
-### Documentation Search
-
-- Agents can access project documentation
-- Responses include relevant documentation context
-- Documentation is categorized by topic
-
-Example:
-
+### 1. General Conversation
 ```bash
-You: "How does the knowledge base work?"
-[System will provide relevant technical documentation]
+You: Hello, how are you today?
+Assistant: Hello! I'm doing well, thank you for asking. How can I help you today?
 ```
 
-### Context-Aware Responses
-
-- System maintains conversation context
-- References previous messages when relevant
-- Provides coherent multi-turn conversations
-
-Example:
-
+### 2. Web Scraping
 ```bash
-You: "Tell me about the agents"
-[System explains agents]
-You: "How do they communicate?"
-[System understands context and explains agent communication]
+You: Can you scrape https://example.com?
+Assistant: I'll scrape that website for you...
+[Content will be saved to scrape_dump folder]
 ```
 
-### Agent Handoff
-
-- Automatic transfer to appropriate specialist
-- Seamless conversation continuation
-- Context preservation during transfers
-
-## Tips & Tricks
-
-### Effective Queries
-
-1. **Be Specific**
-
+### 3. Knowledge Base Queries
 ```bash
-# Less effective:
-"How does it work?"
-
-# More effective:
-"How does the agent handoff system work?"
+You: What do you know about the Jedi Order?
+Assistant: Let me search our knowledge base...
+[Returns information about the Jedi Order]
 ```
 
-2. **Use Keywords**
+## Using Web Scraping
 
+### Basic Scraping
 ```bash
-# For technical information:
-"architecture", "implementation", "technical"
+# Direct URL scraping
+"Please scrape https://example.com"
 
-# For process information:
-"workflow", "process", "procedure"
-
-# For setup help:
-"setup", "installation", "configuration"
+# Content analysis request
+"What's on this website: https://example.com"
 ```
 
-### Troubleshooting
+### Viewing Results
+- Scraped content is saved in the `scrape_dump` folder
+- Files are named with URL and timestamp
+- Content is stored in markdown format
 
-Common Issues and Solutions:
+## Accessing Knowledge Base
 
-1. **Unclear Responses**
-
+### Available Topics
 ```bash
-# Rephrase your question
-Original: "How does it handle docs?"
-Better: "Explain how the system manages documentation retrieval"
+# List all topics
+"What topics do you know about?"
+"List available topics"
+
+# Search specific topic
+"Tell me about the Jedi Order"
+"What do you know about the Sith?"
 ```
 
-2. **Wrong Agent**
-
+### Article Retrieval
 ```bash
-# Explicitly request specific expertise
-"Can a technical advisor explain the architecture?"
-"I need onboarding help with setup"
-```
-
-3. **Missing Context**
-
-```bash
-# Provide more context in your query
-"How do I contribute to the project's documentation system?"
-```
-
-## Advanced Usage
-
-### Debug Mode
-
-```bash
-# Enable debug mode in .env
-DEBUG_MODE=true
-
-# You'll see additional information:
-[DEBUG] Generating response...
-[DEBUG] Retrieved context from knowledge base...
-```
-
-### Documentation Categories
-
-```bash
-# Access specific documentation types:
-"Show me the security guidelines"
-"What are the deployment procedures?"
-"Explain the testing requirements"
+# Get specific article
+"Show me the article about the Jedi Code"
+"Get information about lightsabers"
 ```
 
 ## Best Practices
 
-1. **Session Management**
-   - Start with clear objectives
-   - Follow logical conversation flow
-   - Use complete sentences
-   - Review important information
+### Web Scraping
+1. Provide complete URLs
+2. Wait for confirmation of save
+3. Check scrape_dump folder for results
+4. Use for publicly accessible pages
 
-2. **Documentation Access**
-   - Request specific documents
-   - Ask for clarification when needed
-   - Use documentation keywords
-   - Reference specific sections
+### Knowledge Queries
+1. Start with topic listing
+2. Use specific topic names
+3. Ask about related topics
+4. Request article details
 
-3. **Problem Resolution**
-   - Describe issues clearly
-   - Provide relevant context
-   - Follow suggested solutions
-   - Report unexpected behavior
+### General Usage
+1. Be specific in requests
+2. Check command feedback
+3. Review saved content
+4. Use help when needed
+
+## Troubleshooting
+
+### Common Issues
+
+1. Web Scraping Errors
+```bash
+# Invalid URL
+Error: Failed to scrape URL
+Solution: Check URL format and accessibility
+
+# Save Errors
+Error: Failed to save content
+Solution: Check scrape_dump folder permissions
+```
+
+2. Knowledge Base Issues
+```bash
+# Topic Not Found
+Error: No information found for topic
+Solution: Use "list topics" to see available topics
+
+# Article Not Found
+Error: No article found with title
+Solution: Check article title spelling
+```
+
+### Error Messages
+
+The system uses emoji indicators for different states:
+- ❌ Error state
+- ✅ Success
+- ⚠️ Warning
+- ℹ️ Information
+
+## Examples
+
+### Web Scraping Workflow
+```bash
+You: Scrape https://example.com
+Assistant: 🌐 Attempting to scrape URL...
+✅ Content saved to: scrape_dump/example_com_20240318_123456.md
+```
+
+### Knowledge Base Query
+```bash
+You: Tell me about the Jedi Order
+Assistant: 🤔 Searching knowledge base...
+✅ Found information about Jedi Order...
+[Displays topic information]
+```
+
+### General Conversation
+```bash
+You: What can you help me with?
+Assistant: I can help you with:
+1. Web scraping and content analysis
+2. Information about Star Wars topics
+3. General conversation and questions
+```
+
+## Advanced Usage
+
+### Combining Features
+```bash
+# Scrape and analyze
+"Scrape this URL and tell me if it mentions Jedi"
+
+# Knowledge and context
+"Compare this website's content with what we know about Sith"
+```
+
+### Session Management
+- Conversations maintain context
+- History is preserved during session
+- Use clear topic transitions
 
 ## Support
 
 ### Getting Help
-
-- Review this user guide
-- Check the FAQ section
-- Examine relevant documentation
-- Ask the appropriate agent
+1. Use the `help` command
+2. Check error messages
+3. Review saved files
+4. Check documentation
 
 ### Feedback
-
-- Report issues on GitHub
-- Suggest improvements
-- Share success stories
-- Contribute to documentation
+- Clear error messages
+- Operation status updates
+- Save confirmations
+- Processing indicators

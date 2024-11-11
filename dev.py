@@ -464,13 +464,18 @@ knowledge_tools = [
     )
 ]
 
-class RouteResponse(BaseModel):
-    """Model for routing decisions between different processing nodes"""
-    next: Literal["FINISH", "WebScrape", "Knowledge", "Conversation"]
+################################################################################
+# Agent Creation and Configuration
+################################################################################
 
 def create_webscrape_agent():
     """
-    Create the web scraping agent with specific instructions
+    Creates and configures the web scraping specialist agent
+    
+    This agent is responsible for:
+    1. Understanding URL extraction from user queries
+    2. Managing the web scraping process
+    3. Saving and reporting results
     
     Returns:
         Agent: Configured web scraping agent
@@ -498,7 +503,12 @@ def create_webscrape_agent():
 
 def create_knowledge_agent():
     """
-    Create the knowledge base agent with specific instructions
+    Creates and configures the knowledge base specialist agent
+    
+    This agent is responsible for:
+    1. Understanding user queries about stored information
+    2. Searching and retrieving relevant data
+    3. Presenting information in a structured format
     
     Returns:
         Agent: Configured knowledge base agent
@@ -526,9 +536,18 @@ def create_knowledge_agent():
         knowledge_tools
     )
 
+################################################################################
+# Routing and Node Handlers
+################################################################################
+
 def create_router():
     """
-    Create an intelligent router using LLM for intent analysis
+    Creates the intelligent routing system
+    
+    The router analyzes user input and determines which agent should handle the request:
+    - WebScrape: For URL and web content requests
+    - Knowledge: For queries about stored information
+    - Conversation: For general chat and other interactions
     
     Returns:
         function: Router function that classifies user intent
@@ -571,7 +590,13 @@ def create_router():
 
 def webscrape_node(state):
     """
-    Handle web scraping requests
+    Handles web scraping operations in the workflow
+    
+    Processes:
+    1. URL extraction and validation
+    2. Content scraping
+    3. File saving
+    4. Response formatting
     
     Args:
         state: Current conversation state
@@ -608,7 +633,12 @@ def webscrape_node(state):
 
 def knowledge_node(state):
     """
-    Handle knowledge base queries
+    Handles knowledge base queries in the workflow
+    
+    Processes:
+    1. Query understanding
+    2. Information retrieval
+    3. Response formatting
     
     Args:
         state: Current conversation state
@@ -636,7 +666,12 @@ def knowledge_node(state):
 
 def conversation_node(state):
     """
-    Handle regular conversation
+    Handles general conversation in the workflow
+    
+    Processes:
+    1. Natural language understanding
+    2. Response generation
+    3. Conversation flow maintenance
     
     Args:
         state: Current conversation state
@@ -654,12 +689,22 @@ def conversation_node(state):
         log_step('error', f"Conversation error: {str(e)}")
         return {"messages": [HumanMessage(content="I'm having trouble processing that. Could you rephrase?")]}
 
+################################################################################
+# Workflow Creation and Management
+################################################################################
+
 def create_chat_workflow():
     """
-    Create the chat workflow with intelligent routing
+    Creates and configures the main chat workflow
+    
+    This function:
+    1. Sets up the workflow graph
+    2. Adds processing nodes
+    3. Configures routing logic
+    4. Establishes node connections
     
     Returns:
-        Workflow: Compiled workflow graph
+        Workflow: Compiled workflow ready for execution
     """
     log_step('start', "Initializing chat workflow")
     
@@ -706,9 +751,16 @@ def create_chat_workflow():
 
 def chat():
     """
-    Run the chat interface
+    Main chat interface function
     
-    Main function that handles user interaction and manages the conversation flow
+    This function:
+    1. Initializes the chat workflow
+    2. Manages user interaction
+    3. Processes commands
+    4. Handles conversation flow
+    5. Manages error states
+    
+    The chat loop continues until user exits or error occurs
     """
     workflow = create_chat_workflow()
     conversation_history = []
@@ -784,6 +836,10 @@ def chat():
         except Exception as e:
             log_step('error', f"Error: {str(e)}")
             print("\nI encountered an error. Please try again with a smaller batch of URLs or one at a time.")
+
+################################################################################
+# Main Execution
+################################################################################
 
 if __name__ == "__main__":
     chat()

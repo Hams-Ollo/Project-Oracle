@@ -8,81 +8,91 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-
-- Enhanced documentation retrieval system
-- Knowledge base JSON storage
-- Agent documentation wrapper
+- Enhanced logging system with emoji indicators
+- Flexible topic matching in knowledge base
+- Related content discovery
+- Improved error handling
+- Comprehensive documentation
 
 ### Changed
-
-- Migrated from markdown-based to JSON-based knowledge storage
-- Improved context handling in agent responses
-- Updated agent initialization process
+- Refactored agent system for better modularity
+- Improved routing logic
+- Enhanced conversation context handling
+- Updated documentation structure
 
 ### Fixed
+- Agent recursion limit issues
+- Knowledge base search accuracy
+- Web scraping reliability
+- Response formatting
 
-- Agent tool choice compatibility
-- Documentation context integration
-- Response formatting issues
+## [0.2.0] - 2024-03-18
 
-## [0.1.0] - 2024-03-15
-
-### Added (0.1.0)
-
-- Initial release of Project Oracle
-- Multi-agent architecture implementation
-  - Onboarding Specialist
-  - Technical Advisor
-  - Process Guide
-- Basic documentation system
-- Agent handoff capabilities
-- Command-line interface
-- Environment configuration system
-- Debug logging functionality
+### Added
+- Multi-agent system with specialized agents:
+  - Web Scraping Agent
+  - Knowledge Base Agent
+  - Conversation Agent
+- Intelligent routing system
+- JSON-based knowledge base
+- FireCrawl web scraping integration
+- Markdown file storage
+- Emoji-based logging system
 
 ### Core Features
-
-- OpenAI GPT integration
-- Async message processing
-- Context-aware responses
-- Documentation search
-- Agent specialization
-- Interactive CLI
+- LangChain and LangGraph integration
+- Flexible knowledge base querying
+- Web content extraction
+- Context-aware conversations
+- Detailed logging system
 
 ### Documentation
-
-- API documentation
-- Architecture overview
-- Security guidelines
-- Deployment procedures
+- Comprehensive API documentation
+- Detailed architecture overview
+- Agent system documentation
+- Knowledge base documentation
+- Tools documentation
+- Configuration guide
 - Testing framework
-- Git workflow
-- Contributing guidelines
+- Security guidelines
 
-### Development Setup
-
-- Virtual environment configuration
-- Dependency management
-- Environment variable handling
-- Debug mode implementation
+### Development
+- Type hints throughout codebase
+- Error handling improvements
+- Performance optimizations
+- Testing infrastructure
 
 ### Security
-
+- Environment variable management
 - API key protection
 - Input validation
-- Rate limiting
-- Error handling
-- Secure logging
+- Error logging
+- File system security
+
+## [0.1.0] - 2024-03-10
+
+### Added
+- Initial project structure
+- Basic agent framework
+- Simple conversation handling
+- Environment configuration
+- Documentation framework
+
+### Development Setup
+- Repository initialization
+- Development environment setup
+- Basic dependency management
+- Initial documentation
 
 ## [0.0.1] - 2024-03-01
 
-### Added (0.0.1)
-
+### Added
 - Project initialization
 - Basic repository structure
-- Initial documentation framework
+- Initial documentation outline
 - Development environment setup
 
-[Unreleased]: https://github.com/username/project-oracle/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/username/project-oracle/compare/v0.0.1...v0.1.0
-[0.0.1]: https://github.com/username/project-oracle/releases/tag/v0.0.1
+[Unreleased]: https://github.com/yourusername/project-oracle/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/yourusername/project-oracle/compare/v0.1.0...v0.2.0
+[0.1.0]: https://github.com/yourusername/project-oracle/compare/v0.0.1...v0.1.0
+[0.0.1]: https://github.com/yourusername/project-oracle/releases/tag/v0.0.1

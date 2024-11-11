@@ -1,152 +1,245 @@
 # API Documentation
 
-## Overview
+## System Components
 
-Project Oracle's API architecture consists of several key components that enable the multi-agent system to function effectively.
+### Core Classes
 
-## Internal APIs
-
-### BaseAgent
-
+#### 1. WebScraper
 ```python
-class BaseAgent:
-    """Base class for all specialized agents"""
+class WebScraper:
+    """Web scraping tool using FireCrawl"""
     
-    async def process(self, message: str) -> str:
-        """Process incoming messages and generate responses
+    def __init__(self, api_key: str):
+        """Initialize with FireCrawl API key"""
         
-        Args:
-            message (str): The user's input message
-            
-        Returns:
-            str: The agent's response
-        """
+    def scrape_url(self, url: str) -> str:
+        """Scrape and save webpage content"""
         
-    async def get_completion(self, messages: List[Dict[str, str]]) -> str:
-        """Get completion from LLM
-        
-        Args:
-            messages (List[Dict[str, str]]): Conversation history
-            
-        Returns:
-            str: LLM completion response
-        """
-        
-    def get_context(self, query: str) -> str:
-        """Retrieve relevant documentation context
-        
-        Args:
-            query (str): User's query
-            
-        Returns:
-            str: Related documentation context
-        """
+    def save_markdown(self, content: str, url: str) -> str:
+        """Save content as markdown file"""
 ```
 
-### Orchestrator
-
+#### 2. KnowledgeBase
 ```python
-class Orchestrator:
-    """Manages agent routing and interactions"""
+class KnowledgeBase:
+    """Knowledge base management system"""
     
-    async def route_message(self, message: str) -> Dict[str, Any]:
-        """Route messages to appropriate agents
+    def __init__(self, json_path: str = "knowledge_base.json"):
+        """Initialize from JSON file"""
         
-        Args:
-            message (str): User's input message
-            
-        Returns:
-            Dict[str, Any]: {
-                'response': str,
-                'agent': str,
-                'confidence': float
-            }
-        """
+    def search_topic(self, topic: str) -> str:
+        """Search for topic information"""
+        
+    def list_topics(self) -> str:
+        """List all available topics"""
+        
+    def get_article(self, title: str) -> str:
+        """Retrieve specific article"""
 ```
 
-### Specialized Agents
+### Agent System
 
-#### OnboardingAgent
-
+#### 1. Agent Creation
 ```python
-class OnboardingAgent(BaseAgent):
-    """Handles onboarding-related queries"""
-    
-    async def process(self, message: str) -> str:
-        """Process onboarding-specific queries"""
-        
-    def load_onboarding_content(self) -> None:
-        """Load onboarding configuration from YAML"""
+def create_webscrape_agent() -> Agent:
+    """Create web scraping specialist agent"""
+    return create_react_agent(
+        llm.bind(system_message=...), 
+        scraping_tools
+    )
+
+def create_knowledge_agent() -> Agent:
+    """Create knowledge base specialist agent"""
+    return create_react_agent(
+        llm.bind(system_message=...), 
+        knowledge_tools
+    )
 ```
 
-## Configuration
+#### 2. Node Handlers
+```python
+def webscrape_node(state: dict) -> dict:
+    """Handle web scraping operations"""
+    return {"messages": [HumanMessage(content=...)]}
 
-### YAML Structure
+def knowledge_node(state: dict) -> dict:
+    """Handle knowledge base queries"""
+    return {"messages": [HumanMessage(content=...)]}
 
-#### config.yaml
-
-```yaml
-agents:
-  onboarding:
-    model: "gpt-4o-mini"
-    temperature: 0.7
-  technical:
-    model: "gpt-4o-mini"
-    temperature: 0.5
-  process:
-    model: "gpt-4o-mini"
-    temperature: 0.6
+def conversation_node(state: dict) -> dict:
+    """Handle general conversation"""
+    return {"messages": [response]}
 ```
 
-#### onboarding_content.yaml
+### Workflow Management
 
-```yaml
-skills:
-  technical:
-    - name: "Python"
-    - name: "Git"
-  processes:
-    - name: "Code Review"
-    - name: "Documentation"
+#### 1. State Definition
+```python
+class AgentState(TypedDict):
+    messages: Annotated[Sequence[BaseMessage], operator.add]
+    next: str
+```
+
+#### 2. Routing
+```python
+class RouteResponse(BaseModel):
+    """Model for routing decisions"""
+    next: Literal["FINISH", "WebScrape", "Knowledge", "Conversation"]
+```
+
+## Tools
+
+### Web Scraping Tools
+```python
+scraping_tools = [
+    Tool(
+        name="scrape_webpage",
+        description="Scrape content from a webpage",
+        func=scraper.scrape_url
+    )
+]
+```
+
+### Knowledge Base Tools
+```python
+knowledge_tools = [
+    Tool(
+        name="search_topic",
+        description="Search knowledge base topics",
+        func=kb.search_topic
+    ),
+    Tool(
+        name="list_topics",
+        description="List available topics",
+        func=kb.list_topics
+    ),
+    Tool(
+        name="get_article",
+        description="Retrieve specific article",
+        func=kb.get_article
+    )
+]
+```
+
+## Response Formats
+
+### Web Scraping Response
+```python
+{
+    "success": True,
+    "filepath": "scrape_dump/example_com_20240318_123456.md",
+    "summary": "Content summary...",
+    "content": "Full content..."
+}
+```
+
+### Knowledge Base Response
+```python
+{
+    "topic": "Topic name",
+    "definition": "Topic definition",
+    "key_concepts": ["concept1", "concept2"],
+    "important_figures": ["figure1", "figure2"],
+    "cultural_significance": "Significance details",
+    "related_topics": ["topic1", "topic2"]
+}
 ```
 
 ## Error Handling
 
-### Standard Error Responses
-
+### Standard Error Response
 ```python
 {
-    'error': str,           # Error description
-    'error_code': int,      # Numeric error code
-    'timestamp': str,       # ISO format timestamp
-    'request_id': str       # Unique request identifier
+    "error": True,
+    "message": "Error description",
+    "type": "ErrorType",
+    "suggestions": ["suggestion1", "suggestion2"]
 }
 ```
 
-### Error Codes
+### Error Types
+1. WebScrapingError
+   - URL_INVALID
+   - SCRAPING_FAILED
+   - SAVE_FAILED
 
-- 1000: Invalid input
-- 1001: Agent unavailable
-- 1002: Configuration error
-- 1003: LLM API error
-- 1004: Context retrieval error
+2. KnowledgeBaseError
+   - TOPIC_NOT_FOUND
+   - ARTICLE_NOT_FOUND
+   - LOAD_FAILED
 
-### Recovery Procedures
+3. SystemError
+   - ROUTING_FAILED
+   - AGENT_CREATION_FAILED
+   - WORKFLOW_ERROR
 
-1. Retry with exponential backoff
-2. Fallback to default agent
-3. Cache response handling
-4. Error logging and monitoring
+## Usage Examples
 
-## Rate Limiting
+### Web Scraping
+```python
+# Initialize scraper
+scraper = WebScraper(FIRECRAWL_API_KEY)
 
-- 10 requests per minute per user
-- 1000 tokens per request
-- Bulk request handling available
+# Scrape webpage
+result = scraper.scrape_url("https://example.com")
+```
 
-## Security
+### Knowledge Base
+```python
+# Initialize knowledge base
+kb = KnowledgeBase()
 
-- API key required for all requests
-- Request signing for sensitive operations
-- Rate limiting per API key
-- Input validation and sanitization
+# Search topic
+result = kb.search_topic("Jedi Order")
+
+# List topics
+topics = kb.list_topics()
+```
+
+### Workflow
+```python
+# Create workflow
+workflow = create_chat_workflow()
+
+# Process message
+result = workflow.process({
+    "messages": [HumanMessage(content="query")]
+})
+```
+
+## Configuration
+
+### Environment Variables
+```python
+FIRECRAWL_API_KEY=your-api-key
+OPENAI_API_KEY=your-api-key
+```
+
+### System Configuration
+```python
+config = {
+    "recursion_limit": 150,
+    "timeout": 300
+}
+```
+
+## Logging
+
+### Log Format
+```python
+log_step(emoji: str, message: str):
+    """Log with emoji indicator"""
+    print(f"\n{EMOJIS[emoji]} {message}")
+```
+
+### Log Levels
+- 'start': Process initiation
+- 'chat': Chat messages
+- 'web': Web operations
+- 'route': Routing decisions
+- 'error': Error states
+- 'success': Successful operations
+- 'info': Information messages
+- 'think': Processing states
+- 'done': Completion
+- 'warn': Warning messages

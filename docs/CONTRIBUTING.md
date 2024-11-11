@@ -1,56 +1,62 @@
 # Contributing to Project Oracle
 
-## Getting Started
+## Overview
 
-### Development Environment Setup
+Project Oracle welcomes contributions! This document provides guidelines for contributing to the project, setting up your development environment, and submitting changes.
 
+## Development Environment Setup
+
+### Prerequisites
+- Python 3.12+
+- Git
+- OpenAI API key
+- FireCrawl API key
+
+### Initial Setup
 1. Fork and Clone
-
 ```bash
-git clone https://github.com/your-username/project-oracle.git
+git clone https://github.com/yourusername/project-oracle.git
 cd project-oracle
 ```
 
 2. Virtual Environment
-
 ```bash
 python -m venv venv
-source venv/bin/activate  # Unix/MacOS
-.\venv\Scripts\activate   # Windows
+# Windows
+.\venv\Scripts\activate
+# Unix/MacOS
+source venv/bin/activate
 ```
 
 3. Dependencies
-
 ```bash
 pip install -r requirements.txt
-pip install -r requirements-dev.txt  # Development dependencies
 ```
 
 4. Environment Configuration
-
 ```bash
 cp .env.example .env
-# Edit .env with your OpenAI API key
+# Edit .env with required API keys:
+OPENAI_API_KEY=your-key-here
+FIRECRAWL_API_KEY=your-key-here
 ```
 
-## Development Process
+## Code Style Guidelines
 
-### Code Style Guidelines
+### Python Standards
+- Follow PEP 8
+- Use type hints
+- Maximum line length: 88 characters
+- Include docstrings for all classes and functions
 
-1. Python Standards
-   - Follow PEP 8 style guide
-   - Use type hints for all functions
-   - Maximum line length: 88 characters
-   - Use docstrings for all classes and functions
-
-2. Example Function Format
-
+### Example Function Format
 ```python
 def process_message(
     message: str,
     context: Optional[Dict[str, Any]] = None
 ) -> Dict[str, str]:
-    """Process user message with optional context.
+    """
+    Process user message with optional context.
     
     Args:
         message: User input message
@@ -65,60 +71,119 @@ def process_message(
     if not message.strip():
         raise ValueError("Message cannot be empty")
     
-    # Function implementation
-    return {"response": "processed message"}
+    return {"response": process(message, context)}
 ```
 
-### Documentation Standards
+## Component Development
 
-1. Code Documentation
-   - Clear, concise docstrings
-   - Type hints for all functions
-   - Inline comments for complex logic
-   - Example usage where appropriate
-
-2. Markdown Files
-   - Clear headings and structure
-   - Code examples with syntax highlighting
-   - Updated table of contents
-   - Links to related documentation
-
-### Git Workflow
-
-1. Branch Naming
-
-```bash
-feature/add-new-agent      # New features
-bugfix/fix-context-error   # Bug fixes
-docs/update-api-docs       # Documentation updates
-test/add-agent-tests       # Test additions
+### Adding New Agents
+1. Create agent class/function:
+```python
+def create_new_agent():
+    """Create specialized agent"""
+    return create_react_agent(
+        llm.bind(system_message="..."),
+        agent_tools
+    )
 ```
 
-2. Commit Messages
+2. Define tools:
+```python
+agent_tools = [
+    Tool(
+        name="tool_name",
+        description="Tool description",
+        func=tool_function
+    )
+]
+```
 
+3. Add to workflow:
+```python
+workflow.add_node("NewAgent", new_agent_node)
+```
+
+### Modifying Knowledge Base
+1. Follow JSON schema:
+```json
+{
+    "topics": {
+        "topic_key": {
+            "definition": "Topic definition",
+            "key_concepts": ["concept1", "concept2"],
+            "important_figures": ["figure1", "figure2"]
+        }
+    }
+}
+```
+
+2. Update topic mappings
+3. Test search functionality
+4. Document changes
+
+## Testing
+
+### Running Tests
 ```bash
-# Format
-<type>(<scope>): <description>
+# Run all tests
+pytest
 
-# Examples
-feat(agents): add new research agent capability
-fix(kb): resolve knowledge base search issue
+# Run specific tests
+pytest tests/test_agents.py
+pytest tests/test_knowledge_base.py
+
+# Run with coverage
+pytest --cov=src tests/
+```
+
+### Writing Tests
+```python
+def test_agent_response():
+    """Test agent response generation"""
+    agent = create_webscrape_agent()
+    result = agent.invoke({
+        "messages": [
+            HumanMessage(content="test message")
+        ]
+    })
+    assert isinstance(result, dict)
+```
+
+## Documentation
+
+### Code Documentation
+- Clear docstrings
+- Type hints
+- Inline comments for complex logic
+- Usage examples
+
+### Markdown Files
+- Clear structure
+- Code examples
+- Updated TOC
+- Linked references
+
+## Git Workflow
+
+### Branch Naming
+```
+feature/add-new-agent
+bugfix/fix-routing-error
+docs/update-readme
+test/add-agent-tests
+```
+
+### Commit Messages
+```
+feat(agents): add new research agent
+fix(kb): resolve knowledge base search
 docs(api): update API documentation
 test(core): add unit tests for base agent
 ```
 
 ## Pull Request Process
 
-### 1. Preparation Checklist
-
-- [ ] Update documentation
-- [ ] Add/update tests
-- [ ] Run linting checks
-- [ ] Update CHANGELOG.md
-- [ ] Resolve merge conflicts
-
-### 2. PR Template
-
+### PR Template
 ```markdown
 ## Description
 Brief description of changes
@@ -139,101 +204,73 @@ Brief description of changes
 - [ ] CHANGELOG.md updated
 ```
 
-### 3. Code Review Guidelines
-
-- Address all reviewer comments
-- Maintain test coverage (minimum 80%)
-- Follow up with requested changes
-- Keep PR scope focused
-
-## Testing Guidelines
-
-### 1. Unit Tests
-
-```python
-def test_agent_response():
-    """Test agent response generation"""
-    agent = Agent(name="test", model="gpt-4o-mini")
-    response = agent.process("test message")
-    assert isinstance(response, dict)
-    assert "content" in response
-```
-
-### 2. Integration Tests
-
-```python
-async def test_agent_knowledge_base():
-    """Test agent interaction with knowledge base"""
-    kb = KnowledgeBase()
-    agent = AgentWithDocs(Agent(...), kb)
-    context = await agent.get_context_from_docs("test query")
-    assert context is not None
-```
+### Review Process
+1. Code review by maintainers
+2. CI/CD checks pass
+3. Documentation updated
+4. Tests added/updated
+5. CHANGELOG.md updated
 
 ## Development Tools
 
-### 1. Code Quality
-
+### Code Quality
 ```bash
-# Run linting
-flake8 .
+# Formatting
 black .
 isort .
 
-# Run type checking
+# Linting
+flake8 .
+
+# Type checking
 mypy .
 ```
 
-### 2. Testing
-
-```bash
-# Run all tests
-pytest
-
-# Run with coverage
-pytest --cov=. tests/
-```
-
-### 3. Pre-commit Hooks
-
+### Pre-commit Hooks
 ```yaml
 # .pre-commit-config.yaml
 repos:
   - repo: https://github.com/psf/black
-    rev: 22.3.0
+    rev: 23.12.1
     hooks:
       - id: black
   - repo: https://github.com/pycqa/flake8
-    rev: 4.0.1
+    rev: 7.0.0
     hooks:
       - id: flake8
 ```
 
 ## Release Process
 
-### 1. Version Bump
+### Version Updates
+1. Update version in setup.py
+2. Update CHANGELOG.md
+3. Create release branch
+4. Tag release
+5. Update documentation
 
-- Update version in setup.py
-- Update CHANGELOG.md
-- Create release branch
-
-### 2. Release Checklist
-
-- [ ] All tests passing
-- [ ] Documentation updated
-- [ ] CHANGELOG.md updated
-- [ ] Version bumped
-- [ ] Release notes prepared
-
-### 3. Release Commands
-
+### Release Commands
 ```bash
 # Create release branch
-git checkout -b release/v1.0.0
+git checkout -b release/v0.2.0
 
 # Tag release
-git tag -a v1.0.0 -m "Release version 1.0.0"
+git tag -a v0.2.0 -m "Release version 0.2.0"
 
 # Push to remote
-git push origin v1.0.0
+git push origin v0.2.0
 ```
+
+## Support
+
+### Getting Help
+- Review documentation
+- Check existing issues
+- Join discussions
+- Contact maintainers
+
+### Reporting Issues
+- Use issue templates
+- Provide reproduction steps
+- Include relevant logs
+- Tag appropriately

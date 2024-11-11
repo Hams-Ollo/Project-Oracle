@@ -2,169 +2,189 @@
 
 ## System Overview
 
-Project Oracle is a multi-agent chatbot system powered by OpenAI's GPT models, featuring RAG (Retrieval-Augmented Generation) capabilities and an async Python architecture for efficient processing.
+Project Oracle implements a multi-agent chat system using LangChain and LangGraph, featuring specialized agents for web scraping, knowledge base queries, and general conversation.
 
 ## Core Components
 
-### Agent System
-
-```curl
-project_oracle/
-├── main.py                 # Application entry point
-├── utils/
-│   ├── __init__.py
-│   ├── knowledge_base.py   # Documentation retrieval system
-│   └── doc_loader.py       # Legacy documentation loader
-├── agents/
-│   ├── base_agent.py      # Base agent functionality
-│   └── specialized/
-│       ├── onboarding_agent.py
-│       ├── technical_agent.py
-│       └── process_agent.py
-└── config/
-    ├── config.yaml        # System configuration
-    └── onboarding_content.yaml
+### Agent System Architecture
+```mermaid
+graph TD
+    A[User Input] --> B[Router]
+    B --> C[WebScrape Agent]
+    B --> D[Knowledge Agent]
+    B --> E[Conversation Agent]
+    C --> F[Result Processing]
+    D --> F
+    E --> F
+    F --> G[User Response]
 ```
 
 ### Key Components
 
-#### 1. AgentWithDocs Wrapper
-
-- Combines agent functionality with documentation access
-- Manages knowledge base integration
-- Handles context retrieval and formatting
-
-#### 2. Knowledge Base
-
-- JSON-based documentation storage
-- Flexible search functionality
-- Category-based information organization
-- Structured response formatting
-
-#### 3. Agent System
-
-- **Base Agent**: Common agent functionality
+#### 1. Agent Framework
+- **Router**: Intelligent query classification and routing
 - **Specialized Agents**:
-  - Onboarding Specialist: New user assistance
-  - Technical Advisor: Technical guidance
-  - Process Guide: Workflow assistance
-- **Agent Transfer System**: Dynamic agent switching
+  - WebScrape Agent: Handles web content extraction
+  - Knowledge Agent: Manages knowledge base queries
+  - Conversation Agent: Handles general chat
 
-#### 4. Swarm Orchestration
+#### 2. Knowledge Management
+- JSON-based knowledge base
+- Flexible topic matching
+- Related content linking
+- Article management
 
-- Message routing
-- Agent coordination
-- Context management
-- Response handling
+#### 3. Web Scraping System
+- FireCrawl integration
+- Markdown conversion
+- File storage management
+- Content summarization
 
 ## Data Flow
 
-1. **Input Processing**
+### 1. Input Processing
+```python
+User Query -> Router Analysis -> Agent Selection -> Processing -> Response
+```
 
-   ```curl
-   User Input → AgentWithDocs → Knowledge Base Query → Context Retrieval
-   ```
+### 2. Agent Processing
+Each agent follows a specific workflow:
 
-2. **Agent Processing**
+#### WebScrape Agent
+```python
+URL Detection -> Content Extraction -> Markdown Conversion -> File Storage -> Summary Generation
+```
 
-   ```curl
-   Context + Query → Current Agent → LLM Processing → Response Generation
-   ```
+#### Knowledge Agent
+```python
+Query Analysis -> Topic Matching -> Content Retrieval -> Response Formatting
+```
 
-3. **Response Flow**
-
-   ```curl
-   Agent Response → Format Processing → User Display
-   ```
+#### Conversation Agent
+```python
+Context Analysis -> Response Generation -> Output Formatting
+```
 
 ## Technical Implementation
 
-### 1. Message Processing
-
+### 1. State Management
 ```python
-messages_with_context = messages.copy()
-if context_message:
-    messages_with_context.insert(-1, context_message)
+class AgentState(TypedDict):
+    messages: Annotated[Sequence[BaseMessage], operator.add]
+    next: str
 ```
 
-### 2. Agent Handoff
-
+### 2. Workflow Graph
 ```python
-if "next_agent" in response:
-    current_agent = response["next_agent"]
+workflow = StateGraph(AgentState)
+workflow.add_node("WebScrape", webscrape_node)
+workflow.add_node("Knowledge", knowledge_node)
+workflow.add_node("Conversation", conversation_node)
+workflow.add_node("router", create_router())
 ```
 
-### 3. Context Integration
-
+### 3. Routing Logic
 ```python
-context_message = {
-    "role": "system",
-    "content": f"Use this documentation context to inform your response: {doc_context}"
-}
+workflow.add_conditional_edges(
+    "router",
+    lambda x: x["next"],
+    {
+        "WebScrape": "WebScrape",
+        "Knowledge": "Knowledge",
+        "Conversation": "Conversation"
+    }
+)
 ```
 
-## Configuration System
-
-### Environment Variables
-
-- OPENAI_API_KEY: API authentication
-- DEBUG_MODE: Debug logging toggle
-
-### YAML Configuration
-
-```yaml
-agents:
-  onboarding:
-    model: "gpt-4o-mini"
-    temperature: 0.7
+## Directory Structure
+```
+project-oracle/
+├── dev.py                 # Main application
+├── knowledge_base.json    # Knowledge storage
+├── scrape_dump/          # Scraped content
+├── docs/                 # Documentation
+└── requirements.txt      # Dependencies
 ```
 
-## Design Decisions
+## Component Details
 
-### 1. Knowledge Base Implementation
+### WebScraper Class
+- Handles web content extraction
+- Manages file storage
+- Implements error handling
+- Provides content summaries
 
-- **Choice**: JSON-based storage
-- **Rationale**:
+### KnowledgeBase Class
+- Manages JSON data storage
+- Implements fuzzy matching
+- Handles topic relationships
+- Manages article retrieval
 
-  - Easy to maintain and update
-  - Fast access and searching
-  - Structured data organization
-  - Simple integration with Python
-
-### 2. Agent Architecture
-
-- **Choice**: Wrapper-based design
-- **Rationale**:
-  - Clean separation of concerns
-  - Easy to extend functionality
-  - Maintains compatibility with base agents
-
-### 3. Context Management
-
-- **Choice**: System message injection
-- **Rationale**:
-  - Preserves conversation flow
-  - Allows for dynamic context updates
-  - Maintains LLM context window efficiency
+### Router System
+- Uses LLM for intent classification
+- Maintains conversation context
+- Handles agent selection
+- Manages workflow transitions
 
 ## Performance Considerations
 
-- Async message processing
-- Context caching capabilities
-- Efficient knowledge base searches
-- Response formatting optimization
+### Optimization Strategies
+1. **Response Caching**
+   - Frequently accessed knowledge
+   - Common web scraping results
+   - Regular conversation patterns
+
+2. **Resource Management**
+   - Configurable recursion limits
+   - Timeout handling
+   - Error recovery
+
+3. **Content Processing**
+   - Efficient markdown conversion
+   - Optimized file storage
+   - Smart content summarization
+
+## Security Implementation
+
+### Data Protection
+- Environment variable management
+- API key security
+- File system security
+- Input validation
+
+### Error Handling
+- Graceful failure recovery
+- User feedback
+- Logging system
+- Debug capabilities
 
 ## Future Enhancements
 
-1. Database integration for larger knowledge bases
-2. Real-time documentation updates
-3. Enhanced agent specialization
-4. Advanced context management
-5. UI implementation for better interaction
+### Planned Features
+1. Database integration
+2. Enhanced agent collaboration
+3. Advanced content processing
+4. UI implementation
+5. Extended knowledge base capabilities
 
-## Security Measures
+### Scalability Plans
+1. Load balancing
+2. Distributed processing
+3. Enhanced caching
+4. Performance monitoring
 
-- API key protection
-- Input validation
-- Rate limiting
-- Error handling
+## Development Guidelines
+
+### Adding New Agents
+1. Create agent class
+2. Define tools
+3. Update router
+4. Add workflow nodes
+5. Update documentation
+
+### Modifying Workflow
+1. Update state definitions
+2. Modify graph structure
+3. Update routing logic
+4. Test changes
+5. Document modifications

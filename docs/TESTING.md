@@ -2,103 +2,172 @@
 
 ## Overview
 
-Project Oracle implements a comprehensive testing strategy across multiple levels to ensure system reliability and functionality.
+Project Oracle requires comprehensive testing across multiple components: agent functionality, routing logic, knowledge base operations, and web scraping capabilities.
 
 ## Test Structure
 
-### Unit Tests
+### 1. Unit Tests
 
 #### Agent Tests
-
 ```python
-# tests/unit/test_agents.py
-def test_agent_initialization():
-    """Test agent initialization and configuration"""
-    agent = Agent(
-        name="test_agent",
-        model="gpt-4o-mini",
-        instructions="Test instructions"
-    )
-    assert agent.name == "test_agent"
-    assert agent.model == "gpt-4o-mini"
+def test_webscrape_agent():
+    """Test web scraping agent functionality"""
+    agent = create_webscrape_agent()
+    result = agent.invoke({
+        "messages": [
+            HumanMessage(content="Scrape https://example.com")
+        ]
+    })
+    assert isinstance(result, dict)
+    assert "output" in result or "messages" in result
 
-def test_agent_with_docs():
-    """Test AgentWithDocs wrapper functionality"""
-    kb = KnowledgeBase()
-    agent = AgentWithDocs(
-        agent=Agent(name="test", model="gpt-4o-mini"),
-        knowledge_base=kb
-    )
-    context = agent.get_context_from_docs("test query")
-    assert isinstance(context, str)
+def test_knowledge_agent():
+    """Test knowledge base agent functionality"""
+    agent = create_knowledge_agent()
+    result = agent.invoke({
+        "messages": [
+            HumanMessage(content="What do you know about the Jedi Order?")
+        ]
+    })
+    assert isinstance(result, dict)
+    assert "output" in result or "messages" in result
 ```
 
 #### Knowledge Base Tests
-
 ```python
-# tests/unit/test_knowledge_base.py
-def test_knowledge_base_search():
-    """Test knowledge base search functionality"""
+def test_knowledge_base():
+    """Test knowledge base operations"""
     kb = KnowledgeBase()
-    results = kb.search("project setup")
-    assert len(results) > 0
-    assert all(isinstance(r, dict) for r in results)
+    
+    # Test topic search
+    result = kb.search_topic("Jedi Order")
+    assert "Definition" in result
+    assert "Key Concepts" in result
+    
+    # Test article retrieval
+    result = kb.get_article("The Jedi Code")
+    assert "Content" in result
+    assert "Summary" in result
 ```
 
-### Integration Tests
+#### Web Scraping Tests
+```python
+def test_web_scraper():
+    """Test web scraping functionality"""
+    scraper = WebScraper(FIRECRAWL_API_KEY)
+    
+    # Test URL scraping
+    result = scraper.scrape_url("https://example.com")
+    assert "Successfully scraped" in result
+    
+    # Test file saving
+    assert Path("scrape_dump").exists()
+```
+
+### 2. Integration Tests
+
+#### Workflow Tests
+```python
+def test_workflow_routing():
+    """Test workflow routing logic"""
+    workflow = create_chat_workflow()
+    
+    # Test web scraping route
+    result = workflow.invoke({
+        "messages": [
+            HumanMessage(content="Scrape https://example.com")
+        ]
+    })
+    assert "WebScrape" in str(result)
+    
+    # Test knowledge base route
+    result = workflow.invoke({
+        "messages": [
+            HumanMessage(content="Tell me about the Jedi")
+        ]
+    })
+    assert "Knowledge" in str(result)
+```
 
 #### Agent Interaction Tests
-
 ```python
-# tests/integration/test_agent_interactions.py
-async def test_agent_handoff():
-    """Test agent handoff functionality"""
-    swarm = Swarm()
-    current_agent = onboarding_agent
-    response = await swarm.run(
-        agent=current_agent,
-        messages=[{"role": "user", "content": "technical question"}]
-    )
-    assert "next_agent" in response
+def test_agent_interactions():
+    """Test agent interactions and handoffs"""
+    workflow = create_chat_workflow()
+    
+    # Test conversation flow
+    results = []
+    for step in workflow.stream({
+        "messages": [
+            HumanMessage(content="Hello, tell me about the Jedi")
+        ]
+    }):
+        results.append(step)
+    
+    assert len(results) > 0
+    assert any("Knowledge" in str(step) for step in results)
 ```
 
-#### System Flow Tests
+### 3. System Tests
 
+#### End-to-End Tests
 ```python
-# tests/integration/test_system_flow.py
-async def test_complete_conversation_flow():
-    """Test end-to-end conversation flow"""
-    messages = []
-    response = await process_conversation(
-        "How do I set up the project?",
-        messages
-    )
-    assert "setup" in response.lower()
-    assert len(messages) > 1
+def test_complete_conversation():
+    """Test complete conversation flow"""
+    workflow = create_chat_workflow()
+    
+    test_inputs = [
+        "Hello there",
+        "What do you know about the Jedi?",
+        "Can you scrape https://example.com?",
+        "Goodbye"
+    ]
+    
+    for input_text in test_inputs:
+        result = next(workflow.stream({
+            "messages": [HumanMessage(content=input_text)]
+        }))
+        assert result is not None
 ```
 
-### End-to-End Tests
+## Test Configuration
 
-#### User Interaction Tests
-
+### Environment Setup
 ```python
-# tests/e2e/test_user_interactions.py
-def test_complete_user_session():
-    """Test complete user interaction session"""
-    session = UserSession()
-    responses = session.process_interactions([
-        "Hello",
-        "How do I start?",
-        "Tell me about the architecture"
-    ])
-    assert len(responses) == 3
-    assert all(isinstance(r, str) for r in responses)
+# test_config.py
+import pytest
+from dotenv import load_dotenv
+
+@pytest.fixture(autouse=True)
+def setup_test_env():
+    """Set up test environment"""
+    load_dotenv()
+    # Set up mock API responses
+    # Initialize test knowledge base
+```
+
+### Mock Data
+```python
+# test_data.py
+TEST_KNOWLEDGE_BASE = {
+    "topics": {
+        "test_topic": {
+            "definition": "Test definition",
+            "key_concepts": ["concept1", "concept2"]
+        }
+    },
+    "articles": {
+        "test_article": {
+            "title": "Test Article",
+            "content": "Test content"
+        }
+    }
+}
 ```
 
 ## Running Tests
 
 ### Basic Test Execution
-
 ```bash
 # Run all tests
 pytest
@@ -106,98 +175,99 @@ pytest
 # Run specific test categories
 pytest tests/unit/
 pytest tests/integration/
-pytest tests/e2e/
+pytest tests/system/
 
-# Run with verbose output
-pytest -v
-
-# Run specific test file
-pytest tests/unit/test_agents.py
-```
-
-### Coverage Testing
-
-```bash
-# Run tests with coverage
+# Run with coverage
 pytest --cov=src tests/
-
-# Generate coverage report
-pytest --cov=src --cov-report=html tests/
-
-# View coverage report
-open htmlcov/index.html
 ```
 
-## Writing Tests
-
-### Test Case Guidelines
-
-1. Test Structure
-
+### Test Parameters
 ```python
-def test_function_name():
-    """Clear description of what is being tested"""
-    # Setup
-    agent = create_test_agent()
+@pytest.mark.parametrize("input_text,expected_route", [
+    ("Hello", "Conversation"),
+    ("Tell me about Jedi", "Knowledge"),
+    ("Scrape https://example.com", "WebScrape")
+])
+def test_router(input_text, expected_route):
+    """Test router with various inputs"""
+    router = create_router()
+    result = router({"messages": [HumanMessage(content=input_text)]})
+    assert result["next"] == expected_route
+```
+
+## Error Testing
+
+### Agent Error Handling
+```python
+def test_agent_errors():
+    """Test agent error handling"""
+    agent = create_webscrape_agent()
     
-    # Execute
-    result = agent.process("test")
+    # Test invalid URL
+    result = agent.invoke({
+        "messages": [
+            HumanMessage(content="Scrape invalid-url")
+        ]
+    })
+    assert "error" in str(result).lower()
+```
+
+### System Error Recovery
+```python
+def test_system_recovery():
+    """Test system error recovery"""
+    workflow = create_chat_workflow()
     
-    # Assert
-    assert isinstance(result, dict)
-    assert "response" in result
+    # Test API failure recovery
+    with mock.patch('openai.ChatCompletion.create', side_effect=Exception):
+        result = next(workflow.stream({
+            "messages": [HumanMessage(content="Hello")]
+        }))
+        assert "error" in str(result).lower()
 ```
 
-2. Mocking External Services
+## Performance Testing
 
+### Response Time Tests
 ```python
-@patch('openai.ChatCompletion.create')
-def test_llm_interaction(mock_completion):
-    """Test LLM interaction with mocked response"""
-    mock_completion.return_value = {
-        'choices': [{'message': {'content': 'test response'}}]
-    }
-    response = agent.get_completion([])
-    assert response == "test response"
-```
-
-### Test Categories
-
-1. Functional Tests
-
-- Agent behavior
-- Knowledge base operations
-- Message processing
-- Context management
-
-2. Error Handling Tests
-
-```python
-def test_invalid_input_handling():
-    """Test handling of invalid input"""
-    with pytest.raises(ValueError):
-        agent.process("")
-```
-
-3. Performance Tests
-
-```python
-def test_response_time():
-    """Test response time is within acceptable range"""
+def test_response_times():
+    """Test response time requirements"""
+    workflow = create_chat_workflow()
+    
     start_time = time.time()
-    agent.process("test query")
+    next(workflow.stream({
+        "messages": [HumanMessage(content="Hello")]
+    }))
     duration = time.time() - start_time
+    
     assert duration < 2.0  # Maximum 2 seconds
+```
+
+### Load Testing
+```python
+def test_concurrent_requests():
+    """Test handling of concurrent requests"""
+    workflow = create_chat_workflow()
+    
+    async def make_request():
+        return await workflow.astream({
+            "messages": [HumanMessage(content="Hello")]
+        })
+    
+    results = asyncio.run(asyncio.gather(
+        *[make_request() for _ in range(10)]
+    ))
+    assert len(results) == 10
 ```
 
 ## CI/CD Integration
 
 ### GitHub Actions
-
 ```yaml
 # .github/workflows/tests.yml
 name: Tests
 on: [push, pull_request]
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -208,15 +278,12 @@ jobs:
         with:
           python-version: '3.12'
       - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
-          pip install -r requirements-dev.txt
+        run: pip install -r requirements.txt
       - name: Run tests
         run: pytest
 ```
 
 ### Pre-commit Hooks
-
 ```yaml
 # .pre-commit-config.yaml
 repos:
@@ -228,66 +295,4 @@ repos:
         language: system
         pass_filenames: false
         always_run: true
-```
-
-## Test Data Management
-
-### Fixtures
-
-```python
-# tests/conftest.py
-@pytest.fixture
-def test_knowledge_base():
-    """Provide test knowledge base"""
-    return KnowledgeBase("tests/data/test_knowledge_base.json")
-
-@pytest.fixture
-def test_agent(test_knowledge_base):
-    """Provide test agent with knowledge base"""
-    return AgentWithDocs(
-        agent=Agent(name="test", model="gpt-4o-mini"),
-        knowledge_base=test_knowledge_base
-    )
-```
-
-### Test Data
-
-```json
-// tests/data/test_knowledge_base.json
-{
-    "test_data": {
-        "query": "test",
-        "expected_response": "test response"
-    }
-}
-```
-
-## Performance Testing
-
-### Load Testing
-
-```python
-def test_concurrent_requests():
-    """Test handling of concurrent requests"""
-    async def make_request():
-        return await agent.process("test")
-    
-    results = asyncio.run(asyncio.gather(
-        *[make_request() for _ in range(10)]
-    ))
-    assert len(results) == 10
-```
-
-### Memory Usage
-
-```python
-def test_memory_usage():
-    """Test memory usage remains within limits"""
-    import memory_profiler
-    
-    @memory_profiler.profile
-    def process_large_query():
-        agent.process("large test query")
-    
-    process_large_query()
 ```
