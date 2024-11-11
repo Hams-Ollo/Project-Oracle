@@ -15,7 +15,7 @@ Project Oracle welcomes contributions! This document provides guidelines for con
 
 ### Initial Setup
 
-Step A: Fork and Clone
+1. Fork and Clone
 
 ```bash
 git clone https://github.com/yourusername/project-oracle.git
