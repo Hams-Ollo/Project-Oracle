@@ -33,25 +33,53 @@ from src.core.workflow import create_chat_workflow
 # Page configuration
 st.set_page_config(page_title="Project Oracle", page_icon="✨")
 
-# Custom CSS
+# Custom CSS with improved dark theme styling
 st.markdown(
     """
     <style>
+    /* Main container background */
+    .stApp {
+        background-color: #0E1117;
+    }
+    
+    /* User message styling */
     .user-message {
-        background-color: #c4ebf7;
-        padding: 10px;
-        border-radius: 10px;
+        background-color: #2E7DAF;
+        color: white;
+        padding: 12px;
+        border-radius: 15px;
         margin-bottom: 10px;
         text-align: right;
         max-width: 75%;
         margin-left: auto;
+        box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
     }
+    
+    /* Assistant message styling */
     .agent-message {
-        background-color: #f0f0f0;
-        padding: 10px;
-        border-radius: 10px;
+        background-color: #1F2937;
+        color: #E5E7EB;
+        padding: 12px;
+        border-radius: 15px;
         margin-bottom: 10px;
         max-width: 75%;
+        box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+    }
+
+    /* Improve header visibility */
+    h1 {
+        color: #E5E7EB !important;
+    }
+
+    /* Improve divider visibility */
+    hr {
+        border-color: #374151 !important;
+    }
+
+    /* Style chat input */
+    .stTextInput > div > div > input {
+        background-color: #1F2937;
+        color: #E5E7EB;
     }
     </style>
     """,
