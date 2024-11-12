@@ -57,12 +57,11 @@ jsonpointer==3.0.0
 jsonschema==4.23.0
 jsonschema-specifications==2024.10.1
 langchain==0.3.7
-langchain-community==0.3.5
-langchain-core==0.3.15
+langchain-core>=0.1.0
+langchain-openai>=0.0.5
 langchain-groq==0.2.1
-langchain-openai==0.2.6
 langchain-text-splitters==0.3.2
-langgraph==0.2.45
+langgraph>=0.0.15
 langgraph-checkpoint==2.0.2
 langgraph-sdk==0.1.35
 langsmith==0.1.140
@@ -92,7 +91,7 @@ primp==0.7.0
 propcache==0.2.0
 protobuf==5.28.3
 pyarrow==18.0.0
-pydantic==2.9.2
+pydantic>=2.0.0
 pydantic-settings==2.6.1
 pydantic_core==2.23.4
 pydeck==0.9.1
@@ -100,7 +99,7 @@ pydub==0.25.1
 Pygments==2.18.0
 pytest==8.3.3
 python-dateutil==2.9.0.post0
-python-dotenv==1.0.1
+python-dotenv>=1.0.0
 python-engineio==4.10.1
 python-multipart==0.0.12
 python-socketio==5.11.4
@@ -136,7 +135,7 @@ tornado==6.4.1
 tqdm==4.67.0
 typer==0.12.5
 typing-inspect==0.9.0
-typing_extensions==4.12.2
+typing_extensions>=4.5.0
 tzdata==2024.2
 urllib3==2.2.3
 uvicorn==0.32.0

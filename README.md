@@ -1,73 +1,50 @@
-# Project Oracle - Enterprise Onboarding & Knowledge Assistant
+# Project Oracle - AI Assistant with Web Scraping & Knowledge Base
 
-## Overview
-
-Project Oracle is an enterprise-grade intelligent assistant designed to streamline technical onboarding and knowledge management. Built with LangChain, LangGraph, and OpenAI's GPT models, it provides a comprehensive framework for automated onboarding, mentorship, and knowledge retention across organizations.
-
-## 🎯 Target Audience
-
-- **Technical Teams**: DevOps, Engineering, and IT departments
-- **HR & People Operations**: Onboarding specialists and training coordinators
-- **Team Leaders**: Project managers and technical leads managing growing teams
-- **New Employees**: Technical staff requiring role-specific onboarding
+A modular AI assistant that combines web scraping capabilities with a Star Wars knowledge base, powered by LangChain, LangGraph, and OpenAI.
 
 ## 🌟 Features
 
-### Core Capabilities
+- **Intelligent Conversation Routing**: Automatically directs queries to specialized agents
+- **Web Content Scraping**: Extract and store content from websites
+- **Knowledge Base Integration**: Query and retrieve Star Wars-related information
+- **Modular Architecture**: Clean separation of concerns for maintainability
+- **Extensible Design**: Easy to add new agents and capabilities
 
-- **Intelligent Multi-Agent System**
-  - Setup Agent: Guides environment configuration and tool installation
-  - Mentorship Agent: Provides role-specific guidance and best practices
-  - Knowledge Base Agent: Manages and queries organizational documentation
-  - Web Scraping Agent: Automatically indexes internal documentation
-  - Conversation Agent: Handles general inquiries and clarifications
+## 🚀 Project Structure
 
-### Enterprise Features
+```curl
+project-oracle/
+├── src/
+│   ├── __init__.py
+│   ├── main.py                 # Application entry point
+│   ├── config/                 # Configuration management
+│   │   ├── __init__.py
+│   │   └── settings.py        # Environment and app settings
+│   ├── core/                  # Core functionality
+│   │   ├── __init__.py
+│   │   ├── agents.py         # AI agent definitions
+│   │   └── workflow.py       # Conversation workflow
+│   ├── services/             # External services
+│   │   ├── __init__.py
+│   │   ├── web_scraper.py   # Web scraping functionality
+│   │   └── knowledge_base.py # Knowledge base operations
+│   └── interface/           # User interaction
+│       ├── __init__.py
+│       └── chat.py         # Chat interface
+├── knowledge_base.json     # Knowledge base storage
+├── scrape_dump/           # Scraped content storage
+├── requirements.txt       # Project dependencies
+├── setup.py              # Package configuration
+└── README.md            # Project documentation
+```
 
-- **Integration Hub**
-  - ServiceNow integration for ticket management
-  - Slack/Teams connectivity for seamless communication
-  - SSO support for enterprise authentication
-  - Custom API endpoints for existing tools integration
+## 🛠️ Prerequisites
 
-- **Security & Compliance**
-  - Role-based access control (RBAC)
-  - End-to-end encryption for sensitive data
-  - GDPR and SOC 2 compliance ready
-  - Audit logging for all interactions
-
-- **Customization & Scalability**
-  - Custom knowledge base templates
-  - Role-specific onboarding paths
-  - Departmental configuration options
-  - Multi-team support
-
-### Technical Features
-
-- **Modern Web Interface**: Streamlit-based UI with enterprise theming
-- **Intelligent Routing**: Context-aware query handling
-- **Advanced Knowledge Base**: Fuzzy matching with version control
-- **Progress Tracking**: Onboarding milestone monitoring
-- **Analytics Dashboard**: Onboarding metrics and insights
-
-## 💼 Business Benefits
-
-- **Reduced Onboarding Time**: Average 30% reduction in technical onboarding duration
-- **Consistent Training**: Standardized knowledge delivery across teams
-- **Resource Optimization**: 40% reduction in senior staff training involvement
-- **Knowledge Retention**: Improved documentation accessibility and maintenance
-- **Scalable Operations**: Support for rapid team growth and multiple departments
-
-## 🚀 Quick Start
-
-### Prerequisites
-
-- Python 3.12+
+- Python 3.11+
 - OpenAI API key
 - FireCrawl API key
-- Git (for version control)
 
-### Installation
+## ⚙️ Installation
 
 Step 1. Clone the repository:
 
@@ -76,7 +53,7 @@ git clone https://github.com/yourusername/project-oracle.git
 cd project-oracle
 ```
 
-Step 2. Create and activate virtual environment:
+Step 2. Create and activate a virtual environment:
 
 ```bash
 python -m venv venv
@@ -88,138 +65,102 @@ python -m venv venv
 source venv/bin/activate
 ```
 
-Step 3. Install dependencies:
+Step 3. Install the package in development mode:
 
 ```bash
-pip install -r requirements.txt
+pip install -e .
 ```
 
-Step 4. Configure environment variables:
+Step 4. Set up environment variables:
+Create a `.env` file in the project root:
+
+```env
+FIRECRAWL_API_KEY=your_firecrawl_api_key
+OPENAI_API_KEY=your_openai_api_key
+```
+
+## 🚀 Running the Application
+
+Run the application using:
 
 ```bash
-cp template.env .env
-# Edit .env with your API keys
+python src/main.py
 ```
 
-### Example Scenarios
+## 💬 Usage
 
-Scenario 1. **Environment Setup**
+The assistant supports three main types of interactions:
+
+Step 1. **General Conversation**
 
 ```bash
-User: "How do I set up my development environment for Project Athena?"
-Assistant: "I'll guide you through the setup process:
-1. First, let's verify your system requirements
-2. Then, we'll install necessary dependencies
-3. Finally, we'll configure your local environment..."
+You: Hello! How are you?
 ```
 
-Scenario 2. **Role-Specific Training**
+Step 2. **Web Scraping**
 
 ```bash
-User: "What are the key responsibilities for a DevOps engineer here?"
-Assistant: "Let me outline your core responsibilities:
-1. CI/CD pipeline management
-2. Infrastructure as Code practices
-3. Monitoring and alerting setup..."
+You: Can you scrape https://example.com for me?
 ```
 
-## 🔄 Integration Guide
+Step 3. **Knowledge Base Queries**
 
-### Available Integrations
-
-- **Collaboration Tools**
-  - Slack
-  - Microsoft Teams
-  - Discord
-
-- **Knowledge Management**
-  - Confluence
-  - SharePoint
-  - Internal wikis
-
-- **Service Management**
-  - ServiceNow
-  - Jira
-  - Azure DevOps
-
-## 📚 Documentation
-
-Detailed documentation is available in the `docs` folder:
-
-- [API Documentation](docs/API.md)
-- [Architecture Overview](docs/ARCHITECTURE.md)
-- [Deployment Guide](docs/DEPLOYMENT.md)
-- [User Guide](docs/USER_GUIDE.md)
-- [Knowledge Base Guide](docs/KNOWLEDGE_BASE.md)
-- [Tools Documentation](docs/TOOLS.md)
-- [Configuration Guide](docs/CONFIGURATION.md)
-
-## 🛠️ Development
-
-### Project Structure
-
-```text
-project-oracle/
-├── dev.py              # Backend application
-├── streamlit_app.py    # Frontend interface
-├── knowledge_base.json # Knowledge base storage
-├── scrape_dump/       # Scraped content storage
-├── docs/              # Documentation
-└── requirements.txt   # Dependencies
+```bash
+You: What do you know about the Jedi Order?
+You: List all available topics
 ```
-
-### Key Components
-
-- **Web Interface**: Streamlit-based chat interface
-- **Agent System**: Specialized agents for different tasks
-- **Router**: Intelligent query routing
-- **Knowledge Base**: JSON-based information storage
-- **Web Scraper**: FireCrawl-powered web content extraction
 
 ## 🤝 Contributing
 
-See [CONTRIBUTING.md](docs/CONTRIBUTING.md) for detailed contribution guidelines.
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🔒 Security
+## 🔍 Core Components
 
-For security concerns, please see our [Security Guidelines](docs/SECURITY.md).
+- **Web Scraper**: FireCrawl-powered content extraction
+- **Knowledge Base**: JSON-based information storage
+- **Agent System**: Specialized agents for different tasks
+- **Router**: Intelligent query routing
+- **Chat Interface**: Command-line interaction
+
+## ⚠️ Error Handling
+
+The application includes comprehensive error handling for:
+
+- Invalid API keys
+- Failed web scraping attempts
+- Knowledge base query errors
+- User input validation
+
+## 🔄 Workflow
+
+1. User input is received through the chat interface
+2. The router analyzes the input and directs it to the appropriate agent
+3. The agent processes the request using available tools
+4. Results are formatted and presented to the user
+
+## 📊 Performance
+
+- Configurable recursion limits
+- Timeout handling
+- Efficient conversation history management
+- Optimized knowledge base queries
 
 ## 🐛 Troubleshooting
 
-For common issues and solutions, see [TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md).
+If you encounter the "No module named 'src'" error, ensure you:
 
-## 📊 Performance Metrics
+1. Have installed the package with `pip install -e .`
+2. Are running from the project root directory
+3. Have activated your virtual environment
 
-- Average onboarding time reduction: 30%
-- Knowledge base query accuracy: 95%
-- User satisfaction rating: 4.8/5
-- Support ticket reduction: 25%
+## 📚 Documentation
 
-## 🔒 Security & Compliance
-
-- **Data Protection**
-  - AES-256 encryption at rest
-  - TLS 1.3 for data in transit
-  - Regular security audits
-
-- **Compliance**
-  - GDPR compliant
-  - SOC 2 Type II certified
-  - HIPAA ready
-
-## 🎯 Current Status
-
-Version: 0.3.0
-
-Future Updates:
-
-- Enterprise integration framework
-- Role-based access control
-- Advanced analytics dashboard
-- Enhanced security features
-
-See [CHANGELOG.md](docs/CHANGELOG.md) for detailed version history.
+For more detailed information, see the documentation in the `docs/` directory.
