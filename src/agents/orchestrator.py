@@ -1,8 +1,8 @@
 from typing import Any, Dict, List
 import asyncio
-from .specialized_agents.search_agent import SearchAgent
-from .specialized_agents.research_agent import ResearchAgent
-from .specialized_agents.onboarding_agent import OnboardingAgent
+from .search_agent import SearchAgent
+from .research_agent import ResearchAgent
+from .onboarding_agent import OnboardingAgent
 import openai
 
 class Orchestrator:
