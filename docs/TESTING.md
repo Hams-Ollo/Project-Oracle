@@ -1,176 +1,23 @@
-# Testing Documentation
+# Testing Guide for Project Oracle
 
 ## Overview
 
-Project Oracle requires comprehensive testing across multiple components: agent functionality, routing logic, knowledge base operations, and web scraping capabilities.
+Project Oracle uses a comprehensive testing strategy that includes:
+
+- Unit tests for individual components
+- Integration tests for system workflows
+- Performance tests for search operations
+- Memory usage monitoring
 
 ## Test Structure
 
-### 1. Unit Tests
-
-#### Agent Tests
-
-```python
-def test_webscrape_agent():
-    """Test web scraping agent functionality"""
-    agent = create_webscrape_agent()
-    result = agent.invoke({
-        "messages": [
-            HumanMessage(content="Scrape https://example.com")
-        ]
-    })
-    assert isinstance(result, dict)
-    assert "output" in result or "messages" in result
-
-def test_knowledge_agent():
-    """Test knowledge base agent functionality"""
-    agent = create_knowledge_agent()
-    result = agent.invoke({
-        "messages": [
-            HumanMessage(content="What do you know about the Jedi Order?")
-        ]
-    })
-    assert isinstance(result, dict)
-    assert "output" in result or "messages" in result
-```
-
-#### Knowledge Base Tests
-
-```python
-def test_knowledge_base():
-    """Test knowledge base operations"""
-    kb = KnowledgeBase()
-    
-    # Test topic search
-    result = kb.search_topic("Jedi Order")
-    assert "Definition" in result
-    assert "Key Concepts" in result
-    
-    # Test article retrieval
-    result = kb.get_article("The Jedi Code")
-    assert "Content" in result
-    assert "Summary" in result
-```
-
-#### Web Scraping Tests
-
-```python
-def test_web_scraper():
-    """Test web scraping functionality"""
-    scraper = WebScraper(FIRECRAWL_API_KEY)
-    
-    # Test URL scraping
-    result = scraper.scrape_url("https://example.com")
-    assert "Successfully scraped" in result
-    
-    # Test file saving
-    assert Path("scrape_dump").exists()
-```
-
-### 2. Integration Tests
-
-#### Workflow Tests
-
-```python
-def test_workflow_routing():
-    """Test workflow routing logic"""
-    workflow = create_chat_workflow()
-    
-    # Test web scraping route
-    result = workflow.invoke({
-        "messages": [
-            HumanMessage(content="Scrape https://example.com")
-        ]
-    })
-    assert "WebScrape" in str(result)
-    
-    # Test knowledge base route
-    result = workflow.invoke({
-        "messages": [
-            HumanMessage(content="Tell me about the Jedi")
-        ]
-    })
-    assert "Knowledge" in str(result)
-```
-
-#### Agent Interaction Tests
-
-```python
-def test_agent_interactions():
-    """Test agent interactions and handoffs"""
-    workflow = create_chat_workflow()
-    
-    # Test conversation flow
-    results = []
-    for step in workflow.stream({
-        "messages": [
-            HumanMessage(content="Hello, tell me about the Jedi")
-        ]
-    }):
-        results.append(step)
-    
-    assert len(results) > 0
-    assert any("Knowledge" in str(step) for step in results)
-```
-
-### 3. System Tests
-
-#### End-to-End Tests
-
-```python
-def test_complete_conversation():
-    """Test complete conversation flow"""
-    workflow = create_chat_workflow()
-    
-    test_inputs = [
-        "Hello there",
-        "What do you know about the Jedi?",
-        "Can you scrape https://example.com?",
-        "Goodbye"
-    ]
-    
-    for input_text in test_inputs:
-        result = next(workflow.stream({
-            "messages": [HumanMessage(content=input_text)]
-        }))
-        assert result is not None
-```
-
-## Test Configuration
-
-### Environment Setup
-
-```python
-# test_config.py
-import pytest
-from dotenv import load_dotenv
-
-@pytest.fixture(autouse=True)
-def setup_test_env():
-    """Set up test environment"""
-    load_dotenv()
-    # Set up mock API responses
-    # Initialize test knowledge base
-```
-
-### Mock Data
-
-```python
-# test_data.py
-TEST_KNOWLEDGE_BASE = {
-    "topics": {
-        "test_topic": {
-            "definition": "Test definition",
-            "key_concepts": ["concept1", "concept2"]
-        }
-    },
-    "articles": {
-        "test_article": {
-            "title": "Test Article",
-            "content": "Test content"
-        }
-    }
-}
+```curl
+tests/
+├── test_vector_search.py    # Vector store unit tests
+├── test_integration.py      # End-to-end workflow tests
+├── test_performance.py      # Performance benchmarks
+└── test_data/              # Test fixtures
+    └── test_knowledge_base.json
 ```
 
 ## Running Tests
@@ -181,134 +28,126 @@ TEST_KNOWLEDGE_BASE = {
 # Run all tests
 pytest
 
-# Run specific test categories
-pytest tests/unit/
-pytest tests/integration/
-pytest tests/system/
+# Run specific test files
+pytest tests/test_vector_search.py
+pytest tests/test_integration.py
+pytest tests/test_performance.py
 
-# Run with coverage
+# Run with verbose output
+pytest -v
+
+# Run with coverage report
 pytest --cov=src tests/
 ```
 
-### Test Parameters
+## Test Categories
+
+### 1. Vector Search Tests
+
+- Vector store initialization
+- Document processing
+- Search functionality
+- Result formatting
+
+### 2. Integration Tests
+
+- End-to-end workflow testing
+- Cross-component interaction
+- Error handling
+- Response formatting
+
+### 3. Performance Tests
+
+- Search response times
+- Memory usage monitoring
+- Concurrent operation handling
+- Resource cleanup
+
+## Performance Benchmarks
+
+Expected performance metrics:
+
+- Vector search: < 2.0 seconds
+- Traditional search: < 1.0 seconds
+- Memory increase: < 500MB
+- Concurrent operations: < 2.0 seconds per query
+
+## Test Data
+
+The test suite uses a simplified knowledge base for testing:
+
+- Star Wars topics
+- Technical documentation
+- Process information
+
+## Writing New Tests
+
+### Test Structure (Example)
 
 ```python
-@pytest.mark.parametrize("input_text,expected_route", [
-    ("Hello", "Conversation"),
-    ("Tell me about Jedi", "Knowledge"),
-    ("Scrape https://example.com", "WebScrape")
-])
-def test_router(input_text, expected_route):
-    """Test router with various inputs"""
-    router = create_router()
-    result = router({"messages": [HumanMessage(content=input_text)]})
-    assert result["next"] == expected_route
-```
-
-## Error Testing
-
-### Agent Error Handling
-
-```python
-def test_agent_errors():
-    """Test agent error handling"""
-    agent = create_webscrape_agent()
+def test_new_feature():
+    """Test description"""
+    # Arrange
+    # Set up test data and environment
     
-    # Test invalid URL
-    result = agent.invoke({
-        "messages": [
-            HumanMessage(content="Scrape invalid-url")
-        ]
-    })
-    assert "error" in str(result).lower()
-```
-
-### System Error Recovery
-
-```python
-def test_system_recovery():
-    """Test system error recovery"""
-    workflow = create_chat_workflow()
+    # Act
+    # Execute the functionality
     
-    # Test API failure recovery
-    with mock.patch('openai.ChatCompletion.create', side_effect=Exception):
-        result = next(workflow.stream({
-            "messages": [HumanMessage(content="Hello")]
-        }))
-        assert "error" in str(result).lower()
+    # Assert
+    # Verify the results
 ```
 
-## Performance Testing
+### Best Practices
 
-### Response Time Tests
+1. Use descriptive test names
+2. Include docstrings
+3. Follow AAA pattern (Arrange-Act-Assert)
+4. Clean up resources
+5. Use appropriate fixtures
 
-```python
-def test_response_times():
-    """Test response time requirements"""
-    workflow = create_chat_workflow()
-    
-    start_time = time.time()
-    next(workflow.stream({
-        "messages": [HumanMessage(content="Hello")]
-    }))
-    duration = time.time() - start_time
-    
-    assert duration < 2.0  # Maximum 2 seconds
-```
+## Continuous Integration
 
-### Load Testing
+Tests are run automatically on:
 
-```python
-def test_concurrent_requests():
-    """Test handling of concurrent requests"""
-    workflow = create_chat_workflow()
-    
-    async def make_request():
-        return await workflow.astream({
-            "messages": [HumanMessage(content="Hello")]
-        })
-    
-    results = asyncio.run(asyncio.gather(
-        *[make_request() for _ in range(10)]
-    ))
-    assert len(results) == 10
-```
+- Pull request creation
+- Main branch updates
+- Release tagging
 
-## CI/CD Integration
+## Troubleshooting
 
-### GitHub Actions
+Common issues and solutions:
 
-```yaml
-# .github/workflows/tests.yml
-name: Tests
-on: [push, pull_request]
+1. **Module Import Errors**
+   - Ensure `pip install -e .` was run
+   - Check Python path
 
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.12'
-      - name: Install dependencies
-        run: pip install -r requirements.txt
-      - name: Run tests
-        run: pytest
-```
+2. **Test Data Issues**
+   - Verify test_knowledge_base.json exists
+   - Check file permissions
 
-### Pre-commit Hooks
+3. **Performance Test Failures**
+   - Check system resources
+   - Verify no competing processes
 
-```yaml
-# .pre-commit-config.yaml
-repos:
-  - repo: local
-    hooks:
-      - id: pytest
-        name: pytest
-        entry: pytest
-        language: system
-        pass_filenames: false
-        always_run: true
-```
+## Adding New Tests
+
+1. Create test file in `tests/` directory
+2. Add necessary fixtures
+3. Implement test cases
+4. Update documentation
+5. Verify CI pipeline
+
+## Coverage Requirements
+
+- Minimum coverage: 80%
+- Critical paths: 100%
+- New features: 90%
+
+## Future Improvements
+
+Planned enhancements:
+
+1. Property-based testing
+2. Load testing
+3. Chaos testing
+4. API endpoint testing

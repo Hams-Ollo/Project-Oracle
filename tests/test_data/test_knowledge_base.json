@@ -1,0 +1,34 @@
+{
+    "topics": {
+        "star_wars": {
+            "jedi_order": {
+                "definition": "Test Jedi Order definition",
+                "key_concepts": ["Force", "Training", "Lightsaber"],
+                "important_figures": ["Yoda", "Obi-Wan"]
+            }
+        },
+        "project": {
+            "setup": {
+                "definition": "Test project setup information",
+                "key_concepts": ["Installation", "Configuration"],
+                "steps": ["Clone repository", "Install dependencies"]
+            }
+        }
+    },
+    "articles": {
+        "star_wars": {
+            "jedi_training": {
+                "title": "Jedi Training Methods",
+                "summary": "Overview of Jedi training",
+                "content": "Test content about Jedi training methods"
+            }
+        },
+        "technical": {
+            "setup_guide": {
+                "title": "Project Setup Guide",
+                "summary": "How to set up the project",
+                "content": "Test content about project setup"
+            }
+        }
+    }
+} 

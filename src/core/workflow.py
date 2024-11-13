@@ -201,9 +201,9 @@ def knowledge_node(state, llm: ChatOpenAI, knowledge_tools: list):
     Handles knowledge base queries in the workflow
     
     Processes:
-    1. Query understanding
-    2. Information retrieval
-    3. Response formatting
+    1. Query understanding and classification
+    2. Search method selection (vector/traditional/hybrid)
+    3. Information retrieval and formatting
     
     Args:
         state: Current conversation state
@@ -215,8 +215,35 @@ def knowledge_node(state, llm: ChatOpenAI, knowledge_tools: list):
     """
     log_step('info', "Processing knowledge base query")
     try:
+        # Determine search type based on query analysis
+        query_analysis = llm.invoke([
+            SystemMessage(content="""Analyze the query to determine the best search method:
+            - Return "vector" for general, conceptual, or exploratory questions
+            - Return "traditional" for specific topic or article requests
+            - Return "hybrid" for complex queries needing both approaches
+            
+            Respond with only one word: vector, traditional, or hybrid"""),
+            *state["messages"]
+        ])
+        
+        search_type = query_analysis.content.strip().lower()
+        log_step('info', f"Selected search type: {search_type}")
+        
+        # Get the actual query from the last user message
+        query = state["messages"][-1].content
+        
+        # Create search command with type
+        search_command = f"{query}|{search_type}"
+        
+        # Execute search through agent
         agent = create_knowledge_agent(llm, knowledge_tools)
-        result = agent.invoke(state)
+        result = agent.invoke({
+            "messages": [
+                SystemMessage(content=f"Use the {search_type} search method to find information about: {query}"),
+                *state["messages"]
+            ]
+        })
+        
         log_step('success', "Knowledge retrieval completed")
         
         if isinstance(result, dict):

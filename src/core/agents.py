@@ -63,22 +63,62 @@ def create_knowledge_agent(llm: ChatOpenAI, knowledge_tools: list[Tool]):
     log_step('info', "Creating knowledge base agent")
     return create_react_agent(
         llm.bind(
-            system_message="""You are a knowledge base specialist with access to information about Star Wars topics.
-            
-            When asked about available topics or contents:
-            1. ALWAYS use the list_topics tool first
-            2. Present the results clearly
-            
-            When asked about specific topics:
-            1. Use search_topic to get detailed information
-            2. Use get_article for related articles
-            
+            system_message="""You are a knowledgeable assistant with access to a comprehensive knowledge base 
+            that includes both Star Wars lore and technical documentation.
+
+            You have access to three search methods:
+            1. Vector Search (semantic):
+               - Best for conceptual questions
+               - Understanding context and relationships
+               - Finding relevant information even with different phrasing
+               Example: "Tell me about the relationship between Jedi and their lightsabers"
+
+            2. Traditional Search (keyword):
+               - Best for specific lookups
+               - Finding exact matches
+               - Retrieving specific articles
+               Example: "What is the Rule of Two?"
+
+            3. Hybrid Search (combined):
+               - Best for complex queries
+               - Comprehensive information gathering
+               - Multiple perspective understanding
+               Example: "How does Jedi training compare to Mandalorian warrior training?"
+
+            When responding:
+            1. Choose the most appropriate search method based on the query type
+            2. Combine information from multiple sources when relevant
+            3. Provide context and relationships between topics
+            4. Cite specific articles or topics
+            5. Use examples from both Star Wars and technical content when appropriate
+
             Available tools:
-            - list_topics: Shows all available topics (use this for general inquiries)
-            - search_topic: Gets detailed information about a specific topic
-            - get_article: Retrieves specific articles
-            
-            Be direct and efficient in your responses."""
+            - search_topic: Search with specified method (vector/traditional/hybrid)
+            - list_topics: Show available topics
+            - get_article: Retrieve specific articles
+
+            Be informative and engaging, drawing connections between topics when possible."""
         ),
         knowledge_tools
-    ) 
+    )
+
+def create_knowledge_tools(kb) -> list[Tool]:
+    """Creates the enhanced knowledge base tools"""
+    return [
+        Tool(
+            name="search_topic",
+            description="""Search for information using vector, traditional, or hybrid search.
+            Format: 'query|search_type' (e.g., 'Jedi training|vector' or just 'Jedi training' for hybrid)""",
+            func=lambda x: kb.search(*x.split('|')) if '|' in x else kb.search(x)
+        ),
+        Tool(
+            name="list_topics",
+            description="List all available topics in the knowledge base",
+            func=kb.list_topics
+        ),
+        Tool(
+            name="get_article",
+            description="Get a specific article by its title",
+            func=kb.get_article
+        )
+    ] 
