@@ -1,0 +1,44 @@
+graph TD
+    A[User Request] --> B[Web Scraping]
+    B --> C[Content Processing]
+    C --> D[Markdown Storage]
+    C --> E[Knowledge Integration]
+    D --> F[Frontend Display]
+    E --> G[Vector Storage]
+    G --> H[Knowledge Base]
+
+    %% Style definitions
+    classDef input fill:#e1bee7,stroke:#4a148c,stroke-width:2px;
+    classDef process fill:#bbdefb,stroke:#0d47a1,stroke-width:2px;
+    classDef storage fill:#c8e6c9,stroke:#1b5e20,stroke-width:2px;
+    classDef display fill:#ffecb3,stroke:#ff6f00,stroke-width:2px;
+
+    %% Apply styles
+    class A input;
+    class B,C,E process;
+    class D,G,H storage;
+    class F display;
+
+    %% Add descriptions
+    A["User Request<br><small>Initial query or command</small>"]:::input
+    B["Web Scraping<br><small>FireCrawl API extraction</small>"]:::process
+    C["Content Processing<br><small>Parsing & cleaning</small>"]:::process
+    D["Markdown Storage<br><small>Formatted text files</small>"]:::storage
+    E["Knowledge Integration<br><small>Semantic processing</small>"]:::process
+    F["Frontend Display<br><small>Streamlit interface</small>"]:::display
+    G["Vector Storage<br><small>Embeddings & indices</small>"]:::storage
+    H["Knowledge Base<br><small>Structured data store</small>"]:::storage
+
+    %% Add subgraph for storage systems
+    subgraph Storage Layer
+        D
+        G
+        H
+    end
+
+    %% Add subgraph for processing
+    subgraph Processing Layer
+        B
+        C
+        E
+    end

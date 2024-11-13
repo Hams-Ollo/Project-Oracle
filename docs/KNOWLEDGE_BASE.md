@@ -1,279 +1,289 @@
-# Knowledge Base Documentation
+# Knowledge Base Development Guide
 
 ## Overview
 
-Project Oracle uses a JSON-based knowledge base system with flexible topic matching and article management. The system supports fuzzy matching, related content linking, and comprehensive topic/article relationships.
+This guide provides detailed instructions for developers to add and manage information in Project Oracle's knowledge base system. The knowledge base uses ChromaDB for vector storage and semantic search capabilities, allowing efficient retrieval of information through both traditional and vector-based search methods.
 
-## Structure
+## Table of Contents
 
-### JSON Schema
+1. [System Architecture](#system-architecture)
+2. [Setup Requirements](#setup-requirements)
+3. [Adding Knowledge Base Entries](#adding-knowledge-base-entries)
+4. [Vector Store Operations](#vector-store-operations)
+5. [Testing Your Changes](#testing-your-changes)
+6. [Best Practices](#best-practices)
+
+## System Architecture
+
+Project Oracle's knowledge base consists of two main components:
+
+1. **VectorStore Service**:
+   - Handles document embeddings using OpenAI
+   - Manages similarity search via ChromaDB
+   - Handles document chunking and processing
+   - Maintains metadata relationships
+
+2. **KnowledgeBase Service**:
+   - Manages JSON data structure
+   - Coordinates search operations
+   - Handles data validation
+   - Provides tool interfaces
+
+## Setup Requirements
+
+Before working with the knowledge base, ensure you have:
+
+1. **Environment Setup**:
+   - Python 3.11 or higher
+   - Virtual environment activated
+   - Dependencies installed via `pip install -r requirements.txt`
+
+2. **API Keys**:
+   - OpenAI API key in `.env`
+   - Other required credentials
+
+3. **Directory Structure**:
+
+   ```curl
+   project-oracle/
+   ├── knowledge_base.json
+   ├── vector_store/
+   │   ├── chroma.sqlite3
+   │   └── index/
+   └── scrape_dump/
+   ```
+
+## Adding Knowledge Base Entries
+
+### 1. JSON Structure
+
+The knowledge base data follows this structure:
 
 ```json
 {
     "topics": {
-        "topic_key": {
-            "definition": "Topic definition",
-            "key_concepts": ["concept1", "concept2"],
-            "important_figures": ["figure1", "figure2"],
-            "cultural_significance": "Significance details"
+        "category_name": {
+            "topic_name": {
+                "definition": "Clear definition",
+                "history": "Historical context",
+                "key_concepts": ["concept1", "concept2"],
+                "important_figures": ["figure1", "figure2"],
+                "cultural_significance": "Impact description"
+            }
         }
     },
     "articles": {
-        "article_key": {
-            "title": "Article Title",
-            "summary": "Brief summary",
-            "key_points": ["point1", "point2"],
-            "content": "Full article content"
+        "category_name": {
+            "article_name": {
+                "title": "Article Title",
+                "summary": "Brief overview",
+                "key_points": ["point1", "point2"],
+                "content": "Detailed content"
+            }
         }
     }
 }
 ```
 
-### Topic Structure
+### 2. Adding New Topics
+
+1. **Choose Category**:
+   - Use existing category or create new
+   - Follow naming conventions
+   - Maintain hierarchy
+
+2. **Create Topic Content**:
+
+   ```python
+   new_topic = {
+       "definition": "Clear, concise definition",
+       "history": "Historical background",
+       "key_concepts": ["concept1", "concept2"],
+       "important_figures": ["person1", "person2"],
+       "cultural_significance": "Impact description"
+   }
+   ```
+
+3. **Update Knowledge Base**:
+
+   ```python
+   kb.data["topics"]["category_name"]["new_topic"] = new_topic
+   kb._initialize_vector_store()  # Rebuild vector store
+   ```
+
+## Vector Store Operations
+
+### 1. Document Processing
 
 ```python
-topic = {
-    "definition": str,          # Main topic definition
-    "key_concepts": List[str],  # Related concepts
-    "important_figures": List[str],  # Key figures
-    "cultural_significance": str  # Cultural context
-}
+def process_documents(content: dict) -> List[Document]:
+    """Convert content to vector store format"""
+    documents = []
+    for category, topics in content.items():
+        for topic, details in topics.items():
+            doc = create_document(category, topic, details)
+            documents.append(doc)
+    return documents
 ```
 
-### Article Structure
+### 2. Search Performance Settings
+
+1. **Vector Search**:
+
+   ```python
+   results = kb.search("query", search_type="vector")
+   ```
+
+2. **Traditional Search**:
+
+   ```python
+   results = kb.search("query", search_type="traditional")
+   ```
+
+3. **Hybrid Search**:
+
+   ```python
+   results = kb.search("query", search_type="hybrid")
+   ```
+
+## Testing Your Changes
+
+### 1. Unit Tests
 
 ```python
-article = {
-    "title": str,              # Article title
-    "summary": str,            # Brief summary
-    "key_points": List[str],   # Main points
-    "content": str             # Full content
-}
+def test_knowledge_base():
+    kb = KnowledgeBase()
+    
+    # Test topic addition
+    result = kb.add_topic("category", "topic", topic_data)
+    assert result.success
+    
+    # Test search functionality
+    search_result = kb.search("test query")
+    assert search_result is not None
 ```
 
-## Implementation
-
-### KnowledgeBase Class
+### 2. Integration Tests
 
 ```python
-class KnowledgeBase:
-    def __init__(self, json_path: str = "knowledge_base.json"):
-        """Initialize knowledge base from JSON file"""
-        
-    def search_topic(self, topic: str) -> str:
-        """Search for topic information"""
-        
-    def list_topics(self) -> str:
-        """List all available topics"""
-        
-    def get_article(self, title: str) -> str:
-        """Retrieve specific article"""
-```
-
-### Flexible Matching System
-
-#### Topic Aliases
-
-```python
-self.topic_aliases = {
-    "original_key": "topic_key",
-    "alternative_name": "topic_key",
-    "key_concept": "topic_key"
-}
-```
-
-#### Article Aliases
-
-```python
-self.article_aliases = {
-    "article_title": "article_key",
-    "alternative_title": "article_key",
-    "key_point_term": "article_key"
-}
-```
-
-## Usage
-
-### Searching Topics
-
-```python
-# Direct search
-result = kb.search_topic("Jedi Order")
-
-# Fuzzy matching
-result = kb.search_topic("Jedi")  # Will match "Jedi Order"
-```
-
-### Retrieving Articles
-
-```python
-# Direct retrieval
-article = kb.get_article("The Jedi Code")
-
-# Partial matching
-article = kb.get_article("Jedi Code")  # Will find "The Jedi Code"
-```
-
-### Listing Content
-
-```python
-# List all topics
-topics = kb.list_topics()
-
-# List all articles
-articles = kb.list_articles()
-```
-
-## Tools Integration
-
-### Knowledge Tools
-
-```python
-knowledge_tools = [
-    Tool(
-        name="search_topic",
-        description="Search knowledge base topics",
-        func=kb.search_topic
-    ),
-    Tool(
-        name="list_topics",
-        description="List available topics",
-        func=kb.list_topics
-    ),
-    Tool(
-        name="get_article",
-        description="Retrieve specific article",
-        func=kb.get_article
-    )
-]
-```
-
-## Response Formats
-
-### Topic Response
-
-```python
-"""
-Topic: [topic_name]
-
-Definition: [definition]
-
-Key Concepts: [concept1, concept2, ...]
-
-Important Figures: [figure1, figure2, ...]
-
-Cultural Significance: [significance]
-
-Related Topics: [topic1, topic2, ...]
-
-Related Articles: [article1, article2, ...]
-"""
-```
-
-### Article Response
-
-```python
-"""
-Article: [title]
-
-Summary: [summary]
-
-Key Points:
-- [point1]
-- [point2]
-...
-
-Content:
-[full_content]
-
-Related Topics: [topic1, topic2, ...]
-"""
+def test_vector_store_integration():
+    kb = KnowledgeBase()
+    vs = VectorStore()
+    
+    # Test document processing
+    docs = vs.process_json_data(test_data)
+    assert len(docs) > 0
+    
+    # Test search integration
+    results = kb.search("test", search_type="hybrid")
+    assert results is not None
 ```
 
 ## Best Practices
 
-### Content Organization
+### 1. Content Management
 
-1. Use clear, unique topic keys
-2. Provide comprehensive definitions
-3. Include relevant key concepts
-4. Link related content
-5. Maintain consistent formatting
+- Use clear, concise definitions
+- Include relevant metadata
+- Maintain consistent formatting
+- Update related content
+- Preserve context in chunks
 
-### Content Updates
+### 2. Vector Store Management
 
-1. Backup before modifications
-2. Validate JSON structure
-3. Update aliases after changes
-4. Test topic relationships
-5. Verify article links
+- Rebuild after significant changes
+- Monitor embedding quality
+- Optimize chunk sizes
+- Maintain metadata relationships
+- Regular performance testing
 
-### Query Optimization
+### 3. Search Optimization
 
-1. Use specific search terms
-2. Consider alternative names
-3. Check related content
-4. Verify topic existence
-5. Handle missing content
+- Use appropriate search types
+- Balance chunk sizes
+- Monitor search performance
+- Optimize metadata usage
+- Regular accuracy testing
 
-## Error Handling
-
-### Common Issues
+### 4. Error Handling
 
 ```python
 try:
-    result = kb.search_topic(topic)
+    kb.add_topic(category, topic, data)
+except ValueError as e:
+    log_step('error', f"Invalid data format: {e}")
 except Exception as e:
-    handle_knowledge_base_error(e)
+    log_step('error', f"Unexpected error: {e}")
 ```
-
-### Error Types
-
-1. FileNotFoundError: JSON file missing
-2. JSONDecodeError: Invalid JSON format
-3. KeyError: Missing required fields
-4. ValueError: Invalid content format
 
 ## Performance Considerations
 
-### Optimization Techniques
+### 1. Vector Store
 
-1. Alias caching
-2. Content indexing
-3. Relationship mapping
-4. Response formatting
-5. Error caching
+- Optimal chunk size: 1000 tokens
+- Chunk overlap: 200 tokens
+- Regular reindexing
+- Cache management
+- Batch processing
 
-### Memory Management
+### 2. Search Operations
 
-1. Lazy loading
-2. Content pagination
-3. Result caching
-4. Resource cleanup
-5. Memory monitoring
+- Default k=3 for vector search
+- Hybrid search timeout: 30s
+- Result caching
+- Query optimization
+- Performance monitoring
 
-## Development Guidelines
+## Maintenance
 
-### Adding New Topics
+### 1. Regular Tasks
 
-1. Follow JSON schema
-2. Include all required fields
-3. Add relevant aliases
-4. Link related content
-5. Update documentation
+- Validate JSON structure
+- Update embeddings
+- Clean unused vectors
+- Optimize indexes
+- Update documentation
 
-### Modifying Content
+### 2. Monitoring
 
-1. Preserve structure
-2. Update relationships
-3. Maintain formatting
-4. Test changes
-5. Update aliases
+- Search response times
+- Embedding quality
+- Storage usage
+- Error rates
+- User feedback
 
-### Testing
+## Troubleshooting
 
-1. Verify topic retrieval
-2. Check article access
-3. Test relationships
-4. Validate formatting
-5. Check error handling
+### Common Issues
+
+1. **Vector Store Errors**:
+   - Clear vector store directory
+   - Rebuild embeddings
+   - Check API keys
+   - Verify data format
+
+2. **Search Problems**:
+   - Check query format
+   - Verify data exists
+   - Test different search types
+   - Monitor performance
+
+3. **Data Integration**:
+   - Validate JSON
+   - Check relationships
+   - Verify metadata
+   - Test consistency
+
+## Future Improvements
+
+1. **Planned Enhancements**:
+   - Advanced metadata
+   - Improved chunking
+   - Better context preservation
+   - Enhanced search algorithms
+
+2. **Optimization Goals**:
+   - Faster search
+   - Better accuracy
+   - Reduced storage
+   - Improved scalability
