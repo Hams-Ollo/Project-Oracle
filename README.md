@@ -1,6 +1,6 @@
 # Project Oracle - AI Assistant with Web Scraping & Knowledge Base
 
-A modular AI assistant that combines web scraping capabilities with a Star Wars knowledge base, powered by LangChain, LangGraph, and OpenAI.
+A modular AI assistant that combines web scraping capabilities with a internal custom knowledge base (insert_use_case_here), powered by LangChain, LangGraph, and OpenAI.
 
 ## 🌟 Features
 
