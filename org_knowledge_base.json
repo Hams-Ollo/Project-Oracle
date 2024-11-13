@@ -3,11 +3,11 @@
       "departments": [
         {
           "id": "dept001",
-          "name": "Engineering",
+          "name": "Engineering", 
           "description": "Responsible for product development and technical innovation."
         },
         {
-          "id": "dept002", 
+          "id": "dept002",
           "name": "Product Management",
           "description": "Oversees product strategy and roadmap."
         },
@@ -18,11 +18,11 @@
         },
         {
           "id": "dept004",
-          "name": "Quality Assurance", 
+          "name": "Quality Assurance",
           "description": "Ensures product quality through testing and validation."
         },
         {
-          "id": "dept005",
+          "id": "dept005", 
           "name": "Data Science",
           "description": "Handles data analysis, modeling, and insights generation."
         },
@@ -51,8 +51,8 @@
         },
         {
           "id": "team002",
-          "name": "Backend Development",
-          "department_id": "dept001", 
+          "name": "Backend Development", 
+          "department_id": "dept001",
           "mission": "Build scalable server-side applications."
         },
         {
@@ -110,7 +110,7 @@
           "mission": "Build custom solutions for enterprise clients."
         },
         {
-          "id": "team012", 
+          "id": "team012",
           "name": "Technical Documentation",
           "department_id": "dept001",
           "mission": "Create and maintain technical documentation."
@@ -447,6 +447,17 @@
           "description": "Standards for DevOps processes and automation.",
           "link": "https://intranet.example.com/docs/devops-best-practices",
           "tags": ["devops", "automation", "best practices"]
+        }
+      ],
+      "internal_docs": [
+        {
+          "id": "int001",
+          "title": "README.md",
+          "type": "markdown",
+          "content": "# Application Documentation\n\nThis section contains internal documentation and standard operating procedures (SOPs) for our applications and teams.\n\n## Purpose\nTo provide a centralized location for all internal documentation, making it easily accessible for team members and our documentation bot.\n\n## Structure\n- Technical Documentation\n- Process Documentation \n- Security Documentation\n- Best Practices\n- Team SOPs\n\n## Usage\nAll documentation in this section can be retrieved by our documentation bot for quick reference and sharing.\n\n## Maintenance\nDocumentation should be reviewed and updated quarterly to ensure accuracy.",
+          "last_updated": "2023-10-01",
+          "owner": "Technical Documentation Team",
+          "tags": ["readme", "documentation", "internal"]
         }
       ]
     },
