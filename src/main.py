@@ -23,6 +23,8 @@
 # Imports and Configuration
 ################################################################################
 
+from typing import Dict, Any
+from datetime import datetime
 from langchain_openai import ChatOpenAI
 
 # Use relative imports instead of absolute imports
@@ -32,28 +34,59 @@ from services.knowledge_base import KnowledgeBase, create_knowledge_tools
 from core.workflow import create_chat_workflow
 from interface.chat import run_chat_interface
 
-################################################################################
-# Initial Setup and Configuration
-################################################################################
-
-# Initialize LLM (Language Learning Model) with temperature parameter
-llm = ChatOpenAI(temperature=0.7)
-
-# Initialize scraper and create tools for web scraping
-scraper = WebScraper(FIRECRAWL_API_KEY)
-scraping_tools = create_scraping_tools(scraper)
-
-# Initialize knowledge base and create tools for knowledge queries
-kb = KnowledgeBase()
-knowledge_tools = create_knowledge_tools(kb)
+class ProjectOracleApp:
+    """Main application class for Project Oracle"""
+    
+    def __init__(self):
+        """Initialize the application components"""
+        # Initialize LLM
+        self.llm = ChatOpenAI(temperature=0.7)
+        
+        # Initialize tools and services
+        self.scraper = WebScraper(FIRECRAWL_API_KEY)
+        self.scraping_tools = create_scraping_tools(self.scraper)
+        
+        self.kb = KnowledgeBase()
+        self.knowledge_tools = create_knowledge_tools(self.kb)
+        
+        # Initialize workflow
+        self.workflow = create_chat_workflow(
+            self.llm,
+            self.scraping_tools,
+            self.knowledge_tools
+        )
+        
+        # Initialize statistics
+        self.stats = {
+            'messages': 0,
+            'web_pages_scraped': 0,
+            'kb_queries': 0,
+            'last_active': datetime.now(),
+            'sessions': 0
+        }
+    
+    def get_components(self) -> Dict[str, Any]:
+        """Get initialized components for use in different interfaces
+        
+        Returns:
+            Dict[str, Any]: Dictionary containing workflow and other components
+        """
+        return {
+            'workflow': self.workflow,
+            'kb': self.kb,
+            'scraper': self.scraper,
+            'stats': self.stats
+        }
 
 ################################################################################
 # Main Entry Point
 ################################################################################
 
 if __name__ == "__main__":
-    # Create and initialize the chat workflow
-    workflow = create_chat_workflow(llm, scraping_tools, knowledge_tools)
-    
-    # Run the chat interface
-    run_chat_interface(workflow)
+    app = ProjectOracleApp()
+    # For CLI usage
+    run_chat_interface(
+        workflow=app.workflow,
+        stats_manager=app,
+        kb=app.kb
+    )
