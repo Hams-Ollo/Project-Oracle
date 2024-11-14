@@ -6,7 +6,7 @@ A modular AI assistant that combines web scraping capabilities with a internal c
 
 - **Intelligent Conversation Routing**: Automatically directs queries to specialized agents
 - **Web Content Scraping**: Extract and store content from websites
-- **Knowledge Base Integration**: Query and retrieve Star Wars-related information
+- **Knowledge Base Integration**: Query and retrieve KNowledge Base information
 - **Modular Architecture**: Clean separation of concerns for maintainability
 - **Extensible Design**: Easy to add new agents and capabilities
 
