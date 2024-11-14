@@ -44,7 +44,7 @@ def create_router(llm: ChatOpenAI):
                 Return 'Knowledge' if the user:
                 - Asks what information is available
                 - Asks about the knowledge base contents
-                - Asks about any Star Wars topic
+                - Asks about any topic in the knowledge base
                 - Requests to list or see available topics
                 
                 Return 'WebScrape' if the user:

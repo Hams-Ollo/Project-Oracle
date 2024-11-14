@@ -7,7 +7,7 @@
                 "key_concepts": [
                     "The Force",
                     "Light Side",
-                    "Jedi Code",
+                    "Jedi Code", 
                     "Padawan",
                     "Jedi Council",
                     "Force Abilities",
@@ -17,7 +17,7 @@
                     "Yoda",
                     "Obi-Wan Kenobi",
                     "Anakin Skywalker",
-                    "Luke Skywalker",
+                    "Luke Skywalker", 
                     "Mace Windu",
                     "Qui-Gon Jinn",
                     "Rey"
@@ -31,7 +31,7 @@
                     "Dark Side",
                     "Sith Code",
                     "Rule of Two",
-                    "Apprentice",
+                    "Apprentice", 
                     "Sith Empire",
                     "Force Lightning",
                     "Holocrons"
@@ -192,6 +192,255 @@
                         ]
                     }
                 ]
+            },
+            "company_overview": {
+                "definition": "K Korp Inc. - A pioneer in enterprise AI solutions",
+                "history": "Founded in 2018 by a team of AI researchers and enterprise software veterans, K Korp Inc. has grown into a leading provider of AI-driven enterprise solutions.",
+                "key_concepts": [
+                    "Innovation First",
+                    "Collaborative Excellence",
+                    "Ethical AI Development",
+                    "Continuous Learning"
+                ],
+                "mission_statement": "Pioneering advanced AI solutions for enterprise transformation while maintaining the highest standards of ethical development and deployment.",
+                "vision": "To be the global leader in responsible AI innovation, transforming how enterprises operate through ethical and efficient AI solutions.",
+                "cultural_values": [
+                    {
+                        "value": "Innovation First",
+                        "description": "Continuously pushing the boundaries of what's possible in AI"
+                    },
+                    {
+                        "value": "Collaborative Excellence",
+                        "description": "Fostering an environment where diverse talents combine to create exceptional solutions"
+                    },
+                    {
+                        "value": "Ethical AI Development",
+                        "description": "Ensuring all AI development adheres to strict ethical guidelines"
+                    },
+                    {
+                        "value": "Continuous Learning",
+                        "description": "Promoting constant growth and knowledge sharing"
+                    }
+                ]
+            },
+            "specialized_teams": {
+                "ai_research_development": {
+                    "definition": "Core R&D team focused on advancing AI capabilities",
+                    "team_lead": "Dr. Sarah Chen, Ph.D. in Machine Learning",
+                    "current_size": 12,
+                    "location": "Main Research Campus - Building A",
+                    "key_projects": [
+                        {
+                            "name": "Project Oracle",
+                            "status": "Active Development",
+                            "description": "Next-generation AI assistant platform",
+                            "key_technologies": [
+                                "LangChain",
+                                "GPT-4",
+                                "Custom LLM Architecture"
+                            ]
+                        },
+                        {
+                            "name": "Neural Framework Initiative",
+                            "status": "Research Phase",
+                            "description": "Advanced neural network architecture for enterprise applications",
+                            "key_technologies": [
+                                "PyTorch",
+                                "Custom Neural Architectures",
+                                "Distributed Training Systems"
+                            ]
+                        }
+                    ],
+                    "open_positions": [
+                        {
+                            "title": "Senior AI Researcher",
+                            "level": "L5",
+                            "focus_areas": [
+                                "Large Language Models",
+                                "Neural Architecture Design",
+                                "Model Optimization"
+                            ],
+                            "required_experience": "5+ years in AI research",
+                            "preferred_qualifications": [
+                                "Ph.D. in Computer Science/ML",
+                                "Publication history in top AI conferences",
+                                "Experience with large-scale ML systems"
+                            ]
+                        },
+                        {
+                            "title": "ML Operations Engineer",
+                            "level": "L4",
+                            "focus_areas": [
+                                "ML Infrastructure",
+                                "Pipeline Optimization",
+                                "Deployment Automation"
+                            ],
+                            "required_experience": "3+ years in MLOps",
+                            "preferred_qualifications": [
+                                "Experience with distributed systems",
+                                "Strong Python and cloud platform expertise",
+                                "Knowledge of monitoring and optimization tools"
+                            ]
+                        }
+                    ],
+                    "team_culture": "Highly collaborative research environment with emphasis on innovation and peer review"
+                },
+                "enterprise_solutions": {
+                    "definition": "Client-facing team specializing in enterprise AI implementation",
+                    "team_lead": "Marcus Wong, Former Enterprise Architect at Major Tech Firms",
+                    "current_size": 15,
+                    "location": "Client Solutions Center - Building B",
+                    "key_projects": [
+                        {
+                            "name": "Corporate Digital Transformation Suite",
+                            "status": "Active/Ongoing",
+                            "description": "End-to-end AI integration solution for enterprise clients",
+                            "key_technologies": [
+                                "Custom Integration Framework",
+                                "Enterprise AI Models",
+                                "Secure Cloud Infrastructure"
+                            ]
+                        },
+                        {
+                            "name": "Automated Workflow Engine",
+                            "status": "Beta Testing",
+                            "description": "AI-powered workflow automation platform",
+                            "key_technologies": [
+                                "Process Mining",
+                                "Automated Decision Systems",
+                                "Integration APIs"
+                            ]
+                        }
+                    ],
+                    "open_positions": [
+                        {
+                            "title": "Solutions Architect",
+                            "level": "L5",
+                            "focus_areas": [
+                                "Enterprise Architecture",
+                                "System Integration",
+                                "Client Solutions"
+                            ],
+                            "required_experience": "7+ years in enterprise software",
+                            "preferred_qualifications": [
+                                "Experience with large-scale system integration",
+                                "Strong client communication skills",
+                                "AI/ML system implementation experience"
+                            ]
+                        },
+                        {
+                            "title": "Integration Specialist",
+                            "level": "L4",
+                            "focus_areas": [
+                                "API Development",
+                                "System Integration",
+                                "Client Support"
+                            ],
+                            "required_experience": "4+ years in system integration",
+                            "preferred_qualifications": [
+                                "Experience with enterprise APIs",
+                                "Knowledge of common enterprise systems",
+                                "Strong troubleshooting skills"
+                            ]
+                        }
+                    ],
+                    "team_culture": "Results-driven environment with strong focus on client success and solution reliability"
+                },
+                "ai_ethics_governance": {
+                    "definition": "Team ensuring ethical AI development and compliance",
+                    "team_lead": "Dr. Maya Patel, Ph.D. in AI Ethics",
+                    "current_size": 8,
+                    "location": "Ethics & Governance Center - Building C",
+                    "key_projects": [
+                        {
+                            "name": "AI Safety Framework",
+                            "status": "Ongoing Development",
+                            "description": "Comprehensive framework for ethical AI development",
+                            "key_components": [
+                                "Risk Assessment Protocols",
+                                "Ethical Guidelines",
+                                "Compliance Checkpoints"
+                            ]
+                        },
+                        {
+                            "name": "Ethical AI Guidelines",
+                            "status": "Active Implementation",
+                            "description": "Company-wide ethical AI development standards",
+                            "key_components": [
+                                "Development Standards",
+                                "Testing Protocols",
+                                "Audit Procedures"
+                            ]
+                        }
+                    ],
+                    "open_positions": [
+                        {
+                            "title": "AI Ethics Researcher",
+                            "level": "L4",
+                            "focus_areas": [
+                                "AI Safety Research",
+                                "Ethical Framework Development",
+                                "Impact Assessment"
+                            ],
+                            "required_experience": "3+ years in AI ethics",
+                            "preferred_qualifications": [
+                                "Advanced degree in Ethics, Philosophy, or related field",
+                                "Publication history in AI ethics",
+                                "Experience with AI safety frameworks"
+                            ]
+                        },
+                        {
+                            "title": "Compliance Specialist",
+                            "level": "L4",
+                            "focus_areas": [
+                                "AI Compliance",
+                                "Risk Assessment",
+                                "Policy Development"
+                            ],
+                            "required_experience": "4+ years in compliance",
+                            "preferred_qualifications": [
+                                "Experience with AI/ML systems",
+                                "Knowledge of regulatory frameworks",
+                                "Strong analytical skills"
+                            ]
+                        }
+                    ],
+                    "team_culture": "Thoughtful and analytical environment focused on responsible AI development"
+                }
+            },
+            "organizational_hierarchy": {
+                "definition": "K Korp's organizational structure and reporting relationships",
+                "leadership_team": [
+                    {
+                        "position": "Chief Executive Officer",
+                        "name": "Dr. James Morrison",
+                        "background": "20+ years in AI and enterprise software"
+                    },
+                    {
+                        "position": "Chief Technology Officer",
+                        "name": "Dr. Sarah Chen",
+                        "background": "Leading AI researcher and system architect"
+                    },
+                    {
+                        "position": "Chief Ethics Officer",
+                        "name": "Dr. Maya Patel",
+                        "background": "Pioneer in AI ethics and governance"
+                    },
+                    {
+                        "position": "VP of Enterprise Solutions",
+                        "name": "Marcus Wong",
+                        "background": "Enterprise architecture and client solutions expert"
+                    }
+                ],
+                "reporting_structure": {
+                    "description": "Matrix organization with both functional and project-based reporting",
+                    "key_principles": [
+                        "Clear communication channels",
+                        "Cross-functional collaboration",
+                        "Agile team structure",
+                        "Flat hierarchy for innovation"
+                    ]
+                }
             }
         },
         "project": {
@@ -449,3 +698,5 @@
         }
     }
 }
+
+
