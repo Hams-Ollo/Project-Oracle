@@ -1,3 +1,24 @@
+#-------------------------------------------------------------------------------------#
+# SETUP:
+#
+# Setup venv and install the requirements
+# 1. Create a virtual environment -> python -m venv venv
+# 2. Activate the virtual environment -> .\venv\Scripts\Activate
+# 3. Install the requirements -> pip install -r requirements.txt
+# 4. Run the streamlit app -> streamlit run streamlit_app.py / streamlit run frontend/streamlit_app.py / python frontend/gradio_app.py
+#
+# Git Commands:
+# 1. Initialize repository -> git init
+# 2. Add files to staging -> git add .
+# 3. Commit changes -> git commit -m "your message"
+# 4. Create new branch -> git checkout -b branch-name
+# 5. Switch branches -> git checkout branch-name
+# 6. Push to remote -> git push -u origin branch-name
+# 7. Pull latest changes -> git pull origin branch-name
+# 8. Check status -> git status
+# 9. View commit history -> git log
+#-------------------------------------------------------------------------------------#
+
 import streamlit as st
 from pathlib import Path
 import sys
@@ -165,7 +186,7 @@ def render_chat_interface():
     # Chat messages ("😊" if is_user else "🤖"):
     for msg in st.session_state.messages:
         is_user = isinstance(msg, HumanMessage)
-        with st.chat_message("😊" if is_user else "🔮"):
+        with st.chat_message("😊" if is_user else "🤖"):
             st.markdown(msg.content)
     
     # Chat input

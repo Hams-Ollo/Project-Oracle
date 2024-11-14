@@ -1,14 +1,24 @@
-# Project Oracle - AI Assistant with Web Scraping & Knowledge Base
+# Project Oracle - Intelligent Onboarding System
 
-A modular AI assistant that combines web scraping capabilities with a internal custom knowledge base (insert_use_case_here), powered by LangChain, LangGraph, and OpenAI.
+Project Oracle is a sophisticated multi-agent system built on LangChain and GPT-4 that transforms organizational onboarding through AI-driven automation. The system features specialized agents orchestrating everything from personalized learning paths to email management and team integration, enabling rapid team integration, consistent knowledge transfer, and measurable progress tracking while reducing manual overhead in onboarding processes.
+
+Core capabilities include intelligent orchestration, RAG-powered knowledge navigation, automated task management, and comprehensive progress tracking through specialized agents working in concert. The system combines web scraping capabilities with an internal custom knowledge base, powered by LangChain, LangGraph, and OpenAI to deliver a comprehensive onboarding solution.
 
 ## 🌟 Features
 
 - **Intelligent Conversation Routing**: Automatically directs queries to specialized agents
 - **Web Content Scraping**: Extract and store content from websites
-- **Knowledge Base Integration**: Query and retrieve KNowledge Base information
+- **Knowledge Base Integration**: Query and retrieve Knowledge Base information
 - **Modular Architecture**: Clean separation of concerns for maintainability
 - **Extensible Design**: Easy to add new agents and capabilities
+
+### Coming in Next Release
+
+- **Personalized Learning Path Creation**: Tailored onboarding experiences
+- **Email & Calendar Integration**: Automated communication management
+- **Team Integration Assistance**: Streamlined team member incorporation
+- **Resource Access Management**: Controlled information distribution
+- **Real-Time Progress Analytics**: Track and measure onboarding success
 
 ## 🚀 Project Structure
 
