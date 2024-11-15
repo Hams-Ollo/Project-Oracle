@@ -1,125 +1,118 @@
-"""
-Vector store service for document storage and retrieval.
-"""
-
+"""Vector store for document embeddings and similarity search"""
+import chromadb
+from chromadb.utils import embedding_functions
+from typing import Dict, List, Any, Optional
+import logging
 from pathlib import Path
-from typing import List, Dict
-from langchain_community.vectorstores import Chroma
-from langchain_openai import OpenAIEmbeddings
-from langchain.schema import Document
-
-from src.config.settings import log_step
 
 class VectorStore:
-    """Vector store for document storage and similarity search"""
+    """Vector store implementation using ChromaDB"""
     
-    def __init__(self, persist_dir: str = "vector_store"):
-        """
-        Initialize vector store
+    def __init__(self, config):
+        """Initialize vector store
         
         Args:
-            persist_dir (str): Directory for storing vector data
+            config: Knowledge base configuration
         """
-        self.persist_dir = Path(persist_dir)
-        self.embeddings = OpenAIEmbeddings()
+        self.config = config
+        self.client = None
+        self.collection = None
         self._initialize_store()
     
     def _initialize_store(self):
-        """Initialize or load existing vector store"""
+        """Initialize ChromaDB and collection"""
         try:
-            self.store = Chroma(
-                persist_directory=str(self.persist_dir),
-                embedding_function=self.embeddings
+            # Initialize ChromaDB client
+            self.client = chromadb.PersistentClient(
+                path=str(self.config.vectors_dir)
             )
-            log_step('success', f"Vector store initialized at {self.persist_dir}")
+            
+            # Initialize embedding function
+            self.embedding_fn = embedding_functions.SentenceTransformerEmbeddingFunction(
+                model_name="all-MiniLM-L6-v2"  # Changed from text-embedding-ada-002
+            )
+            
+            # Get or create collection
+            self.collection = self.client.get_or_create_collection(
+                name="knowledge_base",
+                embedding_function=self.embedding_fn,
+                metadata={"hnsw:space": "cosine"}
+            )
+            
+            logging.info("Vector store initialized successfully")
         except Exception as e:
-            log_step('error', f"Failed to initialize vector store: {e}")
+            logging.error(f"Error initializing vector store: {str(e)}")
             raise
-
-    def process_json_data(self, data: Dict) -> List[Document]:
-        """
-        Convert JSON data to documents for vector store
+    
+    def add_document(self, doc) -> List[str]:
+        """Add document to vector store
         
         Args:
-            data (Dict): Knowledge base data
+            doc: Processed document
             
         Returns:
-            List[Document]: Processed documents
-        """
-        documents = []
-        
-        # Process topics
-        for category, topics in data["topics"].items():
-            for topic_name, topic_data in topics.items():
-                # Create main topic document
-                content = f"Category: {category}\nTopic: {topic_name}\n"
-                if "definition" in topic_data:
-                    content += f"Definition: {topic_data['definition']}\n"
-                if "history" in topic_data:
-                    content += f"History: {topic_data['history']}\n"
-                
-                # Add key concepts and important figures if available
-                if "key_concepts" in topic_data:
-                    content += f"Key Concepts: {', '.join(topic_data['key_concepts'])}\n"
-                if "important_figures" in topic_data:
-                    content += f"Important Figures: {', '.join(topic_data['important_figures'])}\n"
-                if "cultural_significance" in topic_data:
-                    content += f"Cultural Significance: {topic_data['cultural_significance']}"
-                
-                documents.append(Document(
-                    page_content=content,
-                    metadata={"category": category, "topic": topic_name, "type": "topic"}
-                ))
-        
-        # Process articles if they exist
-        if "articles" in data:
-            for category, articles in data["articles"].items():
-                for article_name, article_data in articles.items():
-                    content = f"Category: {category}\nArticle: {article_name}\n"
-                    if "title" in article_data:
-                        content += f"Title: {article_data['title']}\n"
-                    if "summary" in article_data:
-                        content += f"Summary: {article_data['summary']}\n"
-                    if "content" in article_data:
-                        content += f"Content: {article_data['content']}"
-                    
-                    documents.append(Document(
-                        page_content=content,
-                        metadata={"category": category, "article": article_name, "type": "article"}
-                    ))
-        
-        return documents
-
-    def add_documents(self, documents: List[Document]):
-        """
-        Add documents to vector store
-        
-        Args:
-            documents (List[Document]): Documents to add
+            List of chunk IDs
         """
         try:
-            if documents:
-                self.store.add_documents(documents)
-                log_step('success', f"Added {len(documents)} chunks to vector store")
-            else:
-                log_step('warning', "No documents to add")
+            # Add document chunks to collection
+            self.collection.add(
+                documents=doc.chunks,
+                metadatas=[doc.metadata] * len(doc.chunks),
+                ids=[f"{doc.source_id}_{i}" for i in range(len(doc.chunks))]
+            )
+            return [f"{doc.source_id}_{i}" for i in range(len(doc.chunks))]
         except Exception as e:
-            log_step('error', f"Failed to add documents: {e}")
+            logging.error(f"Error adding document to vector store: {str(e)}")
             raise
-
-    def similarity_search(self, query: str, k: int = 3) -> List[Document]:
-        """
-        Perform similarity search
+    
+    def search(
+        self,
+        query: str,
+        limit: Optional[int] = None,
+        filters: Optional[Dict] = None,
+        min_score: Optional[float] = None
+    ) -> Dict[str, Any]:
+        """Search for similar documents
         
         Args:
-            query (str): Search query
-            k (int): Number of results to return
+            query: Search query
+            limit: Maximum number of results
+            filters: Metadata filters
+            min_score: Minimum similarity score
             
         Returns:
-            List[Document]: Similar documents
+            Search results
         """
         try:
-            return self.store.similarity_search(query, k=k)
+            results = self.collection.query(
+                query_texts=[query],
+                n_results=limit or 10,
+                where=filters
+            )
+            return results
         except Exception as e:
-            log_step('error', f"Similarity search failed: {e}")
+            logging.error(f"Error searching vector store: {str(e)}")
             raise
+    
+    def get_document(self, doc_id: str) -> Optional[Dict[str, Any]]:
+        """Retrieve document by ID
+        
+        Args:
+            doc_id: Document ID
+            
+        Returns:
+            Document data if found
+        """
+        try:
+            results = self.collection.get(
+                ids=[doc_id]
+            )
+            if results["documents"]:
+                return {
+                    "content": results["documents"][0],
+                    "metadata": results["metadatas"][0]
+                }
+            return None
+        except Exception as e:
+            logging.error(f"Error retrieving document: {str(e)}")
+            return None

@@ -1,0 +1,244 @@
+#-------------------------------------------------------------------------------------#
+# CLAUDE PROJECT GUIDE - AI DEVELOPMENT ASSISTANT
+# Last Updated: 2024
+#-------------------------------------------------------------------------------------#
+
+I. ESSENTIAL PROJECT DOCUMENTATION
+================================
+
+1. Architecture & Design
+-----------------------
+- System architecture diagrams
+- Component interaction flows
+- Data flow diagrams
+- API specifications
+- Database schemas
+- Infrastructure diagrams
+- Security architecture
+- Deployment architecture
+
+2. Technical Documentation
+-------------------------
+- Tech stack details
+- Framework documentation
+- Library dependencies
+- API documentation
+- Code style guides
+- Testing strategies
+- Performance requirements
+- Security protocols
+
+3. Development Guidelines
+------------------------
+- Coding standards
+- Git workflow
+- PR templates
+- Documentation templates
+- Testing requirements
+- CI/CD pipelines
+- Deployment procedures
+- Review processes
+
+II. AI/ML SPECIFIC RESOURCES
+===========================
+
+1. Model Architecture
+--------------------
+- Agent system design
+- Model selection criteria
+- Training procedures
+- Fine-tuning approaches
+- Evaluation metrics
+- Performance benchmarks
+- Model deployment strategies
+- Model monitoring plans
+
+2. Data Management
+-----------------
+- Data schemas
+- Processing pipelines
+- Validation procedures
+- Quality metrics
+- Storage strategies
+- Privacy requirements
+- Backup procedures
+- Recovery plans
+
+3. Integration Patterns
+----------------------
+- API integration patterns
+- Event handling
+- Message queuing
+- State management
+- Cache strategies
+- Error handling
+- Retry mechanisms
+- Fallback procedures
+
+III. BUSINESS CONTEXT
+====================
+
+1. Product Vision
+----------------
+- Mission statement
+- Strategic goals
+- Success metrics
+- Target audience
+- Market analysis
+- Competitive landscape
+- Growth strategy
+- Revenue model
+
+2. Requirements
+--------------
+- Functional requirements
+- Non-functional requirements
+- User stories
+- Use cases
+- Acceptance criteria
+- Performance SLAs
+- Compliance requirements
+- Security requirements
+
+3. Project Management
+--------------------
+- Project timeline
+- Resource allocation
+- Risk management
+- Quality assurance
+- Change management
+- Communication plan
+- Stakeholder management
+- Budget constraints
+
+IV. REFERENCE MATERIALS
+======================
+
+1. Best Practices
+----------------
+- Design patterns
+- Architecture patterns
+- Security patterns
+- Performance optimization
+- Scalability strategies
+- Maintenance procedures
+- Monitoring practices
+- Incident response
+
+2. Industry Standards
+--------------------
+- Coding standards
+- Security standards
+- Compliance frameworks
+- API standards
+- Documentation standards
+- Testing standards
+- DevOps practices
+- SRE principles
+
+3. Learning Resources
+--------------------
+- Technical tutorials
+- Architecture guides
+- Design patterns
+- Best practices
+- Case studies
+- Lessons learned
+- Common pitfalls
+- Success stories
+
+V. TEMPLATES & EXAMPLES
+======================
+
+1. Code Templates
+----------------
+- Component templates
+- Service templates
+- Test templates
+- Documentation templates
+- Configuration templates
+- Deployment templates
+- Security templates
+- Monitoring templates
+
+2. Process Templates
+-------------------
+- PR review checklist
+- Security review checklist
+- Deployment checklist
+- Incident response template
+- Change request template
+- Documentation template
+- Testing template
+- Release template
+
+3. Example Implementations
+-------------------------
+- Reference architectures
+- Sample integrations
+- Example configurations
+- Test cases
+- Documentation examples
+- Deployment examples
+- Monitoring setups
+- Security implementations
+
+VI. MAINTENANCE GUIDELINES
+=========================
+
+1. Regular Updates
+-----------------
+- Keep documentation current
+- Update dependencies
+- Review security
+- Monitor performance
+- Update templates
+- Refresh examples
+- Review standards
+- Update procedures
+
+2. Knowledge Base Management
+--------------------------
+- Regular audits
+- Version control
+- Access management
+- Content organization
+- Search optimization
+- Metadata management
+- Archive procedures
+- Backup strategies
+
+USAGE GUIDELINES
+===============
+
+1. When working with Claude:
+   - Reference specific sections when asking questions
+   - Provide context from relevant documentation
+   - Ask for specific examples or templates
+   - Request comparisons with best practices
+   - Seek architecture/design reviews
+   - Get implementation guidance
+   - Review security considerations
+   - Validate technical decisions
+
+2. Keep this guide updated with:
+   - New learnings
+   - Best practices
+   - Common solutions
+   - Useful patterns
+   - Lessons learned
+   - Success stories
+   - Failure cases
+   - Performance insights
+
+3. Regular maintenance:
+   - Review quarterly
+   - Update as needed
+   - Archive outdated content
+   - Add new relevant sections
+   - Refresh examples
+   - Update references
+   - Validate accuracy
+   - Maintain organization
+
+#-------------------------------------------------------------------------------------# 

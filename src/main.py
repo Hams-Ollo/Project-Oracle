@@ -26,11 +26,12 @@
 from typing import Dict, Any
 from datetime import datetime
 from langchain_openai import ChatOpenAI
+from pathlib import Path
 
 # Use relative imports instead of absolute imports
 from config.settings import FIRECRAWL_API_KEY
 from services.web_scraper import WebScraper, create_scraping_tools
-from services.knowledge_base import KnowledgeBase, create_knowledge_tools
+from services.knowledge_base import KnowledgeBase, create_knowledge_tools, KBConfig
 from core.workflow import create_chat_workflow
 from interface.chat import run_chat_interface
 
@@ -46,8 +47,9 @@ class ProjectOracleApp:
         self.scraper = WebScraper(FIRECRAWL_API_KEY)
         self.scraping_tools = create_scraping_tools(self.scraper)
         
-        # Initialize enhanced Knowledge Base with metadata support
-        self.kb = KnowledgeBase()  # Load and initialize the enhanced KB
+        # Initialize KB with new configuration
+        kb_config = KBConfig(base_dir=Path("knowledge_base"))
+        self.kb = KnowledgeBase(config=kb_config)
         self.knowledge_tools = create_knowledge_tools(self.kb)
         
         # Initialize workflow with KB support
