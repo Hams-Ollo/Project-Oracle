@@ -7,7 +7,7 @@
 # 1. Create a virtual environment -> python -m venv venv
 # 2. Activate the virtual environment -> .\venv\Scripts\Activate
 # 3. Install the requirements -> pip install -r requirements.txt
-# 4. Run the streamlit app -> streamlit run streamlit_origin.py 
+# 4. Run the streamlit app -> streamlit run frontend/streamlit_origin.py 
 #
 # Git Commands:
 # 1. Initialize repository -> git init
