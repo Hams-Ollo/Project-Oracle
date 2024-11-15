@@ -5,7 +5,7 @@
 # 1. Create a virtual environment -> python -m venv venv
 # 2. Activate the virtual environment -> .\venv\Scripts\Activate
 # 3. Install the requirements -> pip install -r requirements.txt
-# 4. Run the streamlit app -> streamlit run streamlit_app.py / streamlit run frontend/streamlit_app_dev.py
+# 4. Run the streamlit app -> streamlit run frontend/streamlit_app_dev.py
 #
 # Git Commands:
 # 1. Initialize repository -> git init
@@ -26,7 +26,8 @@ Main Streamlit App functionality for Project Oracle's Intelligent Onboarding Sys
 import streamlit as st
 import sys
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timedelta
+from typing import Optional, Dict, Any
 from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
 
 # Add project root to path
@@ -37,7 +38,69 @@ from src.services.knowledge_base import KnowledgeBase, create_knowledge_tools
 from src.core.workflow import create_chat_workflow
 from langchain_openai import ChatOpenAI
 
-def load_css(file_name):
+class SessionStats:
+    """
+    Manages session statistics tracking for Project Oracle
+    """
+    def __init__(self):
+        self.initialize_stats()
+    
+    def initialize_stats(self):
+        """Initialize or reset session statistics"""
+        if 'stats' not in st.session_state:
+            st.session_state.stats = {
+                'messages': 0,
+                'web_pages': 0,
+                'kb_queries': 0,
+                'session_start': datetime.now(),
+                'agent_usage': {
+                    'onboarding': 0,
+                    'web': 0,
+                    'knowledge': 0
+                },
+                'successful_queries': 0,
+                'failed_queries': 0,
+                'total_session_time': timedelta(),
+                'last_activity': datetime.now()
+            }
+    
+    @staticmethod
+    def increment_stat(stat_name: str):
+        """Increment a specific statistic"""
+        if stat_name in st.session_state.stats:
+            st.session_state.stats[stat_name] += 1
+            st.session_state.stats['last_activity'] = datetime.now()
+    
+    @staticmethod
+    def get_session_duration() -> str:
+        """Calculate and format session duration"""
+        start_time = st.session_state.stats['session_start']
+        duration = datetime.now() - start_time
+        hours = duration.seconds // 3600
+        minutes = (duration.seconds % 3600) // 60
+        
+        if hours > 0:
+            return f"{hours}h {minutes}m"
+        return f"{minutes}m"
+    
+    @staticmethod
+    def track_agent_usage(agent_name: str):
+        """Track which agents are being used"""
+        if 'agent_usage' not in st.session_state.stats:
+            st.session_state.stats['agent_usage'] = {}
+        st.session_state.stats['agent_usage'][agent_name] = \
+            st.session_state.stats['agent_usage'].get(agent_name, 0) + 1
+    
+    @staticmethod
+    def update_session_time():
+        """Update total session time based on last activity"""
+        if 'last_activity' in st.session_state.stats:
+            current_time = datetime.now()
+            time_diff = current_time - st.session_state.stats['last_activity']
+            st.session_state.stats['total_session_time'] += time_diff
+            st.session_state.stats['last_activity'] = current_time
+
+def load_css(file_name: str):
     """Load custom CSS styling"""
     with open(file_name) as f:
         css = f.read()
@@ -73,17 +136,48 @@ def homepage():
     
     st.divider()
 
+def display_statistics():
+    """Display enhanced statistics in the sidebar"""
+    st.sidebar.divider()
+    st.sidebar.subheader("📊 Statistics")
+    
+    # Update session time
+    SessionStats.update_session_time()
+    
+    # Create three rows of metrics
+    col1, col2 = st.sidebar.columns(2)
+    
+    # Row 1: Message and Session stats
+    with col1:
+        st.metric("💬 Messages", st.session_state.stats['messages'])
+        st.metric("⏱️ Session", SessionStats.get_session_duration())
+    
+    # Row 2: Web and KB stats
+    with col2:
+        st.metric("🌐 Web Pages", st.session_state.stats['web_pages'])
+        st.metric("📚 KB Queries", st.session_state.stats['kb_queries'])
+    
+    # Detailed statistics in expander
+    with st.sidebar.expander("Detailed Statistics"):
+        st.write("Agent Usage:")
+        for agent, count in st.session_state.stats['agent_usage'].items():
+            st.write(f"- {agent.title()}: {count}")
+        
+        total_queries = (st.session_state.stats['successful_queries'] + 
+                        st.session_state.stats['failed_queries'])
+        success_rate = 0
+        if total_queries > 0:
+            success_rate = (st.session_state.stats['successful_queries'] / 
+                          total_queries) * 100
+        
+        st.write(f"Query Success Rate: {success_rate:.1f}%")
+        st.write(f"Total Session Time: {st.session_state.stats['total_session_time']}")
+
 def init_session_state():
     """Initialize session state variables"""
     defaults = {
         'messages': [],
         'current_agent': 'chat',
-        'stats': {
-            'messages': 0,
-            'web_pages': 0,
-            'kb_queries': 0,
-            'session_start': datetime.now().isoformat()
-        },
         'workflow': None,
         'kb': None
     }
@@ -108,6 +202,35 @@ def initialize_components():
         )
         st.session_state.kb = kb
 
+def process_message(prompt: str) -> str:
+    """Process messages through the workflow with enhanced statistics tracking"""
+    try:
+        SessionStats.increment_stat('messages')
+        result = None
+        
+        for step in st.session_state.workflow.stream({
+            "messages": [HumanMessage(content=prompt)]
+        }):
+            if "__end__" not in step:
+                for key in step:
+                    if 'messages' in step[key]:
+                        result = step[key]['messages'][-1].content
+                        
+                        # Track which agent handled the request
+                        if 'WebScrape' in step:
+                            SessionStats.increment_stat('web_pages')
+                            SessionStats.track_agent_usage('web')
+                        elif 'Knowledge' in step:
+                            SessionStats.increment_stat('kb_queries')
+                            SessionStats.track_agent_usage('knowledge')
+                        
+                        SessionStats.increment_stat('successful_queries')
+                        
+        return result if result else "I'm not sure how to help with that."
+    except Exception as e:
+        SessionStats.increment_stat('failed_queries')
+        return f"I encountered an error: {str(e)}"
+
 def chat_interface():
     """Main chat interface for the Onboarding Assistant"""
     st.title("💬 Onboarding Assistant")
@@ -123,7 +246,6 @@ def chat_interface():
     # Chat input
     if prompt := st.chat_input("How can I help with your onboarding?"):
         st.session_state.messages.append(HumanMessage(content=prompt))
-        st.session_state.stats['messages'] += 1
         
         with st.spinner("🤔 Processing..."):
             response = process_message(prompt)
@@ -131,7 +253,7 @@ def chat_interface():
         st.rerun()
 
 def web_interface():
-    """Web scraping and knowledge integration interface"""
+    """Web scraping interface with statistics tracking"""
     st.title("🌐 Web Knowledge Integration")
     st.write("Access and analyze web-based resources relevant to your role.")
     
@@ -139,11 +261,16 @@ def web_interface():
     if url and st.button("Analyze"):
         with st.spinner("Analyzing content..."):
             response = st.session_state.workflow.get("WebScrape").run(url)
+            if response and "Successfully scraped" in response:
+                SessionStats.increment_stat('web_pages')
+                SessionStats.track_agent_usage('web')
+                SessionStats.increment_stat('successful_queries')
+            else:
+                SessionStats.increment_stat('failed_queries')
             st.write(response)
-            st.session_state.stats['web_pages'] += 1
 
 def knowledge_interface():
-    """Knowledge base query interface"""
+    """Knowledge base interface with statistics tracking"""
     st.title("📚 Knowledge Base")
     st.write("Search our organizational knowledge base.")
     
@@ -151,23 +278,13 @@ def knowledge_interface():
     if query and st.button("Search"):
         with st.spinner("Searching..."):
             response = st.session_state.workflow.get("Knowledge").run(query)
+            if response and not "No information found" in response:
+                SessionStats.increment_stat('kb_queries')
+                SessionStats.track_agent_usage('knowledge')
+                SessionStats.increment_stat('successful_queries')
+            else:
+                SessionStats.increment_stat('failed_queries')
             st.write(response)
-            st.session_state.stats['kb_queries'] += 1
-
-def process_message(prompt: str) -> str:
-    """Process messages through the workflow"""
-    try:
-        result = None
-        for step in st.session_state.workflow.stream({
-            "messages": [HumanMessage(content=prompt)]
-        }):
-            if "__end__" not in step:
-                for key in step:
-                    if 'messages' in step[key]:
-                        result = step[key]['messages'][-1].content
-        return result if result else "I'm not sure how to help with that."
-    except Exception as e:
-        return f"I encountered an error: {str(e)}"
 
 def main():
     """Main application entry point"""
@@ -176,6 +293,7 @@ def main():
     # Initialize components
     init_session_state()
     initialize_components()
+    stats_manager = SessionStats()
     
     # Sidebar navigation
     st.sidebar.title("Navigation")
@@ -190,17 +308,8 @@ def main():
     if st.sidebar.button("📚 Knowledge Base"):
         st.session_state.page = "Knowledge"
     
-    # Statistics in sidebar
-    st.sidebar.divider()
-    st.sidebar.subheader("📊 Statistics")
-    col1, col2 = st.sidebar.columns(2)
-    with col1:
-        st.metric("Messages", st.session_state.stats['messages'])
-        st.metric("KB Queries", st.session_state.stats['kb_queries'])
-    with col2:
-        st.metric("Web Pages", st.session_state.stats['web_pages'])
-        session_duration = datetime.now() - datetime.fromisoformat(st.session_state.stats['session_start'])
-        st.metric("Session", f"{session_duration.seconds // 60}m")
+    # Display statistics
+    display_statistics()
     
     # Display selected page
     if "page" not in st.session_state:
