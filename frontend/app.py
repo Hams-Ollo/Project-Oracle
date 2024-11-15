@@ -20,7 +20,7 @@
 # 8. Check status -> git status
 # 9. View commit history -> git log
 #-------------------------------------------------------------------------------------#
-# frontend/app.py
+#   streamlit run frontend/app.py
 
 """
 Main Streamlit App for Project Oracle - Intelligent Onboarding System.
@@ -39,44 +39,63 @@ from src.config.settings import FIRECRAWL_API_KEY
 from src.services.web_scraper import WebScraper, create_scraping_tools
 from src.services.knowledge_base import KnowledgeBase, create_knowledge_tools
 from src.core.workflow import create_chat_workflow
+import logging
 
 # Define paths and setup
 sys.path.append(str(Path(__file__).parent.parent))
-SCRAPED_CONTENT_DIR = "scraped_content"
+SCRAPED_CONTENT_DIR = Path("scraped_content")
+KB_DIR = Path("knowledge_base")
 
 # Helper Functions for File Management
 def save_scraped_content(content: str, file_name: str):
-    os.makedirs(SCRAPED_CONTENT_DIR, exist_ok=True)
-    file_path = os.path.join(SCRAPED_CONTENT_DIR, f"{file_name}.md")
-    with open(file_path, "w") as f:
-        f.write(content)
-    st.success(f"Content saved as {file_name}.md")
+    """Save scraped content to markdown file."""
+    try:
+        SCRAPED_CONTENT_DIR.mkdir(exist_ok=True)
+        file_path = SCRAPED_CONTENT_DIR / f"{file_name}.md"
+        file_path.write_text(content)
+        st.success(f"Content saved as {file_name}.md")
+    except Exception as e:
+        st.error(f"Error saving content: {str(e)}")
+        logging.error(f"Error saving scraped content: {str(e)}")
 
 def display_saved_files():
     """List saved files with options to view or delete."""
-    files = os.listdir(SCRAPED_CONTENT_DIR)
-    if not files:
-        st.write("No files available.")
-        return
+    try:
+        SCRAPED_CONTENT_DIR.mkdir(exist_ok=True)
+        files = list(SCRAPED_CONTENT_DIR.glob("*.md"))
+        
+        if not files:
+            st.write("No files available.")
+            return
 
-    selected_file = st.selectbox("Select a file to view or delete:", files)
-    
-    if st.button("View File"):
-        file_path = os.path.join(SCRAPED_CONTENT_DIR, selected_file)
-        with open(file_path, "r") as f:
-            content = f.read()
-        st.markdown(content, unsafe_allow_html=True)
-
-    if st.button("Delete File"):
-        os.remove(os.path.join(SCRAPED_CONTENT_DIR, selected_file))
-        st.warning(f"{selected_file} deleted.")
-        st.experimental_rerun()  # Refresh the page to update the file list
-
-    if st.button("Clear All Files"):
-        for file in files:
-            os.remove(os.path.join(SCRAPED_CONTENT_DIR, file))
-        st.warning("All files cleared.")
-        st.experimental_rerun()
+        file_names = [f.name for f in files]
+        selected_file = st.selectbox("Select a file to view or delete:", file_names)
+        
+        col1, col2, col3 = st.columns(3)
+        
+        with col1:
+            if st.button("View File"):
+                file_path = SCRAPED_CONTENT_DIR / selected_file
+                content = file_path.read_text()
+                st.markdown(content, unsafe_allow_html=True)
+        
+        with col2:
+            if st.button("Delete File"):
+                file_path = SCRAPED_CONTENT_DIR / selected_file
+                file_path.unlink()
+                st.warning(f"{selected_file} deleted.")
+                st.experimental_rerun()
+        
+        with col3:
+            if st.button("Clear All"):
+                for file in files:
+                    file.unlink()
+                st.warning("All files cleared.")
+                st.experimental_rerun()
+                
+    except Exception as e:
+        st.error(f"Error managing files: {str(e)}")
+        logging.error(f"Error in display_saved_files: {str(e)}")
 
 # Session Stats Management
 class SessionStats:
@@ -146,19 +165,25 @@ def init_session_state():
             st.session_state[key] = default_value
 
 def initialize_components():
-    if st.session_state.workflow is None:
-        llm = ChatOpenAI(temperature=0.7)
-        scraper = WebScraper(FIRECRAWL_API_KEY)
-        scraping_tools = create_scraping_tools(scraper)
-        kb = KnowledgeBase()
-        knowledge_tools = create_knowledge_tools(kb)
-        
-        st.session_state.workflow = create_chat_workflow(
-            llm, 
-            scraping_tools, 
-            knowledge_tools
-        )
-        st.session_state.kb = kb
+    """Initialize application components with error handling."""
+    try:
+        if st.session_state.workflow is None:
+            llm = ChatOpenAI(temperature=0.7)
+            scraper = WebScraper(FIRECRAWL_API_KEY)
+            scraping_tools = create_scraping_tools(scraper)
+            kb = KnowledgeBase()
+            knowledge_tools = create_knowledge_tools(kb)
+            
+            st.session_state.workflow = create_chat_workflow(
+                llm, 
+                scraping_tools, 
+                knowledge_tools
+            )
+            st.session_state.kb = kb
+            logging.info("Components initialized successfully")
+    except Exception as e:
+        st.error("Failed to initialize components. Please check your configuration.")
+        logging.error(f"Component initialization error: {str(e)}")
 
 # Process Message with Workflow
 def process_message(prompt: str) -> str:
@@ -235,20 +260,31 @@ def chat_interface():
         st.rerun()
 
 def web_interface():
+    """Web scraping and knowledge integration interface."""
     st.title("🌐 Web Knowledge Integration")
     tab1, tab2 = st.tabs(["Scrape Web Content", "View Saved Content"])
 
     with tab1:
         st.write("Enter a URL to analyze and save the content as markdown.")
         url = st.text_input("URL:", placeholder="https://example.com")
+        
         if st.button("Scrape and Save"):
             with st.spinner("Scraping content..."):
-                content = "Simulated scraped content for testing"  # Replace with actual scraping logic
-                if content:
-                    file_name = url.replace("https://", "").replace("/", "_")
-                    save_scraped_content(content, file_name)
-                else:
-                    st.error("Failed to scrape content.")
+                try:
+                    # Use the actual WebScraper instead of simulation
+                    scraper = WebScraper(FIRECRAWL_API_KEY)
+                    content = scraper.scrape_url(url)
+                    
+                    if content:
+                        file_name = url.replace("https://", "").replace("/", "_")[:50]
+                        save_scraped_content(content, file_name)
+                        SessionStats.increment_stat('web_pages')
+                        SessionStats.track_agent_usage('web')
+                    else:
+                        st.error("No content retrieved from URL.")
+                except Exception as e:
+                    st.error(f"Failed to scrape content: {str(e)}")
+                    logging.error(f"Scraping error for URL {url}: {str(e)}")
 
     with tab2:
         st.write("View or manage saved content.")

@@ -124,3 +124,21 @@ class DocumentProcessor:
         """Extract title from first markdown heading"""
         title_match = re.search(r'^#\s+(.+)$', content, re.MULTILINE)
         return title_match.group(1) if title_match else None 
+
+    def process_document(self, document_path: Path) -> dict:
+        """Process a single document."""
+        try:
+            # Implementation
+            pass
+        except Exception as e:
+            logging.error(f"Error processing document {document_path}: {str(e)}")
+            raise
+
+    def process_directory(self, directory_path: Path) -> list:
+        """Process all documents in a directory."""
+        try:
+            # Implementation
+            pass
+        except Exception as e:
+            logging.error(f"Error processing directory {directory_path}: {str(e)}")
+            raise
