@@ -13,10 +13,12 @@ from langchain_openai import ChatOpenAI
 from src.config.settings import log_step
 from src.core.agents import create_webscrape_agent, create_knowledge_agent
 
+
 class AgentState(TypedDict):
     """Type definition for agent state"""
     messages: Annotated[Sequence[BaseMessage], operator.add]
     next: str
+
 
 def create_router(llm: ChatOpenAI):
     """
@@ -69,6 +71,7 @@ def create_router(llm: ChatOpenAI):
 
     return route_classifier
 
+
 def conversation_node(state, llm: ChatOpenAI):
     """
     Handles general conversation in the workflow
@@ -94,6 +97,7 @@ def conversation_node(state, llm: ChatOpenAI):
     except Exception as e:
         log_step('error', f"Conversation error: {str(e)}")
         return {"messages": [HumanMessage(content="I'm having trouble processing that. Could you rephrase?")]}
+
 
 def create_chat_workflow(llm: ChatOpenAI, scraping_tools: list, knowledge_tools: list):
     """
@@ -151,6 +155,7 @@ def create_chat_workflow(llm: ChatOpenAI, scraping_tools: list, knowledge_tools:
     log_step('success', "Chat workflow initialized")
     return workflow.compile()
 
+
 def webscrape_node(state, llm: ChatOpenAI, scraping_tools: list):
     """
     Handles web scraping operations in the workflow
@@ -175,26 +180,14 @@ def webscrape_node(state, llm: ChatOpenAI, scraping_tools: list):
         result = agent.invoke(state)
         log_step('success', "Web scraping completed")
         
-        # Handle different result formats
-        if isinstance(result, dict):
-            if "output" in result:
-                return {"messages": [HumanMessage(content=result["output"])]}
-            elif "messages" in result:
-                return {"messages": [HumanMessage(content=result["messages"][-1].content)]}
+        if isinstance(result, dict) and "output" in result:
+            return {"messages": [HumanMessage(content=result["output"])]}
         
-        # Fallback for other result formats
         return {"messages": [HumanMessage(content=str(result))]}
-        
     except Exception as e:
         log_step('error', f"Web scraping failed: {str(e)}")
-        error_message = f"""I encountered an error while trying to scrape the website. 
-        Error details: {str(e)}
-        
-        Please check that:
-        1. The URL is valid and accessible
-        2. The website allows scraping
-        3. Try again or try with a different URL"""
-        return {"messages": [HumanMessage(content=error_message)]}
+        return {"messages": [HumanMessage(content=f"Error during scraping: {str(e)}")]}
+
 
 def knowledge_node(state, llm: ChatOpenAI, knowledge_tools: list):
     """
@@ -215,45 +208,34 @@ def knowledge_node(state, llm: ChatOpenAI, knowledge_tools: list):
     """
     log_step('info', "Processing knowledge base query")
     try:
-        # Determine search type based on query analysis
-        query_analysis = llm.invoke([
-            SystemMessage(content="""Analyze the query to determine the best search method:
-            - Return "vector" for general, conceptual, or exploratory questions
-            - Return "traditional" for specific topic or article requests
-            - Return "hybrid" for complex queries needing both approaches
-            
-            Respond with only one word: vector, traditional, or hybrid"""),
-            *state["messages"]
-        ])
-        
-        search_type = query_analysis.content.strip().lower()
-        log_step('info', f"Selected search type: {search_type}")
-        
-        # Get the actual query from the last user message
         query = state["messages"][-1].content
         
-        # Create search command with type
-        search_command = f"{query}|{search_type}"
-        
-        # Execute search through agent
+        # Determine search type
+        search_type_analysis = llm.invoke([
+            SystemMessage(content="""Analyze the query and decide:
+            - Return "vector" for general, conceptual questions
+            - Return "traditional" for specific topic or article requests
+            - Return "hybrid" for mixed queries
+            
+            Respond with only one word: vector, traditional, or hybrid"""),
+            HumanMessage(content=query)
+        ])
+        search_type = search_type_analysis.content.strip().lower()
+        log_step('info', f"Selected search type: {search_type}")
+
+        # Agent invocation for KB search
         agent = create_knowledge_agent(llm, knowledge_tools)
         result = agent.invoke({
             "messages": [
-                SystemMessage(content=f"Use the {search_type} search method to find information about: {query}"),
-                *state["messages"]
+                SystemMessage(content=f"Search knowledge base using {search_type} search: {query}"),
+                HumanMessage(content=query)
             ]
         })
-        
-        log_step('success', "Knowledge retrieval completed")
-        
-        if isinstance(result, dict):
-            if "output" in result:
-                return {"messages": [HumanMessage(content=result["output"])]}
-            elif "messages" in result:
-                return {"messages": [HumanMessage(content=result["messages"][-1].content)]}
-        
+
+        if isinstance(result, dict) and "output" in result:
+            return {"messages": [HumanMessage(content=result["output"])]}
+
         return {"messages": [HumanMessage(content=str(result))]}
-        
     except Exception as e:
-        log_step('error', f"Knowledge retrieval failed: {str(e)}")
-        return {"messages": [HumanMessage(content=f"I encountered an error while searching the knowledge base: {str(e)}")]}
+        log_step('error', f"Knowledge retrieval error: {str(e)}")
+        return {"messages": [HumanMessage(content=f"Error during knowledge search: {str(e)}")]}

@@ -36,7 +36,7 @@ from interface.chat import run_chat_interface
 
 class ProjectOracleApp:
     """Main application class for Project Oracle"""
-    
+
     def __init__(self):
         """Initialize the application components"""
         # Initialize LLM
@@ -46,10 +46,11 @@ class ProjectOracleApp:
         self.scraper = WebScraper(FIRECRAWL_API_KEY)
         self.scraping_tools = create_scraping_tools(self.scraper)
         
-        self.kb = KnowledgeBase()
+        # Initialize enhanced Knowledge Base with metadata support
+        self.kb = KnowledgeBase()  # Load and initialize the enhanced KB
         self.knowledge_tools = create_knowledge_tools(self.kb)
         
-        # Initialize workflow
+        # Initialize workflow with KB support
         self.workflow = create_chat_workflow(
             self.llm,
             self.scraping_tools,
@@ -64,6 +65,18 @@ class ProjectOracleApp:
             'last_active': datetime.now(),
             'sessions': 0
         }
+
+    def search_kb(self, keyword: str):
+        """Perform keyword search in the knowledge base"""
+        return self.kb.search_documents(keyword)
+
+    def search_kb_by_tag(self, tag: str):
+        """Perform tag-based search in the knowledge base"""
+        return self.kb.search_by_tag(tag)
+
+    def get_internal_links(self, content: str):
+        """Get internal links in a document content"""
+        return self.kb.find_internal_links(content)
     
     def get_components(self) -> Dict[str, Any]:
         """Get initialized components for use in different interfaces
