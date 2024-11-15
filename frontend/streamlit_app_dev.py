@@ -108,7 +108,7 @@ def load_css(file_name: str):
 
 def homepage():
     """Project Oracle homepage with overview of features"""
-    st.title("🔮 Project Oracle - Intelligent Onboarding System")
+    st.title("🔮 Project Oracle - Intelligent Onboarding System 🤖")
     st.write("Welcome to Project Oracle! Your AI-powered guide through the onboarding process. \
              Select a feature from the sidebar to get started.")
     
@@ -240,7 +240,7 @@ def chat_interface():
     with chat_container:
         for msg in st.session_state.messages:
             is_user = isinstance(msg, HumanMessage)
-            with st.chat_message("user" if is_user else "assistant"):
+            with st.chat_message("😊" if is_user else "🤖"):
                 st.markdown(msg.content)
     
     # Chat input
