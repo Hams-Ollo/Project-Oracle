@@ -19,16 +19,17 @@
 # 9. View commit history -> git log
 #-------------------------------------------------------------------------------------#
 
+"""
+Main Streamlit App functionality for Project Oracle's Intelligent Onboarding System.
+"""
+
 import streamlit as st
-from pathlib import Path
 import sys
-from typing import Dict, Any, Optional
-import time
+from pathlib import Path
 from datetime import datetime
 from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
-import streamlit.components.v1 as components
 
-# Add project root to system path
+# Add project root to path
 sys.path.append(str(Path(__file__).parent.parent))
 from src.config.settings import FIRECRAWL_API_KEY
 from src.services.web_scraper import WebScraper, create_scraping_tools
@@ -36,72 +37,47 @@ from src.services.knowledge_base import KnowledgeBase, create_knowledge_tools
 from src.core.workflow import create_chat_workflow
 from langchain_openai import ChatOpenAI
 
-# Configure Streamlit page
-st.set_page_config(
-    page_title="Project Oracle",
-    page_icon="🔮",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
+def load_css(file_name):
+    """Load custom CSS styling"""
+    with open(file_name) as f:
+        css = f.read()
+    st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
 
-# Custom CSS for styling
-st.markdown("""
-<style>
-    /* Sidebar styling */
-    .css-1d391kg {
-        padding: 1rem;
-    }
+def homepage():
+    """Project Oracle homepage with overview of features"""
+    st.title("🔮 Project Oracle - Intelligent Onboarding System")
+    st.write("Welcome to Project Oracle! Your AI-powered guide through the onboarding process. \
+             Select a feature from the sidebar to get started.")
     
-    /* Agent buttons */
-    .stButton>button {
-        width: 100%;
-        text-align: left;
-        padding: 0.5rem 1rem;
-        margin: 0.25rem 0;
-        border: none;
-        background-color: transparent;
-    }
+    st.divider()
+    st.header("Core Features")
+    st.write("")
     
-    .stButton>button:hover {
-        background-color: rgba(128, 90, 213, 0.1);
-    }
+    st.subheader("💬 Onboarding Assistant")
+    st.write("- Personalized guidance through your onboarding journey")
+    st.write("- Custom learning paths based on your role and experience")
+    st.write("- Real-time support and answers to your questions")
+    st.write("")
     
-    .selected-agent {
-        background-color: rgba(128, 90, 213, 0.2) !important;
-        color: rgb(107, 70, 193) !important;
-    }
+    st.subheader("🌐 Web Knowledge Integration")
+    st.write("- Access and analyze web-based resources")
+    st.write("- Save and organize important documentation")
+    st.write("- Extract relevant information from online sources")
+    st.write("")
     
-    /* Message styling */
-    .chat-message {
-        padding: 1rem;
-        border-radius: 0.5rem;
-        margin: 0.5rem 0;
-    }
+    st.subheader("📚 Knowledge Base")
+    st.write("- Access comprehensive organizational knowledge")
+    st.write("- Find documentation and best practices")
+    st.write("- Learn about teams, projects, and processes")
+    st.write("")
     
-    .user-message {
-        background-color: rgba(128, 90, 213, 0.1);
-        margin-left: 2rem;
-    }
-    
-    .assistant-message {
-        background-color: white;
-        margin-right: 2rem;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-    }
-    
-    /* Input box styling */
-    .stTextInput>div>div>input {
-        border-radius: 0.5rem;
-    }
-</style>
-""", unsafe_allow_html=True)
+    st.divider()
 
 def init_session_state():
     """Initialize session state variables"""
     defaults = {
         'messages': [],
         'current_agent': 'chat',
-        'show_tutorial': True,
         'stats': {
             'messages': 0,
             'web_pages': 0,
@@ -117,7 +93,7 @@ def init_session_state():
             st.session_state[key] = default_value
 
 def initialize_components():
-    """Initialize AI components if not already initialized"""
+    """Initialize AI components and tools"""
     if st.session_state.workflow is None:
         llm = ChatOpenAI(temperature=0.7)
         scraper = WebScraper(FIRECRAWL_API_KEY)
@@ -132,75 +108,54 @@ def initialize_components():
         )
         st.session_state.kb = kb
 
-def render_sidebar():
-    """Render the sidebar with agent selection and stats"""
-    with st.sidebar:
-        st.title("🔮 Project Oracle")
-        
-        st.subheader("Agents")
-        agents = {
-            'chat': {'name': 'Chat Agent', 'icon': '💬', 'color': 'blue'},
-            'web': {'name': 'Web Scraper', 'icon': '🌐', 'color': 'green'},
-            'knowledge': {'name': 'Knowledge Base', 'icon': '📚', 'color': 'purple'}
-        }
-        
-        for agent_id, agent in agents.items():
-            button_class = "selected-agent" if st.session_state.current_agent == agent_id else ""
-            if st.button(
-                f"{agent['icon']} {agent['name']}", 
-                key=f"agent_{agent_id}",
-                help=f"Switch to {agent['name']}"
-            ):
-                st.session_state.current_agent = agent_id
-                st.rerun()
-        
-        # Statistics
-        st.markdown("---")
-        st.subheader("Statistics")
-        col1, col2 = st.columns(2)
-        with col1:
-            st.metric("Messages", st.session_state.stats['messages'])
-            st.metric("KB Queries", st.session_state.stats['kb_queries'])
-        with col2:
-            st.metric("Web Pages", st.session_state.stats['web_pages'])
-            session_duration = datetime.now() - datetime.fromisoformat(st.session_state.stats['session_start'])
-            st.metric("Session", f"{session_duration.seconds // 60}m")
-
-def render_chat_interface():
-    """Render the main chat interface"""
-    # Tutorial message
-    if st.session_state.show_tutorial:
-        with st.expander("Welcome to Project Oracle! 👋", expanded=True):
-            st.markdown("""
-            I can help you with:
-            - 💬 Natural conversations
-            - 🌐 Web scraping and analysis
-            - 📚 Star Wars knowledge base queries
-            
-            Try asking me something!
-            """)
-            if st.button("Got it!", key="close_tutorial"):
-                st.session_state.show_tutorial = False
-                st.rerun()
+def chat_interface():
+    """Main chat interface for the Onboarding Assistant"""
+    st.title("💬 Onboarding Assistant")
     
-    # Chat messages ("😊" if is_user else "🤖"):
-    for msg in st.session_state.messages:
-        is_user = isinstance(msg, HumanMessage)
-        with st.chat_message("😊" if is_user else "🤖"):
-            st.markdown(msg.content)
+    # Chat messages
+    chat_container = st.container()
+    with chat_container:
+        for msg in st.session_state.messages:
+            is_user = isinstance(msg, HumanMessage)
+            with st.chat_message("user" if is_user else "assistant"):
+                st.markdown(msg.content)
     
     # Chat input
-    if prompt := st.chat_input("Message Project Oracle..."):
+    if prompt := st.chat_input("How can I help with your onboarding?"):
         st.session_state.messages.append(HumanMessage(content=prompt))
         st.session_state.stats['messages'] += 1
         
-        with st.spinner("Thinking..."):
+        with st.spinner("🤔 Processing..."):
             response = process_message(prompt)
             st.session_state.messages.append(AIMessage(content=response))
         st.rerun()
 
+def web_interface():
+    """Web scraping and knowledge integration interface"""
+    st.title("🌐 Web Knowledge Integration")
+    st.write("Access and analyze web-based resources relevant to your role.")
+    
+    url = st.text_input("Enter URL to analyze:", placeholder="https://example.com")
+    if url and st.button("Analyze"):
+        with st.spinner("Analyzing content..."):
+            response = st.session_state.workflow.get("WebScrape").run(url)
+            st.write(response)
+            st.session_state.stats['web_pages'] += 1
+
+def knowledge_interface():
+    """Knowledge base query interface"""
+    st.title("📚 Knowledge Base")
+    st.write("Search our organizational knowledge base.")
+    
+    query = st.text_input("Search knowledge base:", placeholder="Enter your query")
+    if query and st.button("Search"):
+        with st.spinner("Searching..."):
+            response = st.session_state.workflow.get("Knowledge").run(query)
+            st.write(response)
+            st.session_state.stats['kb_queries'] += 1
+
 def process_message(prompt: str) -> str:
-    """Process user message and return response"""
+    """Process messages through the workflow"""
     try:
         result = None
         for step in st.session_state.workflow.stream({
@@ -216,10 +171,49 @@ def process_message(prompt: str) -> str:
 
 def main():
     """Main application entry point"""
+    st.set_page_config(page_title="Project Oracle", page_icon="🔮", layout="wide")
+    
+    # Initialize components
     init_session_state()
     initialize_components()
-    render_sidebar()
-    render_chat_interface()
+    
+    # Sidebar navigation
+    st.sidebar.title("Navigation")
+    if st.sidebar.button("🏠 Home"):
+        st.session_state.page = "Home"
+    
+    st.sidebar.subheader("Features")
+    if st.sidebar.button("💬 Onboarding Assistant"):
+        st.session_state.page = "Chat"
+    if st.sidebar.button("🌐 Web Knowledge"):
+        st.session_state.page = "Web"
+    if st.sidebar.button("📚 Knowledge Base"):
+        st.session_state.page = "Knowledge"
+    
+    # Statistics in sidebar
+    st.sidebar.divider()
+    st.sidebar.subheader("📊 Statistics")
+    col1, col2 = st.sidebar.columns(2)
+    with col1:
+        st.metric("Messages", st.session_state.stats['messages'])
+        st.metric("KB Queries", st.session_state.stats['kb_queries'])
+    with col2:
+        st.metric("Web Pages", st.session_state.stats['web_pages'])
+        session_duration = datetime.now() - datetime.fromisoformat(st.session_state.stats['session_start'])
+        st.metric("Session", f"{session_duration.seconds // 60}m")
+    
+    # Display selected page
+    if "page" not in st.session_state:
+        st.session_state.page = "Home"
+    
+    if st.session_state.page == "Home":
+        homepage()
+    elif st.session_state.page == "Chat":
+        chat_interface()
+    elif st.session_state.page == "Web":
+        web_interface()
+    elif st.session_state.page == "Knowledge":
+        knowledge_interface()
 
 if __name__ == "__main__":
     main()
