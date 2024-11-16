@@ -25,7 +25,7 @@ Project Oracle is a sophisticated knowledge management system built with modern 
 
 ## 🚀 Project Structure
 
-```
+```curl
 project-oracle/
 ├── src/
 │   ├── services/
@@ -52,13 +52,15 @@ project-oracle/
 
 ## ⚙️ Installation
 
-1. Clone the repository:
+Step 1. Clone the repository:
+
 ```bash
 git clone https://github.com/yourusername/project-oracle.git
 cd project-oracle
 ```
 
-2. Create and activate a virtual environment:
+Step 2. Create and activate a virtual environment:
+
 ```bash
 python -m venv venv
 
@@ -69,13 +71,15 @@ python -m venv venv
 source venv/bin/activate
 ```
 
-3. Install dependencies:
+Step 3. Install dependencies:
+
 ```bash
 pip install -r requirements.txt
 ```
 
-4. Set up environment variables:
+Step 4. Set up environment variables:
 Create a `.env` file in the project root:
+
 ```env
 OPENAI_API_KEY=your_openai_api_key
 ```
@@ -83,6 +87,7 @@ OPENAI_API_KEY=your_openai_api_key
 ## 🚀 Running the Application
 
 Launch the web interface:
+
 ```bash
 streamlit run frontend/streamlit_app.py
 ```
@@ -90,12 +95,14 @@ streamlit run frontend/streamlit_app.py
 ## 💡 Core Components
 
 ### Document Processing
+
 - Multi-format support (PDF, DOCX, TXT, MD, Images)
 - Automatic text extraction and chunking
 - Metadata extraction
 - Document summarization
 
 ### Advanced Search
+
 - Semantic search using embeddings
 - Faceted search with filters for:
   - Document types
@@ -106,6 +113,7 @@ streamlit run frontend/streamlit_app.py
 - Topic-based exploration
 
 ### Knowledge Organization
+
 - Automatic topic modeling
 - Document clustering
 - Relationship tracking
@@ -115,6 +123,7 @@ streamlit run frontend/streamlit_app.py
   - LLM-based topic identification
 
 ### Web Interface
+
 - Document upload and management
 - Interactive search
 - Topic visualization
@@ -124,6 +133,7 @@ streamlit run frontend/streamlit_app.py
 ## 🔧 Configuration
 
 Key configuration options in `kb_config.py`:
+
 - Document processing parameters
 - Search settings
 - Model configurations
@@ -139,6 +149,7 @@ Key configuration options in `kb_config.py`:
 ## 🐛 Troubleshooting
 
 Common issues and solutions:
+
 1. **Import Errors**: Ensure all dependencies are installed and virtual environment is activated
 2. **API Key Issues**: Verify OpenAI API key in `.env` file
 3. **Memory Issues**: Adjust chunk sizes for large documents
