@@ -1,70 +1,64 @@
-# Project Oracle - Intelligent Onboarding System
+# Project Oracle - Advanced Knowledge Management System
 
-Project Oracle is a sophisticated multi-agent system built on LangChain and GPT-4 that transforms organizational onboarding through AI-driven automation. The system features specialized agents orchestrating everything from personalized learning paths to email management and team integration, enabling rapid team integration, consistent knowledge transfer, and measurable progress tracking while reducing manual overhead in onboarding processes.
+Project Oracle is a sophisticated knowledge management system built with modern AI technologies. It features advanced document processing, intelligent search capabilities, and automated knowledge organization. The system leverages cutting-edge NLP and machine learning techniques to provide powerful document analysis, topic modeling, and relationship discovery.
 
-Core capabilities include intelligent orchestration, RAG-powered knowledge navigation, automated task management, and comprehensive progress tracking through specialized agents working in concert. The system combines web scraping capabilities with an internal custom knowledge base, powered by LangChain, LangGraph, and OpenAI to deliver a comprehensive onboarding solution.
+## 🌟 Key Features
 
-## 🌟 Features
-
-- **Intelligent Conversation Routing**: Automatically directs queries to specialized agents
-- **Web Content Scraping**: Extract and store content from websites
-- **Knowledge Base Integration**: Query and retrieve Knowledge Base information
-- **Modular Architecture**: Clean separation of concerns for maintainability
-- **Extensible Design**: Easy to add new agents and capabilities
-
-### Coming in Next Release
-
-- **Personalized Learning Path Creation**: Tailored onboarding experiences
-- **Email & Calendar Integration**: Automated communication management
-- **Team Integration Assistance**: Streamlined team member incorporation
-- **Resource Access Management**: Controlled information distribution
-- **Real-Time Progress Analytics**: Track and measure onboarding success
+- **Multi-Format Document Processing**: Support for various document types (PDF, DOCX, TXT, MD, Images)
+- **Advanced Search Capabilities**:
+  - Semantic search using embeddings
+  - Faceted search with multiple dimensions
+  - Topic-based document exploration
+- **Intelligent Document Analysis**:
+  - Automatic topic modeling (LDA/NMF)
+  - Document clustering
+  - Named entity recognition
+  - Automatic tag generation
+- **Knowledge Organization**:
+  - Relationship tracking between documents
+  - Automated metadata extraction
+  - Dynamic topic categorization
+- **Modern Web Interface**:
+  - Streamlit-based dashboard
+  - Interactive visualizations
+  - Real-time search and filtering
 
 ## 🚀 Project Structure
 
-```curl
+```
 project-oracle/
 ├── src/
-│   ├── __init__.py
-│   ├── main.py                 # Application entry point
-│   ├── config/                 # Configuration management
-│   │   ├── __init__.py
-│   │   └── settings.py        # Environment and app settings
-│   ├── core/                  # Core functionality
-│   │   ├── __init__.py
-│   │   ├── agents.py         # AI agent definitions
-│   │   └── workflow.py       # Conversation workflow
-│   ├── services/             # External services
-│   │   ├── __init__.py
-│   │   ├── web_scraper.py   # Web scraping functionality
-│   │   └── knowledge_base.py # Knowledge base operations
-│   └── interface/           # User interaction
-│       ├── __init__.py
-│       └── chat.py         # Chat interface
-├── knowledge_base.json     # Knowledge base storage
-├── scrape_dump/           # Scraped content storage
-├── requirements.txt       # Project dependencies
-├── setup.py              # Package configuration
-└── README.md            # Project documentation
+│   ├── services/
+│   │   ├── advanced_search.py    # Enhanced search functionality
+│   │   ├── document_processor.py # Multi-format document processing
+│   │   ├── knowledge_base.py     # Core knowledge management
+│   │   ├── search_engine.py      # Search implementation
+│   │   └── kb_config.py          # System configuration
+│   └── utils/
+│       └── text_utils.py         # Text processing utilities
+├── frontend/
+│   └── streamlit_app.py         # Web interface
+├── tests/                       # Test suite
+├── data/                       # Document storage
+├── requirements.txt           # Project dependencies
+└── README.md                # Project documentation
 ```
 
 ## 🛠️ Prerequisites
 
-- Python 3.11+
-- OpenAI API key
-- FireCrawl API key
+- Python 3.12+
+- OpenAI API key (for advanced NLP features)
+- Virtual environment
 
 ## ⚙️ Installation
 
-Step 1. Clone the repository:
-
+1. Clone the repository:
 ```bash
 git clone https://github.com/yourusername/project-oracle.git
 cd project-oracle
 ```
 
-Step 2. Create and activate a virtual environment:
-
+2. Create and activate a virtual environment:
 ```bash
 python -m venv venv
 
@@ -75,50 +69,80 @@ python -m venv venv
 source venv/bin/activate
 ```
 
-Step 3. Install the package in development mode:
-
+3. Install dependencies:
 ```bash
-pip install -e .
+pip install -r requirements.txt
 ```
 
-Step 4. Set up environment variables:
+4. Set up environment variables:
 Create a `.env` file in the project root:
-
 ```env
-FIRECRAWL_API_KEY=your_firecrawl_api_key
 OPENAI_API_KEY=your_openai_api_key
 ```
 
 ## 🚀 Running the Application
 
-Run the application using:
-
+Launch the web interface:
 ```bash
-python src/main.py
+streamlit run frontend/streamlit_app.py
 ```
 
-## 💬 Usage
+## 💡 Core Components
 
-The assistant supports three main types of interactions:
+### Document Processing
+- Multi-format support (PDF, DOCX, TXT, MD, Images)
+- Automatic text extraction and chunking
+- Metadata extraction
+- Document summarization
 
-Step 1. **General Conversation**
+### Advanced Search
+- Semantic search using embeddings
+- Faceted search with filters for:
+  - Document types
+  - Topics
+  - Authors
+  - Date ranges
+  - Tags
+- Topic-based exploration
 
-```bash
-You: Hello! How are you?
-```
+### Knowledge Organization
+- Automatic topic modeling
+- Document clustering
+- Relationship tracking
+- Tag generation using:
+  - KeyBERT extraction
+  - Named Entity Recognition
+  - LLM-based topic identification
 
-Step 2. **Web Scraping**
+### Web Interface
+- Document upload and management
+- Interactive search
+- Topic visualization
+- Faceted navigation
+- Document previews
 
-```bash
-You: Can you scrape https://example.com for me?
-```
+## 🔧 Configuration
 
-Step 3. **Knowledge Base Queries**
+Key configuration options in `kb_config.py`:
+- Document processing parameters
+- Search settings
+- Model configurations
+- Storage paths
 
-```bash
-You: What do you know about the Jedi Order?
-You: List all available topics
-```
+## 📊 Performance Considerations
+
+- Efficient document chunking
+- Optimized search indexing
+- Caching for frequently accessed content
+- Batched processing for large documents
+
+## 🐛 Troubleshooting
+
+Common issues and solutions:
+1. **Import Errors**: Ensure all dependencies are installed and virtual environment is activated
+2. **API Key Issues**: Verify OpenAI API key in `.env` file
+3. **Memory Issues**: Adjust chunk sizes for large documents
+4. **Search Performance**: Check index status and rebuild if necessary
 
 ## 🤝 Contributing
 
@@ -131,46 +155,3 @@ You: List all available topics
 ## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🔍 Core Components
-
-- **Web Scraper**: FireCrawl-powered content extraction
-- **Knowledge Base**: JSON-based information storage
-- **Agent System**: Specialized agents for different tasks
-- **Router**: Intelligent query routing
-- **Chat Interface**: Command-line interaction
-
-## ⚠️ Error Handling
-
-The application includes comprehensive error handling for:
-
-- Invalid API keys
-- Failed web scraping attempts
-- Knowledge base query errors
-- User input validation
-
-## 🔄 Workflow
-
-1. User input is received through the chat interface
-2. The router analyzes the input and directs it to the appropriate agent
-3. The agent processes the request using available tools
-4. Results are formatted and presented to the user
-
-## 📊 Performance
-
-- Configurable recursion limits
-- Timeout handling
-- Efficient conversation history management
-- Optimized knowledge base queries
-
-## 🐛 Troubleshooting
-
-If you encounter the "No module named 'src'" error, ensure you:
-
-1. Have installed the package with `pip install -e .`
-2. Are running from the project root directory
-3. Have activated your virtual environment
-
-## 📚 Documentation
-
-For more detailed information, see the documentation in the `docs/` directory.
