@@ -34,7 +34,7 @@ from datetime import datetime, timedelta
 from typing import Optional, Dict, List
 import plotly.graph_objects as go
 import plotly.express as px
-from langchain_core.messages import HumanMessage, AIMessage
+from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
 from langchain_openai import ChatOpenAI
 import pandas as pd
 import networkx as nx
@@ -145,7 +145,7 @@ def init_session_state():
             )
             kb = KnowledgeBase(config=kb_config)
             st.session_state.kb = kb
-            st.session_state.search = AdvancedSearch(kb)
+            st.session_state.search = AdvancedSearch(kb=kb)
         except Exception as e:
             st.error(f"Error initializing knowledge base: {str(e)}")
             logging.error(f"Error initializing knowledge base: {str(e)}")
@@ -183,37 +183,44 @@ def process_document(kb: KnowledgeBase, file_path: Path) -> bool:
 # Session Stats Management
 class SessionStats:
     def __init__(self):
-        self.initialize_stats()
-    
-    def initialize_stats(self):
-        """Initialize session statistics."""
-        self.session_start = datetime.now()
-        self.messages = 0
         self.documents_processed = 0
-        self.searches_performed = 0
-        self.agent_usage = {
-            'search': 0,
-            'process': 0,
-            'analyze': 0
-        }
+        self.queries_made = 0
+        self.chat_messages = 0
         self.document_types = {}
-        self.search_terms = []
-    
-    def update_stats(self, stat_type: str, value: any = 1):
+        self.last_update = datetime.now()
+        self.session_start = datetime.now()
+        self.searches_performed = 0
+        self.total_tokens = 0
+        self.error_count = 0
+        self.search_terms = []  # Added search terms list
+        
+    def update_stats(self, stat_type: str, value: int = 1):
+        """Update session statistics."""
         if hasattr(self, stat_type):
-            if isinstance(getattr(self, stat_type), int):
-                setattr(self, stat_type, getattr(self, stat_type) + value)
-            elif isinstance(getattr(self, stat_type), list):
-                getattr(self, stat_type).append(value)
-            elif isinstance(getattr(self, stat_type), dict):
-                if value in getattr(self, stat_type):
-                    getattr(self, stat_type)[value] += 1
-                else:
-                    getattr(self, stat_type)[value] = 1
+            current_value = getattr(self, stat_type)
+            if isinstance(current_value, dict):
+                current_value['total'] = current_value.get('total', 0) + value
+            elif isinstance(current_value, list):
+                if isinstance(value, str):
+                    current_value.append(value)
+            else:
+                setattr(self, stat_type, current_value + value)
+        self.last_update = datetime.now()
+        
+    def update_document_types(self, doc_type: str):
+        """Update document type statistics."""
+        if doc_type not in self.document_types:
+            self.document_types[doc_type] = 0
+        self.document_types[doc_type] += 1
+        
+    def get_session_duration(self) -> timedelta:
+        """Get the current session duration."""
+        return datetime.now() - self.session_start
 
 # Interface Components
 def homepage():
     st.title("Project Oracle - Advanced Knowledge Base Management and Onboarding Assistant")
+    
     st.markdown("""
     Welcome to Project Oracle, your intelligent knowledge management system that transforms how you store, search, and understand your documents. 
     Additionally, Project Oracle is a multi-agent onboarding assistant solution that assists and guides the user with learning, onboarding, and guidance as they navigate the custom knowledge base of data which the system has access to. 
@@ -223,99 +230,138 @@ def homepage():
     ### Features:
     
     #### 📚 Document Management
-    Upload and organize your documents with ease. Supports multiple formats including PDF, Word, text files, and more. 
-    Our system automatically processes and indexes your documents for advanced search and analysis.
+    Upload and organize your documents with ease. Supports multiple formats including PDF, Word, text files, and more. Documents are automatically processed, chunked, and indexed for efficient retrieval.
+    
+    #### 🤖 AI-Powered Chat Interface
+    Engage in natural conversations with your knowledge base. Our AI assistant helps you understand and extract insights from your documents while providing guided onboarding support.
     
     #### 🔍 Advanced Search
-    Go beyond simple keyword matching with our AI-powered semantic search. Find relevant information even when 
-    the exact terms don't match, thanks to our advanced natural language processing capabilities.
-    
-    #### 🕸️ Knowledge Graph
-    Visualize connections between your documents and concepts. Our system automatically builds an interactive 
-    knowledge graph that reveals hidden relationships and patterns in your document collection.
+    Utilize semantic search capabilities to find relevant information across your entire knowledge base. Combines both keyword and semantic understanding for better results.
     
     #### 📊 Analytics Dashboard
-    Gain insights into your document collection with powerful analytics. Track key metrics, identify trends, 
-    and understand the composition of your knowledge base through intuitive visualizations.
+    Track your knowledge base growth, usage patterns, and get insights into your document collection through interactive visualizations.
+    
+    #### 🕸️ Knowledge Graph
+    Visualize relationships between documents and concepts in your knowledge base through an interactive knowledge graph.
     
     #### 🌐 Web Integration
-    Seamlessly integrate with web sources to enrich your knowledge base. Import content from websites and 
-    keep your information up-to-date with our web crawling capabilities.
+    Seamlessly integrate web content into your knowledge base through our web scraping capabilities.
     
-    #### 💬 Chat Interface
-    Engage with Project Oracle using natural language. Ask questions, request information, or simply chat with 
-    our AI assistant to get the most out of your knowledge base.
-    
-    Select a feature from the sidebar to get started.
+    ### Getting Started:
+    1. Upload your documents in the Document Management section
+    2. Use the Chat Interface to start interacting with your knowledge base
+    3. Explore Advanced Search for specific queries
+    4. View relationships in the Knowledge Graph
+    5. Monitor usage in the Analytics Dashboard
     """)
+    
+    # Quick Stats
+    if 'stats' in st.session_state:
+        st.subheader("📈 Quick Stats")
+        col1, col2, col3 = st.columns(3)
+        
+        with col1:
+            docs_processed = st.session_state.stats.documents_processed
+            total_docs = docs_processed.get('total', 0) if isinstance(docs_processed, dict) else docs_processed
+            st.metric("Documents Processed", total_docs)
+        with col2:
+            queries = st.session_state.stats.queries_made
+            total_queries = queries.get('total', 0) if isinstance(queries, dict) else queries
+            st.metric("Queries Made", total_queries)
+        with col3:
+            messages = st.session_state.stats.chat_messages
+            total_messages = messages.get('total', 0) if isinstance(messages, dict) else messages
+            st.metric("Chat Messages", total_messages)
+            
+    # System Status
+    st.subheader("⚡ System Status")
+    col1, col2 = st.columns(2)
+    with col1:
+        if 'kb' in st.session_state:
+            st.success("✅ Knowledge Base: Connected")
+        else:
+            st.error("❌ Knowledge Base: Not Connected")
+    with col2:
+        try:
+            import openai
+            st.success("✅ OpenAI API: Connected")
+        except:
+            st.warning("⚠️ OpenAI API: Not Connected")
 
 def chat_interface():
-    st.header("Chat Interface")
+    st.header("🤖 AI Assistant & Knowledge Base Chat")
     
     # Initialize chat components if not already done
-    if 'workflow' not in st.session_state:
-        try:
-            llm = ChatOpenAI(temperature=0.7)
-            scraper = WebScraper(FIRECRAWL_API_KEY)
-            scraping_tools = create_scraping_tools(scraper)
-            knowledge_tools = create_knowledge_tools(st.session_state.kb)
-            
-            st.session_state.workflow = create_chat_workflow(
-                llm, 
-                scraping_tools, 
-                knowledge_tools
-            )
-        except Exception as e:
-            st.error(f"Failed to initialize chat components: {str(e)}")
-            logging.error(f"Chat initialization error: {str(e)}")
-            return
+    if 'chat_history' not in st.session_state:
+        st.session_state.chat_history = []
+        
+    # Chat interface explanation
+    st.markdown("""
+    Chat with your knowledge base using natural language. Our AI assistant can:
+    - Answer questions about your documents
+    - Guide you through onboarding processes
+    - Explain complex concepts
+    - Provide document summaries
+    - Help you find specific information
+    """)
     
-    # Display chat history
-    for message in st.session_state.chat_history:
-        with st.container():
-            if message["role"] == "user":
-                st.markdown(f'<div class="chat-message user-message">👤: {message["content"]}</div>', unsafe_allow_html=True)
-            else:
-                st.markdown(f'<div class="chat-message bot-message">🤖: {message["content"]}</div>', unsafe_allow_html=True)
+    # Chat display
+    for msg in st.session_state.chat_history:
+        if isinstance(msg, HumanMessage):
+            st.chat_message("user").write(msg.content)
+        elif isinstance(msg, AIMessage):
+            st.chat_message("assistant").write(msg.content)
     
     # Chat input
-    user_input = st.text_input("Ask me anything...", key=f"chat_input_{st.session_state.chat_input_key}")
-    
-    if user_input:
-        # Add user message to chat history
-        st.session_state.chat_history.append({"role": "user", "content": user_input})
+    if prompt := st.chat_input("Ask me anything about your knowledge base..."):
+        st.session_state.stats.update_stats('chat_messages')
+        st.chat_message("user").write(prompt)
+        
+        # Add user message to history
+        st.session_state.chat_history.append(HumanMessage(content=prompt))
         
         try:
-            # Process message through workflow
-            messages = [HumanMessage(content=user_input)]
-            response = None
+            # Search knowledge base for relevant context
+            search_results = st.session_state.search.semantic_search(prompt)
             
-            for step in st.session_state.workflow.stream({"messages": messages}):
-                if "__end__" not in step:
-                    for key in step:
-                        if 'messages' in step[key]:
-                            response = step[key]['messages'][-1].content
+            # Format context from search results
+            context = "\n\n".join([
+                f"From {result.metadata.get('title', 'document')}:\n{result.content}"
+                for result in search_results[:3]
+            ])
             
-            if response:
-                st.session_state.chat_history.append({"role": "assistant", "content": response})
-                st.session_state.stats.update_stats('messages')
-            else:
-                st.session_state.chat_history.append({
-                    "role": "assistant", 
-                    "content": "I apologize, but I couldn't process your request. Please try again."
-                })
-                
+            # Generate response using context
+            llm = ChatOpenAI(temperature=0.7)
+            system_prompt = """You are Project Oracle's AI Assistant, an intelligent and helpful guide that helps users understand and navigate their knowledge base.
+            You have access to a custom knowledge base of documents and can help with:
+            1. Answering questions about the content
+            2. Providing guidance and onboarding support
+            3. Explaining complex topics
+            4. Finding specific information
+            5. Summarizing documents
+            
+            Always be helpful, clear, and concise. If you're not sure about something, say so.
+            Base your responses on the provided context when possible."""
+            
+            messages = [
+                SystemMessage(content=system_prompt),
+                HumanMessage(content=f"Context from knowledge base:\n{context}\n\nUser question: {prompt}")
+            ]
+            
+            response = llm(messages)
+            
+            # Display assistant response
+            st.chat_message("assistant").write(response.content)
+            
+            # Add assistant message to history
+            st.session_state.chat_history.append(response)
+            
+            # Update stats
+            st.session_state.stats.update_stats('queries_made')
+            
         except Exception as e:
-            st.error(f"Error processing message: {str(e)}")
-            logging.error(f"Chat processing error: {str(e)}")
-            st.session_state.chat_history.append({
-                "role": "assistant", 
-                "content": "I encountered an error processing your request. Please try again."
-            })
-        
-        # Increment key to clear input
-        st.session_state.chat_input_key += 1
-        st.rerun()
+            st.error(f"Error generating response: {str(e)}")
+            logging.error(f"Chat error: {str(e)}", exc_info=True)
 
 def document_management_interface(kb: KnowledgeBase):
     st.header("Document Management")
@@ -455,90 +501,112 @@ def analytics_dashboard():
     # Key Metrics
     col1, col2, col3 = st.columns(3)
     with col1:
-        st.metric("Documents Processed", st.session_state.stats.documents_processed)
+        docs_processed = st.session_state.stats.documents_processed
+        total_docs = docs_processed if isinstance(docs_processed, int) else docs_processed.get('total', 0)
+        st.metric("Documents Processed", total_docs)
     with col2:
-        st.metric("Searches Performed", st.session_state.stats.searches_performed)
+        queries = st.session_state.stats.queries_made
+        total_queries = queries if isinstance(queries, int) else queries.get('total', 0)
+        st.metric("Queries Made", total_queries)
     with col3:
-        st.metric("Messages Exchanged", st.session_state.stats.messages)
+        messages = st.session_state.stats.chat_messages
+        total_messages = messages if isinstance(messages, int) else messages.get('total', 0)
+        st.metric("Messages Exchanged", total_messages)
     
     # Document Type Distribution
     st.subheader("Document Distribution")
-    doc_types_df = pd.DataFrame(
-        list(st.session_state.stats.document_types.items()),
-        columns=['Type', 'Count']
-    )
-    fig = px.pie(doc_types_df, values='Count', names='Type')
-    st.plotly_chart(fig)
-    
-    # Search Term Analysis
-    st.subheader("Popular Search Terms")
-    search_terms = pd.Series(st.session_state.stats.search_terms).value_counts()
-    if not search_terms.empty:
-        fig = px.bar(search_terms)
+    if st.session_state.stats.document_types:
+        doc_types_df = pd.DataFrame(
+            list(st.session_state.stats.document_types.items()),
+            columns=['Type', 'Count']
+        )
+        fig = px.pie(doc_types_df, values='Count', names='Type')
         st.plotly_chart(fig)
+    else:
+        st.info("No documents processed yet.")
+    
+    # Popular Search Terms
+    st.subheader("Popular Search Terms")
+    if st.session_state.stats.search_terms:
+        search_terms = pd.Series(st.session_state.stats.search_terms).value_counts()
+        fig = px.bar(search_terms, title="Most Common Search Terms")
+        st.plotly_chart(fig)
+    else:
+        st.info("No searches performed yet.")
+
+class AdvancedSearch:
+    def __init__(self, kb=None):
+        self.kb = kb
+        
+    def semantic_search(self, query: str, num_results: int = 3) -> List[dict]:
+        """Perform semantic search over the knowledge base."""
+        try:
+            results = self.kb.search(query, num_results)
+            return results
+        except Exception as e:
+            logging.error(f"Search error: {str(e)}")
+            return []
 
 def main():
+    # Initialize session state
+    if 'current_page' not in st.session_state:
+        st.session_state.current_page = "Home"
+    if 'chat_input_key' not in st.session_state:
+        st.session_state.chat_input_key = 0
+    if 'chat_history' not in st.session_state:
+        st.session_state.chat_history = []
+    if 'stats' not in st.session_state:
+        st.session_state.stats = SessionStats()
+    if 'kb' not in st.session_state:
+        st.session_state.kb = KnowledgeBase()
+    if 'search' not in st.session_state:
+        st.session_state.search = AdvancedSearch(kb=st.session_state.kb)
+        
     # Configure page
     st.set_page_config(
         page_title="Project Oracle",
         page_icon="🔮",
         layout="wide",
-        initial_sidebar_state="expanded",
-        menu_items={
-            'About': " 🔮 Project Oracle - Advanced Knowledge Management System 🤖"
-        }
+        initial_sidebar_state="expanded"
     )
-    
-    # Initialize
-    load_css()
-    init_session_state()
-    
-    # Dark theme
-    st.markdown("""
-        <style>
-        .main {
-            background-color: #121212;
-            color: #FFFFFF;
-        }
-        </style>
-    """, unsafe_allow_html=True)
-    
-    # Sidebar navigation
+        
+    # Sidebar Navigation
     with st.sidebar:
-        st.title("🔮 Project Oracle 🤖")
+        st.title("🔮 Project Oracle")
+        st.markdown("## Navigation")
         
-        menu_options = {
+        pages = {
             "Home": "🏠",
-            "Chat Interface": "💬",
-            "Document Management": "📁",
+            "Document Management": "📚",
+            "Chat Interface": "🤖",
             "Advanced Search": "🔍",
-            "Knowledge Graph": "🕸️",
-            "Analytics": "📊"
+            "Analytics Dashboard": "📊",
+            "Knowledge Graph": "🕸️"
         }
         
-        for page, icon in menu_options.items():
-            if st.button(f"{icon} {page}"):
+        for page, emoji in pages.items():
+            if st.button(f"{emoji} {page}"):
                 st.session_state.current_page = page
         
         # Session Information
         st.markdown("---")
         st.markdown("### Session Info")
-        session_duration = datetime.now() - st.session_state.stats.session_start
+        session_duration = st.session_state.stats.get_session_duration()
         st.text(f"Duration: {str(session_duration).split('.')[0]}")
     
     # Main Content
     if st.session_state.current_page == "Home":
         homepage()
-    elif st.session_state.current_page == "Chat Interface":
-        chat_interface()
     elif st.session_state.current_page == "Document Management":
         document_management_interface(st.session_state.kb)
+    elif st.session_state.current_page == "Chat Interface":
+        chat_interface()
     elif st.session_state.current_page == "Advanced Search":
         advanced_search_interface(st.session_state.kb, st.session_state.search)
+    elif st.session_state.current_page == "Analytics Dashboard":
+        analytics_dashboard()
     elif st.session_state.current_page == "Knowledge Graph":
         knowledge_graph_interface(st.session_state.kb.knowledge_graph)
-    elif st.session_state.current_page == "Analytics":
-        analytics_dashboard()
 
 if __name__ == "__main__":
     main()
