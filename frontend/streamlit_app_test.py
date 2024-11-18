@@ -206,20 +206,53 @@ class SessionStats:
 def homepage():
     st.title("Project Oracle - Advanced Knowledge Management")
     st.markdown("""
-    Welcome to Project Oracle, your intelligent knowledge management system.
+    Welcome to Project Oracle, your intelligent knowledge management system that transforms how you store, search, and understand your documents.
     
     ### Features:
-    - 📚 Document Management
-    - 🔍 Advanced Search
-    - 🕸️ Knowledge Graph
-    - 📊 Analytics Dashboard
-    - 🌐 Web Integration
+    
+    #### 📚 Document Management
+    Upload and organize your documents with ease. Supports multiple formats including PDF, Word, text files, and more. 
+    Our system automatically processes and indexes your documents for advanced search and analysis.
+    
+    #### 🔍 Advanced Search
+    Go beyond simple keyword matching with our AI-powered semantic search. Find relevant information even when 
+    the exact terms don't match, thanks to our advanced natural language processing capabilities.
+    
+    #### 🕸️ Knowledge Graph
+    Visualize connections between your documents and concepts. Our system automatically builds an interactive 
+    knowledge graph that reveals hidden relationships and patterns in your document collection.
+    
+    #### 📊 Analytics Dashboard
+    Gain insights into your document collection with powerful analytics. Track key metrics, identify trends, 
+    and understand the composition of your knowledge base through intuitive visualizations.
+    
+    #### 🌐 Web Integration
+    Seamlessly integrate with web sources to enrich your knowledge base. Import content from websites and 
+    keep your information up-to-date with our web crawling capabilities.
     
     Select a feature from the sidebar to get started.
     """)
 
 def chat_interface():
     st.header("Chat Interface")
+    
+    # Initialize chat components if not already done
+    if 'workflow' not in st.session_state:
+        try:
+            llm = ChatOpenAI(temperature=0.7)
+            scraper = WebScraper(FIRECRAWL_API_KEY)
+            scraping_tools = create_scraping_tools(scraper)
+            knowledge_tools = create_knowledge_tools(st.session_state.kb)
+            
+            st.session_state.workflow = create_chat_workflow(
+                llm, 
+                scraping_tools, 
+                knowledge_tools
+            )
+        except Exception as e:
+            st.error(f"Failed to initialize chat components: {str(e)}")
+            logging.error(f"Chat initialization error: {str(e)}")
+            return
     
     # Display chat history
     for message in st.session_state.chat_history:
@@ -236,9 +269,33 @@ def chat_interface():
         # Add user message to chat history
         st.session_state.chat_history.append({"role": "user", "content": user_input})
         
-        # Add bot response
-        response = "I'm here to help! Let me know what you'd like to know about the knowledge base."
-        st.session_state.chat_history.append({"role": "assistant", "content": response})
+        try:
+            # Process message through workflow
+            messages = [HumanMessage(content=user_input)]
+            response = None
+            
+            for step in st.session_state.workflow.stream({"messages": messages}):
+                if "__end__" not in step:
+                    for key in step:
+                        if 'messages' in step[key]:
+                            response = step[key]['messages'][-1].content
+            
+            if response:
+                st.session_state.chat_history.append({"role": "assistant", "content": response})
+                st.session_state.stats.update_stats('messages')
+            else:
+                st.session_state.chat_history.append({
+                    "role": "assistant", 
+                    "content": "I apologize, but I couldn't process your request. Please try again."
+                })
+                
+        except Exception as e:
+            st.error(f"Error processing message: {str(e)}")
+            logging.error(f"Chat processing error: {str(e)}")
+            st.session_state.chat_history.append({
+                "role": "assistant", 
+                "content": "I encountered an error processing your request. Please try again."
+            })
         
         # Increment key to clear input
         st.session_state.chat_input_key += 1
