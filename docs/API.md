@@ -26,8 +26,8 @@ class WebScraper:
 class KnowledgeBase:
     """Knowledge base management system"""
     
-    def __init__(self, json_path: str = "knowledge_base.json"):
-        """Initialize from JSON file"""
+    def __init__(self, config: KBConfig):
+        """Initialize with configuration"""
         
     def search_topic(self, topic: str) -> str:
         """Search for topic information"""

@@ -136,11 +136,14 @@ def init_session_state():
     if 'kb' not in st.session_state:
         try:
             kb_config = KBConfig(
-                base_dir=str(KB_DIR),
-                vector_store_path=str(VECTOR_STORE_DIR),
-                knowledge_base_path=str(KB_DIR / "knowledge_base.json")
+                base_dir=KB_DIR,
+                vector_store_path=VECTOR_STORE_DIR,
+                markdown_dir=DOCS_DIR,
+                vectors_dir=VECTORS_DIR,
+                graph_dir=GRAPH_DIR,
+                knowledge_base_path=KB_DIR / "knowledge_base.json"
             )
-            kb = KnowledgeBase(kb_config)
+            kb = KnowledgeBase(config=kb_config)
             st.session_state.kb = kb
             st.session_state.search = AdvancedSearch(kb)
         except Exception as e:
@@ -163,12 +166,18 @@ def save_uploaded_file(uploaded_file) -> Optional[Path]:
 def process_document(kb: KnowledgeBase, file_path: Path) -> bool:
     """Process document and add to knowledge base."""
     try:
-        doc = kb.doc_processor.process_document(file_path)
-        kb.add_document(doc)
+        # Process the document
+        processed_doc = kb.doc_processor.process_document(file_path)
+        
+        # Add document chunks to vector store
+        chunk_ids = kb.vector_store.add_document(processed_doc)
+        
+        # Update source map
+        kb._update_source_map(processed_doc, chunk_ids)
+        
         return True
     except Exception as e:
-        st.error(f"Error processing document: {str(e)}")
-        logging.error(f"Document processing error: {str(e)}")
+        logging.error(f"Document processing error: {str(e)}", exc_info=True)
         return False
 
 # Session Stats Management
@@ -229,6 +238,10 @@ def homepage():
     #### 🌐 Web Integration
     Seamlessly integrate with web sources to enrich your knowledge base. Import content from websites and 
     keep your information up-to-date with our web crawling capabilities.
+    
+    #### 💬 Chat Interface
+    Engage with Project Oracle using natural language. Ask questions, request information, or simply chat with 
+    our AI assistant to get the most out of your knowledge base.
     
     Select a feature from the sidebar to get started.
     """)
@@ -305,24 +318,61 @@ def document_management_interface(kb: KnowledgeBase):
     st.header("Document Management")
     
     # Upload section
-    uploaded_file = st.file_uploader("Upload Document", type=['txt', 'pdf', 'json'])
-    if uploaded_file:
-        file_path = save_uploaded_file(uploaded_file)
-        if file_path:
-            process_document(kb, file_path)
-            st.success(f"Successfully processed: {uploaded_file.name}")
-            st.session_state.stats.update_stats('documents_processed')
+    uploaded_files = st.file_uploader(
+        "Upload Documents", 
+        type=['txt', 'pdf', 'json', 'md', 'markdown'],
+        accept_multiple_files=True,
+        help="Upload one or more documents to add to your knowledge base. Supported formats: TXT, PDF, JSON, Markdown"
+    )
+    
+    if uploaded_files:
+        for uploaded_file in uploaded_files:
+            try:
+                file_path = save_uploaded_file(uploaded_file)
+                if file_path:
+                    if process_document(kb, file_path):
+                        st.success(f"✅ Successfully processed: {uploaded_file.name}")
+                        st.session_state.stats.update_stats('documents_processed')
+                    else:
+                        st.error(f"❌ Failed to process: {uploaded_file.name}")
+            except Exception as e:
+                st.error(f"❌ Error processing {uploaded_file.name}: {str(e)}")
+                logging.error(f"Document processing error for {uploaded_file.name}: {str(e)}", exc_info=True)
     
     # Document list
     st.subheader("Processed Documents")
-    documents = kb.list_documents()
-    
-    for doc in documents:
-        with st.expander(f"📄 {doc.get('title', doc.get('source_id', 'Untitled Document'))}"):
-            st.write(f"Source: {doc.get('source_id', 'Unknown')}")
-            st.write(f"Type: {doc.get('type', 'Unknown')}")
-            if doc.get('summary'):
-                st.write("Summary:", doc['summary'])
+    try:
+        # Get unique documents from source map
+        documents = []
+        unique_sources = set()
+        
+        for chunk_id, metadata in kb.source_map.items():
+            source = metadata["source"]
+            if source not in unique_sources:
+                documents.append({
+                    "title": Path(source).stem,
+                    "source": source,
+                    "type": metadata["type"],
+                    "doc_type": metadata["doc_type"],
+                    "processed_at": metadata["processed_at"]
+                })
+                unique_sources.add(source)
+        
+        # Sort by processing date
+        documents = sorted(documents, key=lambda x: x["processed_at"], reverse=True)
+        
+        if not documents:
+            st.info("No documents have been processed yet. Upload documents to get started.")
+        else:
+            for doc in documents:
+                with st.expander(f"📄 {doc['title']}"):
+                    st.write(f"**Source:** {doc['source']}")
+                    st.write(f"**Type:** {doc['type']}")
+                    st.write(f"**Document Type:** {doc['doc_type']}")
+                    st.write(f"**Processed:** {doc['processed_at']}")
+    except Exception as e:
+        st.error(f"Error listing documents: {str(e)}")
+        logging.error(f"Error in document listing: {str(e)}", exc_info=True)
 
 def advanced_search_interface(kb: KnowledgeBase, search: AdvancedSearch):
     st.header("Advanced Search")
@@ -432,7 +482,7 @@ def main():
         layout="wide",
         initial_sidebar_state="expanded",
         menu_items={
-            'About': "Project Oracle - Advanced Knowledge Management System"
+            'About': " 🔮 Project Oracle - Advanced Knowledge Management System 🤖"
         }
     )
     
@@ -452,11 +502,11 @@ def main():
     
     # Sidebar navigation
     with st.sidebar:
-        st.title("🔮 Project Oracle")
+        st.title("🔮 Project Oracle 🤖")
         
         menu_options = {
             "Home": "🏠",
-            "Chat": "💬",
+            "Chat Interface": "💬",
             "Document Management": "📁",
             "Advanced Search": "🔍",
             "Knowledge Graph": "🕸️",
@@ -476,7 +526,7 @@ def main():
     # Main Content
     if st.session_state.current_page == "Home":
         homepage()
-    elif st.session_state.current_page == "Chat":
+    elif st.session_state.current_page == "Chat Interface":
         chat_interface()
     elif st.session_state.current_page == "Document Management":
         document_management_interface(st.session_state.kb)

@@ -7,6 +7,7 @@ from datetime import datetime
 from .kb_config import KBConfig
 from .document_processor import DocumentProcessor
 from .vector_store import VectorStore
+from .knowledge_graph import KnowledgeGraph
 from langchain.tools import Tool
 
 class KnowledgeBase:
@@ -31,6 +32,7 @@ class KnowledgeBase:
         # Initialize components
         self.doc_processor = DocumentProcessor(self.config)
         self.vector_store = VectorStore(self.config)
+        self.knowledge_graph = KnowledgeGraph(self.config)
         
         # Source tracking
         self.source_map = {}
@@ -41,9 +43,9 @@ class KnowledgeBase:
     def _initialize_knowledge_base(self):
         """Initialize knowledge base with all available content"""
         # Process JSON knowledge base
-        if self.config.json_path.exists():
+        if self.config.knowledge_base_path.exists():
             try:
-                doc = self.doc_processor.process_document(self.config.json_path)
+                doc = self.doc_processor.process_document(self.config.knowledge_base_path)
                 chunk_ids = self.vector_store.add_document(doc)
                 self._update_source_map(doc, chunk_ids)
             except Exception as e:
@@ -51,9 +53,10 @@ class KnowledgeBase:
         
         # Process documentation directory
         try:
-            for doc in self.doc_processor.process_directory(self.config.docs_dir):
-                chunk_ids = self.vector_store.add_document(doc)
-                self._update_source_map(doc, chunk_ids)
+            if self.config.markdown_dir.exists():
+                for doc in self.doc_processor.process_directory(self.config.markdown_dir):
+                    chunk_ids = self.vector_store.add_document(doc)
+                    self._update_source_map(doc, chunk_ids)
         except Exception as e:
             logging.error(f"Error processing documentation: {str(e)}")
     
@@ -157,6 +160,29 @@ class KnowledgeBase:
             Document data if found
         """
         return self.vector_store.get_document(doc_id)
+    
+    def get_documents(self) -> List[Dict[str, Any]]:
+        """Get list of all documents in the knowledge base
+        
+        Returns:
+            List of documents with metadata
+        """
+        documents = []
+        unique_sources = set()
+        
+        for chunk_id, metadata in self.source_map.items():
+            source = metadata["source"]
+            if source not in unique_sources:
+                documents.append({
+                    "title": Path(source).stem,
+                    "source": source,
+                    "type": metadata["type"],
+                    "doc_type": metadata["doc_type"],
+                    "processed_at": metadata["processed_at"]
+                })
+                unique_sources.add(source)
+        
+        return sorted(documents, key=lambda x: x["processed_at"], reverse=True)
     
     def get_statistics(self) -> Dict[str, Any]:
         """Get knowledge base statistics

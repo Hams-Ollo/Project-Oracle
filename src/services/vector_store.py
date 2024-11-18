@@ -24,7 +24,7 @@ class VectorStore:
         try:
             # Initialize ChromaDB client
             self.client = chromadb.PersistentClient(
-                path=str(self.config.vectors_dir)
+                path=str(self.config.vector_store_path)
             )
             
             # Initialize embedding function

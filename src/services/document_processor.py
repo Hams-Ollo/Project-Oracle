@@ -229,10 +229,10 @@ class DocumentProcessor:
     
     def process_json_kb(self) -> ProcessedDocument:
         """Process the main knowledge base JSON file"""
-        if not self.config.json_path.exists():
-            raise FileNotFoundError(f"Knowledge base JSON not found: {self.config.json_path}")
+        if not self.config.knowledge_base_path.exists():
+            raise FileNotFoundError(f"Knowledge base JSON not found: {self.config.knowledge_base_path}")
             
-        with open(self.config.json_path, 'r', encoding='utf-8') as f:
+        with open(self.config.knowledge_base_path, 'r', encoding='utf-8') as f:
             content = json.load(f)
             
         # Convert JSON structure to text chunks
@@ -246,7 +246,7 @@ class DocumentProcessor:
         return ProcessedDocument(
             chunks=chunks,
             metadata={
-                "source": str(self.config.json_path),
+                "source": str(self.config.knowledge_base_path),
                 "type": "json",
                 "sections": list(content.keys())
             },

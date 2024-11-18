@@ -8,7 +8,7 @@ from dataclasses import dataclass
 
 from langchain_community.vectorstores import Chroma
 from langchain_community.embeddings import OpenAIEmbeddings
-from langchain.retrievers import BM25Retriever
+from langchain_community.retrievers import BM25Retriever
 from langchain.schema import Document
 from langchain_openai import ChatOpenAI
 from sklearn.metrics.pairwise import cosine_similarity
