@@ -213,9 +213,12 @@ class SessionStats:
 
 # Interface Components
 def homepage():
-    st.title("Project Oracle - Advanced Knowledge Management")
+    st.title("Project Oracle - Advanced Knowledge Base Management and Onboarding Assistant")
     st.markdown("""
-    Welcome to Project Oracle, your intelligent knowledge management system that transforms how you store, search, and understand your documents.
+    Welcome to Project Oracle, your intelligent knowledge management system that transforms how you store, search, and understand your documents. 
+    Additionally, Project Oracle is a multi-agent onboarding assistant solution that assists and guides the user with learning, onboarding, and guidance as they navigate the custom knowledge base of data which the system has access to. 
+    Our system automatically processes and indexes your documents for advanced search and analysis. 
+    It also provides AI-powered semantic search, knowledge graph visualization, analytics dashboard, web integration and natural language chat interface features.
     
     ### Features:
     
