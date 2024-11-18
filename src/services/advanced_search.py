@@ -10,8 +10,7 @@ import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.decomposition import LatentDirichletAllocation, NMF
 from sklearn.cluster import KMeans
-from gensim.models import KeyBERT
-from gensim.summarization import keywords
+from keybert import KeyBERT
 import spacy
 from langchain_openai import ChatOpenAI
 
