@@ -1,4 +1,4 @@
-# 🧠 **Project Oracle: Advanced Knowledge Management and Onboarding Assistant**
+# 🧬 **Project Oracle: Advanced Knowledge Management and Onboarding Assistant**
 
 **Project Oracle** is a next-generation knowledge management and onboarding platform, designed to empower individuals and teams by streamlining knowledge transfer, onboarding, and learning processes. Built on a foundation of cutting-edge AI technologies, including multi-modal, multi-agent frameworks, **Project Oracle** serves as a dynamic knowledge repository and learning assistant. Whether you’re onboarding new team members, managing DevOps knowledge, or creating customized learning paths, Project Oracle ensures seamless integration, collaboration, and productivity.
 
@@ -49,94 +49,130 @@
    ```bash
    git clone https://github.com/yourusername/project-oracle.git
    cd project-oracle
-Set Up Virtual Environment
+   ```
 
-bash
-Copy code
-python -m venv venv
-source venv/bin/activate  # For Unix/MacOS
-.\venv\Scripts\activate   # For Windows
-Install Dependencies
+2. **Set Up Virtual Environment**  
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # For Unix/MacOS
+   .\venv\Scripts\activate   # For Windows
+   ```
 
-bash
-Copy code
-pip install -r requirements.txt
-Set Up Environment Variables
-Create a .env file in the project root:
+3. **Install Dependencies**  
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-plaintext
-Copy code
-OPENAI_API_KEY=your_openai_api_key
-🛠️ Core Components
-1. Document Processing
-Multi-format support for PDF, DOCX, TXT, MD, Images.
-Automatic text extraction, chunking, and summarization.
-Metadata extraction for easy categorization and searchability.
-2. Advanced Search
-Semantic Search: Powered by embeddings for context-aware results.
-Faceted Filters: Explore by document types, topics, tags, authors, and date ranges.
-Topic-Based Exploration: Discover connections and clusters between knowledge assets.
-3. Knowledge Organization
-Automatic topic modeling and clustering.
-Named Entity Recognition for intelligent tagging.
-Relationship tracking between documents for comprehensive knowledge mapping.
-4. Multi-Agent Framework
-Onboarding Assistant: Helps new members get up to speed with curated learning paths.
-Knowledge Transfer Agent: Manages secure and efficient offboarding processes.
-Learning Path Curator: Designs personalized paths based on individual roles and team goals.
-Project Management Assistant: Tracks knowledge integration and workflow dependencies.
-📊 Modern Web Interface
-Real-Time Dashboard:
-Built with Streamlit, the interface supports real-time search, filtering, and task tracking.
+4. **Set Up Environment Variables**  
+   Create a `.env` file in the project root:  
+   ```plaintext
+   OPENAI_API_KEY=your_openai_api_key
+   ```
 
-Document Previews and Visualization:
-View summaries, insights, and relationships between documents interactively.
+---
 
-User Customization:
-Tailor workflows, learning paths, and search filters to individual or team needs.
+## 🛠️ **Core Components**
 
-🔧 Configuration
-Key configuration options in kb_config.py:
+### **1. Document Processing**
+- Multi-format support for **PDF, DOCX, TXT, MD, Images**.
+- Automatic text extraction, chunking, and summarization.
+- Metadata extraction for easy categorization and searchability.
 
-Document processing parameters.
-Search settings (e.g., semantic embeddings, clustering thresholds).
-Multi-agent behavior customization.
-Storage paths for uploaded documents.
-📈 Performance Optimization
-Efficient Document Chunking: Handles large datasets without latency.
-Search Index Optimization: Ensures fast and reliable queries.
-Batched Processing: Optimized for large-scale document ingestion.
-Caching: Improves response times for frequently accessed content.
-🐛 Troubleshooting
-Import Errors: Ensure all dependencies are installed and the virtual environment is activated.
-API Key Issues: Verify OpenAI API key in the .env file.
-Memory Issues: Adjust chunk sizes and batching for large document sets.
-Search Performance: Rebuild indexes if queries slow down.
-🤝 Contributing
-We welcome contributions!
+### **2. Advanced Search**
+- **Semantic Search**: Powered by embeddings for context-aware results.
+- **Faceted Filters**: Explore by document types, topics, tags, authors, and date ranges.
+- **Topic-Based Exploration**: Discover connections and clusters between knowledge assets.
 
-Fork the repository.
-Create a feature branch:
-bash
-Copy code
-git checkout -b feature/amazing-feature
-Commit your changes:
-bash
-Copy code
-git commit -m 'Add amazing feature'
-Push to the branch:
-bash
-Copy code
-git push origin feature/amazing-feature
-Open a Pull Request.
-📝 License
-This project is licensed under the MIT License - see the LICENSE file for details.
+### **3. Knowledge Organization**
+- Automatic topic modeling and clustering.
+- **Named Entity Recognition** for intelligent tagging.
+- Relationship tracking between documents for comprehensive knowledge mapping.
 
-🙏 Acknowledgments
-OpenAI for providing cutting-edge NLP models.
-Streamlit for the interactive dashboard framework.
-Community contributors for ideas and feedback!
-📬 Contact
-GitHub: @Hams-Ollo
-Twitter: @hams_ollo
-Note: Project Oracle is under active development, with features and documentation updated regularly.
+### **4. Multi-Agent Framework**
+- **Onboarding Assistant**: Helps new members get up to speed with curated learning paths.
+- **Knowledge Transfer Agent**: Manages secure and efficient offboarding processes.
+- **Learning Path Curator**: Designs personalized paths based on individual roles and team goals.
+- **Project Management Assistant**: Tracks knowledge integration and workflow dependencies.
+
+---
+
+## 📊 **Modern Web Interface**
+
+1. **Real-Time Dashboard**:  
+   Built with **Streamlit**, the interface supports real-time search, filtering, and task tracking.  
+
+2. **Document Previews and Visualization**:  
+   View summaries, insights, and relationships between documents interactively.
+
+3. **User Customization**:  
+   Tailor workflows, learning paths, and search filters to individual or team needs.
+
+---
+
+## 🔧 **Configuration**
+Key configuration options in `kb_config.py`:
+- Document processing parameters.
+- Search settings (e.g., semantic embeddings, clustering thresholds).
+- Multi-agent behavior customization.
+- Storage paths for uploaded documents.
+
+---
+
+## 📊 **Performance Optimization**
+- **Efficient Document Chunking**: Handles large datasets without latency.
+- **Search Index Optimization**: Ensures fast and reliable queries.
+- **Batched Processing**: Optimized for large-scale document ingestion.
+- **Caching**: Improves response times for frequently accessed content.
+
+---
+
+## 🐛 **Troubleshooting**
+- **Import Errors**: Ensure all dependencies are installed and the virtual environment is activated.
+- **API Key Issues**: Verify OpenAI API key in the `.env` file.
+- **Memory Issues**: Adjust chunk sizes and batching for large document sets.
+- **Search Performance**: Rebuild indexes if queries slow down.
+
+---
+
+## 🤝 **Contributing**
+
+We welcome contributions!  
+1. **Fork the repository.**  
+2. **Create a feature branch**:  
+   ```bash
+   git checkout -b feature/amazing-feature
+   ```  
+3. **Commit your changes**:  
+   ```bash
+   git commit -m 'Add amazing feature'
+   ```  
+4. **Push to the branch**:  
+   ```bash
+   git push origin feature/amazing-feature
+   ```  
+5. **Open a Pull Request.**
+
+---
+
+## 🖋️ **License**
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 🙏 **Acknowledgments**
+
+- [OpenAI](https://openai.com) for providing cutting-edge NLP models.
+- [Streamlit](https://streamlit.io) for the interactive dashboard framework.
+- Community contributors for ideas and feedback!
+
+---
+
+## 📢 **Contact**
+
+- GitHub: [@Hams-Ollo](https://github.com/Hams-Ollo)  
+- Twitter: [@hams_ollo](https://twitter.com/hams_ollo)  
+
+---
+
+**Note**: Project Oracle is under active development, with features and documentation updated regularly.
