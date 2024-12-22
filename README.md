@@ -1,168 +1,142 @@
-# Project Oracle - Advanced Knowledge Management System
+# 🧠 **Project Oracle: Advanced Knowledge Management and Onboarding Assistant**
 
-Project Oracle is a sophisticated knowledge management system built with modern AI technologies. It features advanced document processing, intelligent search capabilities, and automated knowledge organization. The system leverages cutting-edge NLP and machine learning techniques to provide powerful document analysis, topic modeling, and relationship discovery.
+**Project Oracle** is a next-generation knowledge management and onboarding platform, designed to empower individuals and teams by streamlining knowledge transfer, onboarding, and learning processes. Built on a foundation of cutting-edge AI technologies, including multi-modal, multi-agent frameworks, **Project Oracle** serves as a dynamic knowledge repository and learning assistant. Whether you’re onboarding new team members, managing DevOps knowledge, or creating customized learning paths, Project Oracle ensures seamless integration, collaboration, and productivity.
 
-## 🌟 Key Features
+---
 
-- **Multi-Format Document Processing**: Support for various document types (PDF, DOCX, TXT, MD, Images)
-- **Advanced Search Capabilities**:
-  - Semantic search using embeddings
-  - Faceted search with multiple dimensions
-  - Topic-based document exploration
-- **Intelligent Document Analysis**:
-  - Automatic topic modeling (LDA/NMF)
-  - Document clustering
-  - Named entity recognition
-  - Automatic tag generation
-- **Knowledge Organization**:
-  - Relationship tracking between documents
-  - Automated metadata extraction
-  - Dynamic topic categorization
-- **Modern Web Interface**:
-  - Streamlit-based dashboard
-  - Interactive visualizations
-  - Real-time search and filtering
+## 🌟 **Key Features**
 
-## 🚀 Project Structure
+### **1. Advanced Knowledge Management**
+- Multi-modal knowledge repository with intelligent content organization.
+- Support for diverse document formats: **PDF, DOCX, TXT, MD, Images**.
+- Automated metadata extraction and **relationship tracking** between documents.
+- **Semantic and faceted search** for fast, accurate information retrieval.
 
-```curl
-project-oracle/
-├── src/
-│   ├── services/
-│   │   ├── advanced_search.py    # Enhanced search functionality
-│   │   ├── document_processor.py # Multi-format document processing
-│   │   ├── knowledge_base.py     # Core knowledge management
-│   │   ├── search_engine.py      # Search implementation
-│   │   └── kb_config.py          # System configuration
-│   └── utils/
-│       └── text_utils.py         # Text processing utilities
-├── frontend/
-│   └── streamlit_app.py         # Web interface
-├── tests/                       # Test suite
-├── data/                       # Document storage
-├── requirements.txt           # Project dependencies
-└── README.md                # Project documentation
-```
+### **2. Multi-Agentic Learning and Collaboration**
+- **Onboarding Assistant**: Guides new users through knowledge paths and team workflows.
+- **Knowledge Transfer Agent**: Ensures efficient offboarding and secure transfer of critical insights.
+- **Learning Path Curator**: Designs and customizes learning schedules and curated knowledge paths.
+- **Project Management Assistant**: Integrates with team schedules and project workflows.
 
-## 🛠️ Prerequisites
+### **3. Intelligent Search and Insights**
+- **Semantic Search**: Powered by embeddings for contextual understanding.
+- **Faceted Filters**: Search by document type, topics, tags, dates, and more.
+- **Topic Modeling**: Automatic categorization and clustering of documents.
+- **LLM-based Summarization**: Generate summaries and insights for long documents.
 
+### **4. Dynamic Web Interface**
+- **Streamlit Dashboard**: Real-time search, filtering, and interactive visualizations.
+- **Document Previews**: Quickly review document content with summarized views.
+- **Faceted Navigation**: Explore knowledge by categories, tags, or team-specific dimensions.
+
+### **5. Team Collaboration and Integration**
+- **Role-Specific Assistance**: Tailored guidance for DevOps, developers, or other teams.
+- **Knowledge Transfer Workflows**: Automates onboarding and offboarding processes.
+- **Scheduling and Task Management**: Tracks progress and integrates with team calendars and project timelines.
+- **Project Integrations**: Supports seamless knowledge integration with ongoing projects.
+
+---
+
+## 🚀 **Getting Started**
+
+### **Prerequisites**
 - Python 3.12+
 - OpenAI API key (for advanced NLP features)
 - Virtual environment
 
-## ⚙️ Installation
+### **Installation**
+1. **Clone the Repository**  
+   ```bash
+   git clone https://github.com/yourusername/project-oracle.git
+   cd project-oracle
+Set Up Virtual Environment
 
-Step 1. Clone the repository:
-
-```bash
-git clone https://github.com/yourusername/project-oracle.git
-cd project-oracle
-```
-
-Step 2. Create and activate a virtual environment:
-
-```bash
+bash
+Copy code
 python -m venv venv
+source venv/bin/activate  # For Unix/MacOS
+.\venv\Scripts\activate   # For Windows
+Install Dependencies
 
-# Windows
-.\venv\Scripts\activate
-
-# Unix/MacOS
-source venv/bin/activate
-```
-
-Step 3. Install dependencies:
-
-```bash
+bash
+Copy code
 pip install -r requirements.txt
-```
+Set Up Environment Variables
+Create a .env file in the project root:
 
-Step 4. Set up environment variables:
-Create a `.env` file in the project root:
-
-```env
+plaintext
+Copy code
 OPENAI_API_KEY=your_openai_api_key
-```
+🛠️ Core Components
+1. Document Processing
+Multi-format support for PDF, DOCX, TXT, MD, Images.
+Automatic text extraction, chunking, and summarization.
+Metadata extraction for easy categorization and searchability.
+2. Advanced Search
+Semantic Search: Powered by embeddings for context-aware results.
+Faceted Filters: Explore by document types, topics, tags, authors, and date ranges.
+Topic-Based Exploration: Discover connections and clusters between knowledge assets.
+3. Knowledge Organization
+Automatic topic modeling and clustering.
+Named Entity Recognition for intelligent tagging.
+Relationship tracking between documents for comprehensive knowledge mapping.
+4. Multi-Agent Framework
+Onboarding Assistant: Helps new members get up to speed with curated learning paths.
+Knowledge Transfer Agent: Manages secure and efficient offboarding processes.
+Learning Path Curator: Designs personalized paths based on individual roles and team goals.
+Project Management Assistant: Tracks knowledge integration and workflow dependencies.
+📊 Modern Web Interface
+Real-Time Dashboard:
+Built with Streamlit, the interface supports real-time search, filtering, and task tracking.
 
-## 🚀 Running the Application
+Document Previews and Visualization:
+View summaries, insights, and relationships between documents interactively.
 
-Launch the web interface:
+User Customization:
+Tailor workflows, learning paths, and search filters to individual or team needs.
 
-```bash
-streamlit run frontend/streamlit_app.py
-```
+🔧 Configuration
+Key configuration options in kb_config.py:
 
-## 💡 Core Components
+Document processing parameters.
+Search settings (e.g., semantic embeddings, clustering thresholds).
+Multi-agent behavior customization.
+Storage paths for uploaded documents.
+📈 Performance Optimization
+Efficient Document Chunking: Handles large datasets without latency.
+Search Index Optimization: Ensures fast and reliable queries.
+Batched Processing: Optimized for large-scale document ingestion.
+Caching: Improves response times for frequently accessed content.
+🐛 Troubleshooting
+Import Errors: Ensure all dependencies are installed and the virtual environment is activated.
+API Key Issues: Verify OpenAI API key in the .env file.
+Memory Issues: Adjust chunk sizes and batching for large document sets.
+Search Performance: Rebuild indexes if queries slow down.
+🤝 Contributing
+We welcome contributions!
 
-### Document Processing
+Fork the repository.
+Create a feature branch:
+bash
+Copy code
+git checkout -b feature/amazing-feature
+Commit your changes:
+bash
+Copy code
+git commit -m 'Add amazing feature'
+Push to the branch:
+bash
+Copy code
+git push origin feature/amazing-feature
+Open a Pull Request.
+📝 License
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-- Multi-format support (PDF, DOCX, TXT, MD, Images)
-- Automatic text extraction and chunking
-- Metadata extraction
-- Document summarization
-
-### Advanced Search
-
-- Semantic search using embeddings
-- Faceted search with filters for:
-  - Document types
-  - Topics
-  - Authors
-  - Date ranges
-  - Tags
-- Topic-based exploration
-
-### Knowledge Organization
-
-- Automatic topic modeling
-- Document clustering
-- Relationship tracking
-- Tag generation using:
-  - KeyBERT extraction
-  - Named Entity Recognition
-  - LLM-based topic identification
-
-### Web Interface
-
-- Document upload and management
-- Interactive search
-- Topic visualization
-- Faceted navigation
-- Document previews
-
-## 🔧 Configuration
-
-Key configuration options in `kb_config.py`:
-
-- Document processing parameters
-- Search settings
-- Model configurations
-- Storage paths
-
-## 📊 Performance Considerations
-
-- Efficient document chunking
-- Optimized search indexing
-- Caching for frequently accessed content
-- Batched processing for large documents
-
-## 🐛 Troubleshooting
-
-Common issues and solutions:
-
-1. **Import Errors**: Ensure all dependencies are installed and virtual environment is activated
-2. **API Key Issues**: Verify OpenAI API key in `.env` file
-3. **Memory Issues**: Adjust chunk sizes for large documents
-4. **Search Performance**: Check index status and rebuild if necessary
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+🙏 Acknowledgments
+OpenAI for providing cutting-edge NLP models.
+Streamlit for the interactive dashboard framework.
+Community contributors for ideas and feedback!
+📬 Contact
+GitHub: @Hams-Ollo
+Twitter: @hams_ollo
+Note: Project Oracle is under active development, with features and documentation updated regularly.
