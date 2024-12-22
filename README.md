@@ -1,39 +1,39 @@
-# 🧬 **Project Oracle: Advanced Knowledge Management and Onboarding Assistant**
+# 🔬 **Project O.R.A.C.L.E.: Onboarding Repository for AI-Curated Learning and Enrichment**
 
-**Project Oracle** is a next-generation knowledge management and onboarding platform, designed to empower individuals and teams by streamlining knowledge transfer, onboarding, and learning processes. Built on a foundation of cutting-edge AI technologies, including multi-modal, multi-agent frameworks, **Project Oracle** serves as a dynamic knowledge repository and learning assistant. Whether you’re onboarding new team members, managing DevOps knowledge, or creating customized learning paths, Project Oracle ensures seamless integration, collaboration, and productivity.
+**Project O.R.A.C.L.E.** is a next-generation onboarding and knowledge management platform designed to empower individuals and teams by streamlining knowledge transfer, learning processes, and professional enrichment. Built on cutting-edge AI technologies, including multi-modal and multi-agent frameworks, **O.R.A.C.L.E.** serves as an intelligent, dynamic repository for organizing, curating, and enriching knowledge bases. Whether you’re onboarding new team members, managing DevOps knowledge, or creating personalized learning paths, **O.R.A.C.L.E.** ensures seamless integration, collaboration, and productivity.
 
 ---
 
 ## 🌟 **Key Features**
 
 ### **1. Advanced Knowledge Management**
-- Multi-modal knowledge repository with intelligent content organization.
-- Support for diverse document formats: **PDF, DOCX, TXT, MD, Images**.
-- Automated metadata extraction and **relationship tracking** between documents.
-- **Semantic and faceted search** for fast, accurate information retrieval.
+- Multi-modal repository supporting diverse document formats: **PDF, DOCX, TXT, MD, Images**.
+- Intelligent organization with automated metadata extraction.
+- Relationship tracking between documents for holistic insights.
+- **Semantic and faceted search** for fast and accurate information retrieval.
 
 ### **2. Multi-Agentic Learning and Collaboration**
-- **Onboarding Assistant**: Guides new users through knowledge paths and team workflows.
-- **Knowledge Transfer Agent**: Ensures efficient offboarding and secure transfer of critical insights.
-- **Learning Path Curator**: Designs and customizes learning schedules and curated knowledge paths.
-- **Project Management Assistant**: Integrates with team schedules and project workflows.
+- **Onboarding Assistant**: Guides new users through personalized learning paths and workflows.
+- **Knowledge Transfer Agent**: Ensures secure and efficient transfer of critical knowledge during offboarding or transitions.
+- **Learning Path Curator**: Designs and customizes schedules and curated learning experiences.
+- **Project Management Assistant**: Integrates with team schedules and workflows to enhance collaboration.
 
 ### **3. Intelligent Search and Insights**
-- **Semantic Search**: Powered by embeddings for contextual understanding.
-- **Faceted Filters**: Search by document type, topics, tags, dates, and more.
-- **Topic Modeling**: Automatic categorization and clustering of documents.
-- **LLM-based Summarization**: Generate summaries and insights for long documents.
+- **Semantic Search**: Context-aware search powered by embeddings.
+- **Faceted Filters**: Refine searches by document type, topics, tags, dates, and more.
+- **Topic Modeling**: Automatically categorize and cluster documents.
+- **LLM-based Summarization**: Generate concise insights from long documents.
 
 ### **4. Dynamic Web Interface**
 - **Streamlit Dashboard**: Real-time search, filtering, and interactive visualizations.
-- **Document Previews**: Quickly review document content with summarized views.
+- **Document Previews**: Summarized views for quick comprehension.
 - **Faceted Navigation**: Explore knowledge by categories, tags, or team-specific dimensions.
 
 ### **5. Team Collaboration and Integration**
-- **Role-Specific Assistance**: Tailored guidance for DevOps, developers, or other teams.
+- **Role-Specific Guidance**: Tailored workflows for team members based on roles.
 - **Knowledge Transfer Workflows**: Automates onboarding and offboarding processes.
-- **Scheduling and Task Management**: Tracks progress and integrates with team calendars and project timelines.
-- **Project Integrations**: Supports seamless knowledge integration with ongoing projects.
+- **Scheduling and Task Management**: Tracks progress and integrates with project timelines.
+- **Project Integrations**: Seamless knowledge integration into ongoing initiatives.
 
 ---
 
@@ -96,75 +96,47 @@
 
 ---
 
-## 📊 **Modern Web Interface**
+## 🔄 **Development Roadmap**
 
-1. **Real-Time Dashboard**:  
-   Built with **Streamlit**, the interface supports real-time search, filtering, and task tracking.  
-
-2. **Document Previews and Visualization**:  
-   View summaries, insights, and relationships between documents interactively.
-
-3. **User Customization**:  
-   Tailor workflows, learning paths, and search filters to individual or team needs.
-
----
-
-## 🔧 **Configuration**
-Key configuration options in `kb_config.py`:
-- Document processing parameters.
-- Search settings (e.g., semantic embeddings, clustering thresholds).
-- Multi-agent behavior customization.
-- Storage paths for uploaded documents.
-
----
-
-## 📊 **Performance Optimization**
-- **Efficient Document Chunking**: Handles large datasets without latency.
-- **Search Index Optimization**: Ensures fast and reliable queries.
-- **Batched Processing**: Optimized for large-scale document ingestion.
-- **Caching**: Improves response times for frequently accessed content.
-
----
-
-## 🐛 **Troubleshooting**
-- **Import Errors**: Ensure all dependencies are installed and the virtual environment is activated.
-- **API Key Issues**: Verify OpenAI API key in the `.env` file.
-- **Memory Issues**: Adjust chunk sizes and batching for large document sets.
-- **Search Performance**: Rebuild indexes if queries slow down.
+### Upcoming Features
+- Enhanced topic modeling and clustering algorithms.
+- Advanced caching mechanisms for faster data retrieval.
+- Conversation memory and context management for ongoing workflows.
+- User authentication and role-based access control.
+- Support for batch file uploads and advanced analysis.
 
 ---
 
 ## 🤝 **Contributing**
 
-We welcome contributions!  
-1. **Fork the repository.**  
-2. **Create a feature branch**:  
+1. **Fork the Repository**
+2. **Create a Feature Branch**
    ```bash
    git checkout -b feature/amazing-feature
-   ```  
-3. **Commit your changes**:  
+   ```
+3. **Commit Your Changes**
    ```bash
    git commit -m 'Add amazing feature'
-   ```  
-4. **Push to the branch**:  
+   ```
+4. **Push to the Branch**
    ```bash
    git push origin feature/amazing-feature
-   ```  
-5. **Open a Pull Request.**
+   ```
+5. **Open a Pull Request**
 
 ---
 
 ## 🖋️ **License**
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ---
 
 ## 🙏 **Acknowledgments**
 
-- [OpenAI](https://openai.com) for providing cutting-edge NLP models.
+- [OpenAI](https://openai.com) for cutting-edge NLP models.
 - [Streamlit](https://streamlit.io) for the interactive dashboard framework.
-- Community contributors for ideas and feedback!
+- Community contributors for feedback and feature ideas.
 
 ---
 
@@ -175,4 +147,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Note**: Project Oracle is under active development, with features and documentation updated regularly.
+**Note**: Project O.R.A.C.L.E. is under active development, with features and documentation updated regularly.
